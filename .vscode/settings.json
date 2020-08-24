@@ -1,0 +1,5 @@
+{
+  "files.exclude": {
+    "src/api/{bin,obj}": true
+  }
+}
