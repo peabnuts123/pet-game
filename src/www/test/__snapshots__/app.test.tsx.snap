@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App Matches snapshot 1`] = `
+<body>
+  <div>
+    <div
+      id="app"
+    >
+      <header>
+        <h1>
+          Preact App
+        </h1>
+        <nav>
+          <a
+            class=""
+            href="/"
+          >
+            Home
+          </a>
+          <a
+            class=""
+            href="/profile"
+          >
+            Me
+          </a>
+          <a
+            class=""
+            href="/profile/john"
+          >
+            John
+          </a>
+        </nav>
+      </header>
+      <div>
+        <h1>
+          Home
+        </h1>
+        <p>
+          This is the Home component.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+`;

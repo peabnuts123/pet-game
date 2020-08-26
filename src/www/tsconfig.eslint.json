@@ -1,0 +1,19 @@
+// see https://github.com/typescript-eslint/typescript-eslint/issues/890
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "*.tsx",
+    "*.ts",
+    "*.jsx",
+    "*.js",
+    "src/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.jsx",
+    "src/**/*.js",
+    "test/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.jsx",
+    "test/**/*.js",
+    "types/**/*.d.ts",
+  ],
+}

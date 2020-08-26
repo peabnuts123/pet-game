@@ -1,0 +1,37 @@
+{
+  "private": true,
+  "name": "pet-game",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "preact watch",
+    "simulate-build": "npm run test && npm run lint && npm run type-check && npm run build && echo 'Build succeeded'",
+    "build": "rm -rf build && NODE_ENV='production' preact build --dest build",
+    "lint": "eslint --max-warnings 0 --no-error-on-unmatched-pattern \"./*.{js,jsx,ts,tsx}\" \"src/**/*.{js,jsx,ts,tsx}\" \"test/**/*.{js,jsx,ts,tsx}\"",
+    "type-check": "tsc --project ./tsconfig.json",
+    "test": "jest",
+    "test:coverage": "jest --collectCoverage true && http-server coverage/lcov-report"
+  },
+  "dependencies": {
+    "preact": "^10.3.1",
+    "preact-router": "^3.2.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/preact": "^2.0.0",
+    "@types/jest": "^26.0.8",
+    "@types/webpack-env": "^1.15.1",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^3.0.0",
+    "jest": "^26.2.2",
+    "jest-fetch-mock": "^3.0.3",
+    "jest-preset-preact": "^4.0.2",
+    "preact-cli": "^3.0.0",
+    "preact-render-to-string": "^5.1.10",
+    "ts-jest": "^26.2.0",
+    "typescript": "^3.7.5"
+  }
+}
