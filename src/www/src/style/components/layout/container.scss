@@ -1,0 +1,15 @@
+.container {
+  display: block;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $m;
+  padding-right: $m;
+
+  @include media-query('tablet') { width: $breakpoint-mobile; }
+}
+
+.container--no-padding {
+  padding-left: 0;
+  padding-right: 0;
+}

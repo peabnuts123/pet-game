@@ -1,0 +1,35 @@
+$button-height: 40px;
+
+.button {
+  background-color: $primary;
+  color: $secondary;
+  border-radius: $radius;
+  text-decoration: none;
+  cursor: pointer;
+  height: $button-height;
+  padding-left: $m * 2;
+  padding-right: $m * 2;
+  user-select: none;
+  border: none;
+
+  &:hover {
+    background-color: darken($primary, 5%);
+  }
+
+  &:active {
+    background-color: darken($primary, 10%);
+  }
+}
+
+.button--secondary {
+  background-color: $secondary;
+  color: $primary;
+
+  &:hover {
+    background-color: darken($secondary, 5%);
+  }
+
+  &:active {
+    background-color: darken($secondary, 10%);
+  }
+}

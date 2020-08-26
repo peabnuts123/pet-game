@@ -1,49 +1,47 @@
 .header {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 56px;
+  // width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+	height: $header-height;
 	padding: 0;
-	background: #673AB7;
-	box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  z-index: 50;
+	background: $primary;
+	box-shadow: 0 0 5px rgba($black, 0.5);
+  // z-index: 50;
 
   & h1 {
-    float: left;
     margin: 0;
     padding: 0 15px;
     font-size: 24px;
-    line-height: 56px;
+    line-height: $header-height;
     font-weight: 400;
-    color: #FFF;
+    color: $secondary;
   }
 
   & nav {
-    float: right;
     font-size: 100%;
   }
 
   & nav a {
     display: inline-block;
-    height: 56px;
-    line-height: 56px;
+    height: $header-height;
+    line-height: $header-height;
     padding: 0 15px;
     min-width: 50px;
     text-align: center;
     background: rgba(255,255,255,0);
     text-decoration: none;
-    color: #FFF;
+    color: $secondary;
     will-change: background-color;
   }
 
   & nav a:hover,
   & nav a:active {
-    background: rgba(0,0,0,0.2);
+    background: rgba($black,0.2);
   }
 
   & nav a.is-active {
-    background: rgba(0,0,0,0.4);
+    background: rgba($black,0.4);
   }
 }
 

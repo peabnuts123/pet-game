@@ -1,0 +1,21 @@
+.form {
+  margin-bottom: 2 * $m;
+}
+
+.form__input {
+  display: block;
+  margin-bottom: 2 * $m;
+}
+
+.form__input-label {
+  display: block;
+  margin-bottom: $m;
+}
+
+.form__button {
+  width: 100%;
+
+  @include media-query('tablet') {
+    width: 200px;
+  }
+}

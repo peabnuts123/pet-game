@@ -1,0 +1,11 @@
+.input {
+  width: 100%;
+}
+
+.input--text {
+  display: block;
+  background-color: $white;
+  border: 1px solid $grey-medium;
+  border-radius: $radius;
+  padding: $m;
+}
