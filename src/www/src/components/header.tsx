@@ -1,23 +1,32 @@
 import { FunctionalComponent, h } from "preact";
 import { Link } from "preact-router/match";
 
-const Header: FunctionalComponent = () => {
+import { useServices } from '@app/services';
+import { observer } from "mobx-react-lite";
+
+const Header: FunctionalComponent = observer(() => {
+
+  const { UserService } = useServices();
+
   return (
     <header class="header">
-      <h1>Preact App</h1>
-      <nav>
+      <div class="header__container">
         <Link activeClassName="is-active" href="/">
-          Home
+          <h1>Pet Game</h1>
         </Link>
-        <Link activeClassName="is-active" href="/profile">
-          Me
-        </Link>
-        <Link activeClassName="is-active" href="/profile/john">
-          John
-        </Link>
-      </nav>
+
+        <nav>
+          <Link activeClassName="is-active" href="/taking-tree">The Taking Tree</Link>
+
+          {UserService.isLoggedIn ? (
+            <a aria-role="button" onClick={() => UserService.logOut()}>Log out</a>
+          ) : (
+              <Link activeClassName="is-active" href="/login">Log in</Link>
+            )}
+        </nav>
+      </div>
     </header>
   );
-};
+});
 
 export default Header;

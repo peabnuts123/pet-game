@@ -12,6 +12,17 @@ The first phase of this project will have the following architecture:
 
 In the future there will be architectural decisions made to split the app up into manageable chunks, but this will all be in a single chunk for now.
 
+## Basic experience
+  - Home page describing WTF you're looking at
+  - Profile page
+    - User information
+    - What items you have + ability to donate to The Taking Tree
+  - Login page
+  - The Taking Tree
+    - Logged out you can view what's there
+    - Logged in you can take stuff / maybe you can see your inventory / donate stuff
+  - ?Every day you receive 5 inventory items?
+
 ## Backlog
   - Design a basic experience
   - Make an API that implements this logic (in-memory persistence is fine)

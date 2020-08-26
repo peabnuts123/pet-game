@@ -1,10 +1,20 @@
 import { FunctionalComponent, h } from "preact";
 import { Route, Router } from "preact-router";
+import { useEffect } from "preact/hooks";
 
-import Home from "@app/routes/home";
-import Profile from "@app/routes/profile";
-import NotFoundPage from "@app/routes/notfound";
+import Logger, { LogLevel } from "@app/util/Logger";
+
+// Components
 import Header from "@app/components/header";
+
+// Routes
+import HomeRoute from "@app/routes/home";
+import NotFoundRoute from "@app/routes/not-found";
+import LoginRoute from '@app/routes/login';
+import TakingTreeRoute from '@app/routes/taking-tree';
+import UserProfileRoute from '@app/routes/user-profile';
+
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 if ((module as any).hot) {
@@ -13,16 +23,22 @@ if ((module as any).hot) {
 }
 
 const App: FunctionalComponent = () => {
+  useEffect(() => {
+    Logger.setLogLevel(LogLevel.debug);
+    Logger.log(LogLevel.debug, "App loading");
+  }, []);
+
   return (
-    <div id="app">
+    <div>
       <Header />
 
       <div class="container u-padding-top-lg">
         <Router>
-          <Route path="/" component={Home} />
-          <Route path="/profile/" component={Profile} user="me" />
-          <Route path="/profile/:user" component={Profile} />
-          <NotFoundPage default />
+          <Route path="/" component={HomeRoute} />
+          <Route path="/login" component={LoginRoute} />
+          <Route path="/taking-tree" component={TakingTreeRoute} />
+          <Route path="/user-profile" component={UserProfileRoute} />
+          <NotFoundRoute default />
         </Router>
       </div>
     </div>

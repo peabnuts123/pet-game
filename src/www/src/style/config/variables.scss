@@ -3,9 +3,13 @@ $purple: #2D173D;
 $pink: #FF98B7;
 $blue: #5FB2FF;
 $tangerine: #FFA286;
-$peach: #FCDCC8;
+$peach: #fdf6f0;
 $rose-sugar: #FFF4F2;
 $rose: #CB1330;
+
+$gold: #FBBC58;
+$fanta: #F57B51;
+$bark: #422200;
 
 // Greys
 $black: #000000;
@@ -16,10 +20,10 @@ $white:      #FFFFFF;
 
 // Aliases
 $text: rgba($black, 0.9);
-$primary: $tangerine;
-$secondary: $rose-sugar;
-$link: $rose;
-$selection: $peach;
+$primary: $gold;
+$secondary: $bark;
+$link: $blue;
+$selection: $fanta;
 $border: $grey-light;
 
 // Breakpoints

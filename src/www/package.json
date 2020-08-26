@@ -30,6 +30,8 @@
     "jest": "^26.2.2",
     "jest-fetch-mock": "^3.0.3",
     "jest-preset-preact": "^4.0.2",
+    "mobx": "^5.15.6",
+    "mobx-react-lite": "^2.1.0",
     "normalize.css": "^8.0.1",
     "preact-cli": "^3.0.0",
     "preact-render-to-string": "^5.1.10",

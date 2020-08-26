@@ -1,47 +1,44 @@
 .header {
-  // width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 	height: $header-height;
 	padding: 0;
 	background: $primary;
-	box-shadow: 0 0 5px rgba($black, 0.5);
-  // z-index: 50;
+  box-shadow: 0 0 5px rgba($bark, 0.5);
+  user-select: none;
+
+  & a {
+    text-decoration: none;
+  }
 
   & h1 {
-    margin: 0;
-    padding: 0 15px;
-    font-size: 24px;
     line-height: $header-height;
     font-weight: 400;
     color: $secondary;
-  }
-
-  & nav {
-    font-size: 100%;
   }
 
   & nav a {
     display: inline-block;
     height: $header-height;
     line-height: $header-height;
-    padding: 0 15px;
+    padding: 0 $m * 2;
     min-width: 50px;
     text-align: center;
-    background: rgba(255,255,255,0);
-    text-decoration: none;
     color: $secondary;
     will-change: background-color;
   }
 
   & nav a:hover,
   & nav a:active {
-    background: rgba($black,0.2);
+    background: rgba($bark,0.1);
   }
 
   & nav a.is-active {
-    background: rgba($black,0.4);
+    background: rgba($bark,0.2);
   }
 }
 
+.header__container {
+  @extend .container;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
