@@ -3,13 +3,15 @@
 exports[`Initial Test of the Header Matches snapshot 1`] = `
 <body>
   <div>
-    <header>
+    <header
+      class="header"
+    >
       <h1>
         Preact App
       </h1>
       <nav>
         <a
-          class=""
+          class="is-active"
           href="/"
         >
           Home

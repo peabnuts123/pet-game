@@ -31,6 +31,8 @@
     "jest-preset-preact": "^4.0.2",
     "preact-cli": "^3.0.0",
     "preact-render-to-string": "^5.1.10",
+    "sass": "^1.26.10",
+    "sass-loader": "^10.0.1",
     "ts-jest": "^26.2.0",
     "typescript": "^3.7.5"
   }
