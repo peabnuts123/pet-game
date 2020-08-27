@@ -5,4 +5,5 @@
   "eslint.workingDirectories": [
     "src/www"
   ],
+  "typescript.tsdk": "src/www/node_modules/typescript/lib",
 }

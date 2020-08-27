@@ -16,15 +16,13 @@ import UserProfileRoute from '@app/routes/user-profile';
 
 
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 if ((module as any).hot) {
-  // tslint:disable-next-line:no-var-requires
   require("preact/debug");
 }
 
 const App: FunctionalComponent = () => {
   useEffect(() => {
-    Logger.setLogLevel(LogLevel.debug);
     Logger.log(LogLevel.debug, "App loading");
   }, []);
 

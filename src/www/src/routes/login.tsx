@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from "preact";
+import { h, Fragment, FunctionalComponent } from "preact";
 import { useRef } from "preact/hooks";
 import { observer } from "mobx-react-lite";
 
@@ -22,7 +22,7 @@ const LoginRoute: FunctionalComponent = observer(() => {
   };
 
   return (
-    <div>
+    <Fragment>
       <h1>Log in</h1>
 
       <form class="form" action="#" onSubmit={login}>
@@ -36,8 +36,8 @@ const LoginRoute: FunctionalComponent = observer(() => {
         <button class="form__button button" type="submit">Log in</button>
 
       </form>
-    </div>
+    </Fragment>
   );
-});
+}) as FunctionalComponent;
 
 export default LoginRoute;

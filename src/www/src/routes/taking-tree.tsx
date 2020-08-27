@@ -1,13 +1,13 @@
-import { h, FunctionalComponent } from "preact";
+import { h, FunctionalComponent, Fragment } from "preact";
 import { observer } from "mobx-react-lite";
 import { useServices } from "@app/services";
 
-const TakingTreeRoute: FunctionalComponent = observer(() => {
+const TakingTreeRoute = observer(() => {
 
   const { UserService } = useServices();
 
   return (
-    <div>
+    <Fragment>
       <h1>The Taking Tree</h1>
 
       {UserService.isLoggedIn ? (
@@ -15,8 +15,8 @@ const TakingTreeRoute: FunctionalComponent = observer(() => {
       ) : (
         <p>You must log in to take items from The Taking Tree.</p>
       )}
-    </div>
+    </Fragment>
   );
-});
+}) as FunctionalComponent;
 
 export default TakingTreeRoute;

@@ -1,9 +1,9 @@
-import { FunctionalComponent, h } from "preact";
+import { Fragment, FunctionalComponent, h } from "preact";
 import { Link } from "preact-router/match";
 
-const NotFoundRoute: FunctionalComponent = () => {
+const NotFoundRoute = (() => {
   return (
-    <div class="not-found">
+    <Fragment>
       <h1>Error 404</h1>
 
       <p>That page doesn&apos;t exist.</p>
@@ -11,8 +11,8 @@ const NotFoundRoute: FunctionalComponent = () => {
       <Link href="/">
         <h4>Back to Home</h4>
       </Link>
-    </div>
+    </Fragment>
   );
-};
+}) as FunctionalComponent;
 
 export default NotFoundRoute;

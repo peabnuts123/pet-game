@@ -88,6 +88,17 @@ export default class Logger {
   }
 
   /**
+   * Test whether an object is a valid value from enum `LogLevel`.
+   * Mostly around from JS times where you could pass the right string value,
+   * and things would still work.
+   *
+   * @param object Object to test
+   */
+  private static isLogLevel(object: any): object is LogLevel {
+    return Object.values(LogLevel).includes(object);
+  }
+
+  /**
    * Core logging function. Is responsible for resolving the crazy method overloads above.
    * Lots of weird type checking. It is weird because you can call it in so many ways.
    *
@@ -105,7 +116,7 @@ export default class Logger {
     let logLevel = LogLevel.normal;
 
     // First param is either a log level, something to log, or nothing
-    if (Object.values(LogLevel).includes(maybeLogLevelOrObject)) {
+    if (this.isLogLevel(maybeLogLevelOrObject)) {
       logLevel = maybeLogLevelOrObject;
     } else if (maybeLogLevelOrObject) {
       values.push(maybeLogLevelOrObject);

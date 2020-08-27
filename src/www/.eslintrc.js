@@ -47,7 +47,11 @@ module.exports = {
       'files': ['*.js', '*.jsx'],
       'rules': {
         '@typescript-eslint/explicit-function-return-type': DISABLED,
+        '@typescript-eslint/explicit-module-boundary-types': DISABLED,
+        '@typescript-eslint/no-unsafe-member-access': DISABLED,
+        '@typescript-eslint/no-unsafe-call': DISABLED,
         '@typescript-eslint/no-var-requires': DISABLED,
+        '@typescript-eslint/no-unsafe-assignment': DISABLED,
       },
     },
   ]

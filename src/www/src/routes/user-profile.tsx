@@ -5,7 +5,7 @@ import { useServices } from "@app/services";
 
 import AuthenticatedRoute from "./common/authenticated";
 
-const UserProfileRoute: FunctionalComponent = observer(AuthenticatedRoute(() => {
+const UserProfileRoute = observer(AuthenticatedRoute(() => {
   const { UserService } = useServices();
 
   return (
@@ -15,6 +15,6 @@ const UserProfileRoute: FunctionalComponent = observer(AuthenticatedRoute(() => 
       <p><em>It&apos;s a bit empty here right now.</em></p>
     </div>
   );
-}));
+})) as FunctionalComponent;
 
 export default UserProfileRoute;

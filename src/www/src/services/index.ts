@@ -7,6 +7,6 @@ const config = {
   UserService: new UserService(),
 };
 
-export const ServicesContext: Context<typeof config> = createContext(config);
+const ServicesContext: Context<typeof config> = createContext(config);
 
 export const useServices = (): typeof config => useContext(ServicesContext);

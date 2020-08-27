@@ -7,7 +7,7 @@ class UserService {
   private _currentUser: User | null = null;
 
   @action
-  public logIn(username: string, password: string): User {
+  public logIn(username: string, _password: string): User {
     this._currentUser = new User({
       username,
     });

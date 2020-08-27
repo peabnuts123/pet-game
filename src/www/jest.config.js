@@ -11,6 +11,7 @@ module.exports = {
   verbose: true,
   testURL: "http://localhost:8080",
   setupFilesAfterEnv: [
+    '<rootDir>/test/setup/configure-mobx.ts',
     '<rootDir>/test/setup/configure-logger.ts',
     '<rootDir>/test/setup/fail-on-no-assertion.ts',
     '<rootDir>/test/setup/mock-fetch.ts',

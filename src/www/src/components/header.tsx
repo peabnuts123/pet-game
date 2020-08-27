@@ -4,7 +4,7 @@ import { Link } from "preact-router/match";
 import { useServices } from '@app/services';
 import { observer } from "mobx-react-lite";
 
-const Header: FunctionalComponent = observer(() => {
+const Header = observer(() => {
 
   const { UserService } = useServices();
 
@@ -27,6 +27,6 @@ const Header: FunctionalComponent = observer(() => {
       </div>
     </header>
   );
-});
+}) as FunctionalComponent;
 
 export default Header;

@@ -1,14 +1,14 @@
-import { FunctionalComponent, h } from "preact";
+import { Fragment, FunctionalComponent, h } from "preact";
 import { Link } from "preact-router";
 import { observer } from 'mobx-react-lite';
 
 import { useServices } from '@app/services';
 
-const HomeRoute: FunctionalComponent = observer(() => {
+const HomeRoute = observer(() => {
   const { UserService } = useServices();
 
   return (
-    <div class="home">
+    <Fragment>
       <h1>Home</h1>
 
       <p>This is a pet game. You play it.</p>
@@ -25,8 +25,8 @@ const HomeRoute: FunctionalComponent = observer(() => {
         <li><Link class="button" href="/user-profile">View your profile</Link></li>
       </ul>
 
-    </div>
+    </Fragment>
   );
-});
+}) as FunctionalComponent;
 
 export default HomeRoute;

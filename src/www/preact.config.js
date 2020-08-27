@@ -24,6 +24,8 @@ export default {
         "src",
         "index",
       ),
+
+      mobx: path.resolve(__dirname + "/node_modules/mobx/lib/mobx.es6.js"),
     });
   },
 };
