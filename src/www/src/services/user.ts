@@ -103,6 +103,26 @@ export class Inventory {
       }));
     }
   }
+
+  @action
+  public removeItem(item: Item): void {
+    // Look up inventory item
+    const existingItemIndex = this.items.findIndex((inventoryItem) => inventoryItem.item === item);
+
+    if (existingItemIndex === -1) {
+      throw new Error(`Cannot remove item, it is not present in inventory: ${item.name}`);
+    } else {
+      const existingItem = this.items[existingItemIndex];
+
+      // Decrement amount
+      existingItem.amount--;
+
+      // Remove item if there are none left
+      if (existingItem.amount <= 0) {
+        this.items.splice(existingItemIndex, 1);
+      }
+    }
+  }
 }
 
 export class User {
