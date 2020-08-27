@@ -5,14 +5,19 @@ import { useServices } from "@app/services";
 
 import AuthenticatedRoute from "./common/authenticated";
 
-const UserProfileRoute = observer(AuthenticatedRoute(() => {
+const UserProfileRoute = AuthenticatedRoute(observer(() => {
   const { UserService } = useServices();
+
+  const user = UserService.currentUser;
 
   return (
     <div class="user-profile">
-      <h1>User Profile: {UserService.currentUser?.username}</h1>
+      <h1>User Profile: {user?.username}</h1>
 
-      <p><em>It&apos;s a bit empty here right now.</em></p>
+      <h2>Inventory</h2>
+      {user?.inventory.items.map((item) => (
+        <li key={item.item.name}>{item.amount}x {item.item.name}</li>
+      ))}
     </div>
   );
 })) as FunctionalComponent;

@@ -1,4 +1,4 @@
-import { h, ComponentType } from "preact";
+import { h, ComponentType, Fragment } from "preact";
 import { route, getCurrentUrl } from "preact-router";
 
 import { useServices } from "@app/services";
@@ -13,11 +13,14 @@ const AuthenticatedRoute: HigherOrderComponent = <TProps extends Record<string, 
     if (UserService.isLoggedOut) {
       Logger.log(LogLevel.debug, `Unauthenticated user trying to access authenticated route ${getCurrentUrl()}. Redirecting to /login...`);
       route('/login');
+      return (
+        <Fragment />
+      );
+    } else {
+      return (
+        <RouteComponent {...props} />
+      );
     }
-
-    return (
-      <RouteComponent {...props} />
-    );
   };
 
   return WrappedAuthenticatedRoute;
