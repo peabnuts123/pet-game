@@ -7,7 +7,7 @@ describe("Initial Test of the Header", () => {
   test("Header renders 3 nav items", () => {
     const { container } = render(<Header />);
 
-    expect(container.querySelector('h1')?.textContent).toBe("Preact App");
+    expect(container.querySelector('h1')?.textContent).toBe("Pet Game");
     expect(container.querySelectorAll("a").length).toBe(3);
   });
 

@@ -6,29 +6,32 @@ exports[`Initial Test of the Header Matches snapshot 1`] = `
     <header
       class="header"
     >
-      <h1>
-        Preact App
-      </h1>
-      <nav>
+      <div
+        class="header__container"
+      >
         <a
           class="is-active"
           href="/"
         >
-          Home
+          <h1>
+            Pet Game
+          </h1>
         </a>
-        <a
-          class=""
-          href="/profile"
-        >
-          Me
-        </a>
-        <a
-          class=""
-          href="/profile/john"
-        >
-          John
-        </a>
-      </nav>
+        <nav>
+          <a
+            class=""
+            href="/taking-tree"
+          >
+            The Taking Tree
+          </a>
+          <a
+            class=""
+            href="/login"
+          >
+            Log in
+          </a>
+        </nav>
+      </div>
     </header>
   </div>
 </body>

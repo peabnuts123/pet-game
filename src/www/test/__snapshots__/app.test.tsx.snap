@@ -3,45 +3,77 @@
 exports[`App Matches snapshot 1`] = `
 <body>
   <div>
-    <div
-      id="app"
-    >
+    <div>
       <header
         class="header"
       >
-        <h1>
-          Preact App
-        </h1>
-        <nav>
+        <div
+          class="header__container"
+        >
           <a
             class="is-active"
             href="/"
           >
-            Home
+            <h1>
+              Pet Game
+            </h1>
           </a>
-          <a
-            class=""
-            href="/profile"
-          >
-            Me
-          </a>
-          <a
-            class=""
-            href="/profile/john"
-          >
-            John
-          </a>
-        </nav>
+          <nav>
+            <a
+              class=""
+              href="/taking-tree"
+            >
+              The Taking Tree
+            </a>
+            <a
+              class=""
+              href="/login"
+            >
+              Log in
+            </a>
+          </nav>
+        </div>
       </header>
       <div
-        class="home"
+        class="container u-padding-top-lg"
       >
         <h1>
           Home
         </h1>
         <p>
-          This is the Home component.
+          This is a pet game. You play it.
         </p>
+        <p>
+          Things you can do right now:
+        </p>
+        <ul>
+          <li
+            class="u-margin-bottom-md"
+          >
+            <a
+              class="button"
+              href="/login"
+            >
+              Log in
+            </a>
+          </li>
+          <li>
+            <a
+              class="button u-margin-bottom-md"
+              href="/taking-tree"
+            >
+              Visit The Taking Tree
+            </a>
+          </li>
+          <li>
+            <a
+              class="button"
+              href="/user-profile"
+            >
+              View your profile
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
