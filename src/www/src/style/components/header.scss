@@ -1,44 +1,150 @@
 .header {
-	height: $header-height;
-	padding: 0;
-	background: $primary;
-  box-shadow: 0 0 5px rgba($bark, 0.5);
-  user-select: none;
+  height: $header-height;
+  background: $primary;
+  position: relative;
 
   & a {
+    color: $secondary;
     text-decoration: none;
-  }
-
-  & h1 {
-    line-height: $header-height;
-    font-weight: 400;
-    color: $secondary;
-  }
-
-  & nav a {
-    display: inline-block;
-    height: $header-height;
-    line-height: $header-height;
-    padding: 0 $m * 2;
-    min-width: 50px;
-    text-align: center;
-    color: $secondary;
-    will-change: background-color;
-  }
-
-  & nav a:hover,
-  & nav a:active {
-    background: rgba($bark,0.1);
-  }
-
-  & nav a.is-active {
-    background: rgba($bark,0.2);
   }
 }
 
 .header__container {
-  @extend .container;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.header__brand {
+  @extend %font-heading;
+  font-size: $font-size-h1;
+}
+
+.header__nav--desktop {
+  display: none;
+  height: 100%;
+
+  @include media-query('tablet') {
+    display: block;
+  }
+}
+
+.header__nav-item--desktop {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 $m * 2;
+  height: 100%;
+  cursor: pointer;
+
+  &:hover,
+  &:active {
+    background: rgba($bark, 0.1);
+  }
+
+  &.is-active {
+    background: rgba($bark, 0.2);
+  }
+}
+
+.header__user-dropdown {
+  position: absolute;
+  top: $header-height;
+  right: 0;
+  min-height: 100px;
+  width: 200px;
+  background: $primary;
+  padding: $m;
+}
+
+.header__user-dropdown__item {
+  display: block;
+  padding: $m 2 * $m;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba($border, 0.5);
+  }
+
+  &:hover,
+  &:active {
+    background: rgba($bark, 0.1);
+  }
+}
+
+.header__nav--mobile {
+  height: 100%;
+
+  @include media-query('tablet') {
+    display: none;
+  }
+}
+
+.header__nav-item--mobile {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+
+.header__nav--mobile__container {
+  position: absolute;
+  top: $header-height;
+  left: -100vw;
+  height: calc(100vh - #{$header-height});
+  width: max(40vw, 200px);
+  background: $primary;
+  padding: $m;
+  transition: left 0.3s ease-in-out;
+
+  &.is-open {
+    left: 0;
+  }
+}
+
+.header__nav--mobile__item {
+  display: block;
+  padding: $m 2 * $m;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba($border, 0.5);
+  }
+
+  &:hover,
+  &:active {
+    background: rgba($bark, 0.1);
+  }
+
+  &.is-active {
+    background: rgba($bark, 0.2);
+  }
+}
+
+.header__nav--mobile__item--divider {
+  border-bottom: 2px double rgba($border, 0.5);
+}
+
+.header__nav--mobile__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba($black, 0.0);
+  cursor: initial;
+  transition: background-color 0.3s ease-in-out;
+
+  &.is-open {
+    background-color: rgba($black, 0.1);
+    cursor: pointer;
+
+    @include media-query('tablet') {
+      background-color: rgba($black, 0.0);
+      cursor: initial;
+    }
+  }
 }
