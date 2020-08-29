@@ -10,8 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PetGame.Business;
+using PetGame.Data;
 
-namespace api
+namespace PetGame.Web
 {
     public class Startup
     {
@@ -26,6 +28,12 @@ namespace api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
+            services.AddSingleton(typeof(IItemRepository), typeof(ItemRepository));
+
+            services.AddTransient(typeof(ITakingTreeService), typeof(TakingTreeService));
+            services.AddTransient(typeof(IUserService), typeof(UserService));
+            services.AddTransient(typeof(IItemService), typeof(ItemService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

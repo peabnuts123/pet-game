@@ -1,6 +1,6 @@
 {
   "files.exclude": {
-    "src/api/{bin,obj}": true
+    "src/api/**/{bin,obj}": true
   },
   "eslint.workingDirectories": [
     "src/www"
