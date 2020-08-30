@@ -7,7 +7,7 @@ namespace PetGame.Business
     public interface ITakingTreeService
     {
         IList<TakingTreeInventoryItem> GetAllItems();
-        void UserDonateItem(Guid itemId, User user);
-        void UserClaimItem(Guid inventoryItemId, User user);
+        void UserDonateItem(Guid playerInventoryItemId, User user);
+        void UserClaimItem(Guid takingTreeInventoryItemId, User user);
     }
 }

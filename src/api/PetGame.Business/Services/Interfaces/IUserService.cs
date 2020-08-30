@@ -14,7 +14,8 @@ namespace PetGame.Business
 
         User GetUserById(string userId);
         void AddItemToUser(User user, Guid itemId);
-        void RemoveItemFromUser(User user, Guid itemId);
+        void RemoveItemFromUser(User user, Guid playerInventoryItemId, int amount);
+        PlayerInventoryItem GetInventoryItemById(User user, Guid playerInventoryItemId);
         void Login(string userId);
     }
 }

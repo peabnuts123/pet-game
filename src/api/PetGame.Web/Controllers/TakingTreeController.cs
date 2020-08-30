@@ -33,22 +33,10 @@ namespace PetGame.Web
         [Authorize]
         public ActionResult<IList<TakingTreeInventoryItem>> UserDonateItem(TakingTreeDonateItemDto dto)
         {
-            // @TODO @DEBUG REMOVE
-            string username = HttpContext.Request.Headers["X-Username"];
-            if (username == null)
-            {
-                return BadRequest("Missing debug header X-Username");
-            }
+            User user = HttpContext.Items[LookupUserObjectMiddleware.AUTHENTICATED_USER] as User;
 
-            User user = this.userService.GetUserById("@TODO");
+            this.takingTreeService.UserDonateItem(dto.PlayerInventoryItemId, user);
 
-            if (user == null)
-            {
-                return BadRequest($"No user exists with username '{username}'");
-            }
-            // </DEBUG>
-
-            this.takingTreeService.UserDonateItem(dto.ItemId, user);
             return Ok(this.takingTreeService.GetAllItems());
         }
 
@@ -57,22 +45,10 @@ namespace PetGame.Web
         [Authorize]
         public ActionResult<IList<Item>> UserClaimItem(TakingTreeClaimItemDto dto)
         {
-            // @TODO @DEBUG REMOVE
-            string username = HttpContext.Request.Headers["X-Username"];
-            if (username == null)
-            {
-                return BadRequest("Missing debug header X-Username");
-            }
+            User user = HttpContext.Items[LookupUserObjectMiddleware.AUTHENTICATED_USER] as User;
 
-            User user = this.userService.GetUserById("@TODO");
+            this.takingTreeService.UserClaimItem(dto.TakingTreeInventoryItemId, user);
 
-            if (user == null)
-            {
-                return BadRequest($"No user exists with username '{username}'");
-            }
-            // </DEBUG>
-
-            this.takingTreeService.UserClaimItem(dto.InventoryItemId, user);
             return Ok(this.takingTreeService.GetAllItems());
         }
     }

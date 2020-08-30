@@ -2,5 +2,5 @@ using System;
 
 public class TakingTreeDonateItemDto
 {
-    public Guid ItemId { get; set; }
+    public Guid PlayerInventoryItemId { get; set; }
 }

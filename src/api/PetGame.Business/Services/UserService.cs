@@ -36,7 +36,7 @@ namespace PetGame.Business
             }
 
             // See if player already holds this item
-            PlayerInventoryItem existingInventoryItem = GetExistingInventoryItemForUser(user, itemId);
+            PlayerInventoryItem existingInventoryItem = GetInventoryItemByItemId(user, itemId);
 
             if (existingInventoryItem != null)
             {
@@ -58,17 +58,25 @@ namespace PetGame.Business
             }
         }
 
-        public void RemoveItemFromUser(User user, Guid itemId)
+        public void RemoveItemFromUser(User user, Guid playerInventoryItemId, int amount)
         {
-            PlayerInventoryItem existingInventoryItem = GetExistingInventoryItemForUser(user, itemId);
+            PlayerInventoryItem existingInventoryItem = GetInventoryItemById(user, playerInventoryItemId);
 
+            // Validate user has an item with this id
             if (existingInventoryItem == null)
             {
-                throw new System.ArgumentException($"Cannot remove item  with id '{itemId}' from user '{user.Username}'. They do not have this item");
+                throw new System.ArgumentException($"Cannot remove item from user; User '{user.Id}' has no inventory item with id '{playerInventoryItemId}'");
+            }
+            // Validate user has enough of this item to remove
+            else if (existingInventoryItem.Count < amount)
+            {
+                throw new InvalidOperationException($"Cannot remove {amount} of item from user; User '{user.Id}' only has {existingInventoryItem.Count} of item '{playerInventoryItemId}'");
             }
 
-            existingInventoryItem.Count--;
-            if (existingInventoryItem.Count <= 0)
+            // Decrease amount
+            existingInventoryItem.Count -= amount;
+
+            if (existingInventoryItem.Count == 0)
             {
                 // Remove from user entirely
                 user.Inventory.Remove(existingInventoryItem);
@@ -112,7 +120,12 @@ namespace PetGame.Business
             return this.userRepository.GetAll().FirstOrDefault((User user) => user.Id == userId);
         }
 
-        private PlayerInventoryItem GetExistingInventoryItemForUser(User user, Guid itemId)
+        public PlayerInventoryItem GetInventoryItemById(User user, Guid playerInventoryItemId)
+        {
+            return user.Inventory.FirstOrDefault((PlayerInventoryItem inventoryItem) => inventoryItem.Id == playerInventoryItemId);
+        }
+
+        private PlayerInventoryItem GetInventoryItemByItemId(User user, Guid itemId)
         {
             return user.Inventory.FirstOrDefault((PlayerInventoryItem inventoryItem) => inventoryItem.Item.Id == itemId);
         }
