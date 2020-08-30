@@ -10,21 +10,14 @@
       "request": "launch",
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/src/api/bin/Debug/netcoreapp3.1/api.dll",
+      "program": "${workspaceFolder}/src/api/PetGame.Web/bin/Debug/netcoreapp3.1/PetGame.Web.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/src/api",
+      "cwd": "${workspaceFolder}/src/api/PetGame.Web",
       "stopAtEntry": false,
-      // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-      "serverReadyAction": {
-        "action": "openExternally",
-        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-      },
+      "envFile": "${workspaceFolder}/.env", // @NOTE you need to make this file if it does not exist
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "sourceFileMap": {
-        "/Views": "${workspaceFolder}/Views"
-      }
     },
     {
       "name": "[www] Debug Tests",
