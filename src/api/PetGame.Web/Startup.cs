@@ -28,14 +28,31 @@ namespace PetGame.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<LookupUserObjectMiddleware>();
+
+            // Singletons
             services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
             services.AddSingleton(typeof(IItemRepository), typeof(ItemRepository));
 
+            // Services
             services.AddTransient(typeof(ITakingTreeService), typeof(TakingTreeService));
             services.AddTransient(typeof(IUserService), typeof(UserService));
             services.AddTransient(typeof(IItemService), typeof(ItemService));
 
             // CONFIGURATION FOR AUTH0
+            string[] requiredConfigValues = new string[] {
+                "Auth0:Domain",
+                "Auth0:ClientId",
+                "Auth0:ClientSecret",
+            };
+            foreach (string requiredConfig in requiredConfigValues)
+            {
+                if (String.IsNullOrEmpty(Configuration[requiredConfig]))
+                {
+                    throw new ApplicationException($"Auth0 configuration value '{requiredConfig}' cannot be null or empty.");
+                }
+            }
+
             // > Cookie-based auth
             services.AddAuthentication(options =>
             {
@@ -146,6 +163,7 @@ namespace PetGame.Web
             });
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<LookupUserObjectMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

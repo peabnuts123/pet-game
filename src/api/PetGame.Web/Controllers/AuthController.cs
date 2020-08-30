@@ -34,21 +34,15 @@ namespace PetGame.Web
         [Authorize]
         public ActionResult<User> Profile()
         {
-            string userId = User.GetSubject();
-            User existingUser = this.userService.GetUserById(userId);
-            if (existingUser == null)
-            {
-                return BadRequest(new InvalidOperationException($"No user exists with id '{userId}'. Something has gone wrong"));
-            }
+            User user = HttpContext.Items[LookupUserObjectMiddleware.AUTHENTICATED_USER] as User;
 
-            return Ok(existingUser);
+            return Ok(user);
         }
 
         [HttpGet]
         [Route("login")]
         public async Task Login([FromQuery(Name = "returnUrl")] string returnUrl = "/")
         {
-            this.logger.LogInformation($"returnUrl: {returnUrl}");
             await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = returnUrl });
         }
 
