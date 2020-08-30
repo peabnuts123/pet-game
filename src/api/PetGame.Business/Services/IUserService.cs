@@ -9,15 +9,12 @@ namespace PetGame.Business
         /// <summary>
         /// @TODO @DEBUG Remove.
         /// </summary>
-        User debug_Login(string username);
-        /// <summary>
-        /// @TODO @DEBUG Remove.
-        /// </summary>
         IList<User> debug_GetAllUsers();
 
 
-        User GetUserByUsername(string username);
+        User GetUserById(string userId);
         void AddItemToUser(User user, Guid itemId);
         void RemoveItemFromUser(User user, Guid itemId);
+        void Login(string userId);
     }
 }

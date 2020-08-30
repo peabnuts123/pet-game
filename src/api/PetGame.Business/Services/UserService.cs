@@ -26,41 +26,6 @@ namespace PetGame.Business
             return this.userRepository.GetAll().ToList();
         }
 
-        /// @TODO @DEBUG Remove.
-        public User debug_Login(string username)
-        {
-            User existingUser = this.userRepository.GetAll().FirstOrDefault((User existingUser) => existingUser.Username == username);
-
-            if (existingUser == null)
-            {
-                // Create new user object
-                User newUser = new User
-                {
-                    Inventory = new List<PlayerInventoryItem>(),
-                    Username = username,
-                };
-
-                // Add random items to new user
-                IList<Item> AllItems = this.itemService.GetAllItems();
-                Random rng = new Random();
-                for (int i = 0; i < rng.Next(4, 7); i++)
-                {
-                    this.AddItemToUser(newUser, AllItems[rng.Next(AllItems.Count)].Id);
-                }
-
-                return this.userRepository.Add(newUser);
-            }
-            else
-            {
-                return existingUser;
-            }
-        }
-
-        public User GetUserByUsername(string username)
-        {
-            return this.userRepository.GetAll().FirstOrDefault((User user) => user.Username == username);
-        }
-
         public void AddItemToUser(User user, Guid itemId)
         {
             // Look up item to add (validation)
@@ -110,6 +75,42 @@ namespace PetGame.Business
             }
         }
 
+        public void Login(string userId)
+        {
+            User existingUser = GetUserById(userId);
+
+            if (existingUser == null)
+            {
+                this.userRepository.Add(CreateNewUser(userId));
+            }
+        }
+
+        private User CreateNewUser(string userId)
+        {
+            Random rng = new Random();
+
+            // Create new user object
+            User newUser = new User
+            {
+                Id = userId,
+                Username = $"User {rng.Next(10000, 99999)}",
+                Inventory = new List<PlayerInventoryItem>(),
+            };
+
+            // Add random items to new user
+            IList<Item> AllItems = this.itemService.GetAllItems();
+            for (int i = 0; i < rng.Next(4, 7); i++)
+            {
+                this.AddItemToUser(newUser, AllItems[rng.Next(AllItems.Count)].Id);
+            }
+
+            return newUser;
+        }
+
+        public User GetUserById(string userId)
+        {
+            return this.userRepository.GetAll().FirstOrDefault((User user) => user.Id == userId);
+        }
 
         private PlayerInventoryItem GetExistingInventoryItemForUser(User user, Guid itemId)
         {
