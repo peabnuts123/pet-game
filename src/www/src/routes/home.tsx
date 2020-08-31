@@ -2,10 +2,11 @@ import { Fragment, FunctionalComponent, h } from "preact";
 import { Link } from "preact-router";
 import { observer } from 'mobx-react-lite';
 
-import { useServices } from '@app/services';
+import { useStores } from "@app/stores";
+
 
 const HomeRoute = observer(() => {
-  const { UserService } = useServices();
+  const { UserStore } = useStores();
 
   return (
     <Fragment>
@@ -15,8 +16,8 @@ const HomeRoute = observer(() => {
 
       <p>Things you can do right now:</p>
       <ul>
-        {UserService.isLoggedIn ? (
-          <li class="u-margin-bottom-md"><button class="button" onClick={() => UserService.logOut()}>Log out</button></li>
+        {UserStore.isUserLoggedIn ? (
+          <li class="u-margin-bottom-md"><Link class="button" href="/logout">Log out</Link></li>
         ) : (
             <li class="u-margin-bottom-md"><Link class="button" href="/login">Log in</Link></li>
           )}

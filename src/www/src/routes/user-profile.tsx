@@ -1,19 +1,18 @@
 import { h, FunctionalComponent } from "preact";
 import { observer } from "mobx-react-lite";
 
-import { useServices } from "@app/services";
-import { InventoryItem } from "@app/services/user";
+import { useStores } from "@app/stores";
 
 import AuthenticatedRoute from "./common/authenticated";
 
 const UserProfileRoute = AuthenticatedRoute(observer(() => {
-  const { UserService, TakingTreeService } = useServices();
+  const { UserStore, TakingTreeStore } = useStores();
 
-  const user = UserService.currentUser;
+  const user = UserStore.currentUserProfile;
 
-  const donateItem = (inventoryItem: InventoryItem): void => {
-    user?.inventory.removeItem(inventoryItem.item);
-    TakingTreeService.addItem(inventoryItem.item);
+  const donateItem = async (playerInventoryItemId: string): Promise<void> => {
+    await TakingTreeStore.donateItem(playerInventoryItemId);
+    await UserStore.refreshUserProfile();
   };
 
   return (
@@ -22,8 +21,11 @@ const UserProfileRoute = AuthenticatedRoute(observer(() => {
 
       <h2>Inventory</h2>
       <ul>
-        {user?.inventory.items.map((item) => (
-          <li key={item.item.name}>{item.amount}x {item.item.name} &nbsp;<button class="button" onClick={() => donateItem(item)}>Donate to Taking Tree</button></li>
+        {user?.inventory.map((playerInventoryItem) => (
+          <li key={playerInventoryItem.item.id}>
+            {playerInventoryItem.count}x {playerInventoryItem.item.name} &nbsp;
+            <button class="button" onClick={() => donateItem(playerInventoryItem.id)}>Donate to Taking Tree</button>
+          </li>
         ))}
       </ul>
     </div>

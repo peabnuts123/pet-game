@@ -5,19 +5,19 @@ import { route } from "preact-router";
 import Endpoints from "@app/constants/endpoints";
 import { useStores } from "@app/stores";
 
-const LoginRoute: FunctionalComponent = observer(() => {
+const LogoutRoute: FunctionalComponent = observer(() => {
   const { UserStore } = useStores();
 
-  if (UserStore.isUserLoggedIn) {
+  if (UserStore.isUserLoggedOut) {
     route("/", true);
   } else {
-    const loginUrl = `${API_BASE}${Endpoints.Auth.login(location.origin)}`;
-    window.location.href = loginUrl;
+    const logoutUrl = `${API_BASE}${Endpoints.Auth.logout()}`;
+    window.location.href = logoutUrl;
   }
 
   return (
-    <p><em>Redirecting you to Auth0 for login...</em></p>
+    <p><em>Logging you out...</em></p>
   );
 }) as FunctionalComponent;
 
-export default LoginRoute;
+export default LogoutRoute;

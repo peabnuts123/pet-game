@@ -4,15 +4,15 @@ import { observer } from "mobx-react-lite";
 import { useState } from "preact/hooks";
 import classNames from 'classnames';
 
-import { useServices } from '@app/services';
+import { useStores } from "@app/stores";
 
 const Header = observer(() => {
   const [userDropdownVisible, setUserDropdownVisible] = useState<boolean>(false);
   const [mobileMenuVisible, setMobileMenuVisible] = useState<boolean>(false);
-  const { UserService } = useServices();
+  const { UserStore } = useStores();
 
   // Lazy sanity (wake up in the late afternoon)
-  if (UserService.isLoggedOut) {
+  if (UserStore.isUserLoggedOut) {
     setUserDropdownVisible(false);
   }
 
@@ -31,9 +31,9 @@ const Header = observer(() => {
           <nav class="header__nav--desktop">
             <Link class="header__nav-item--desktop" activeClassName="is-active" href="/taking-tree">The Taking Tree</Link>
 
-            {UserService.isLoggedIn ? (
-              <a class="header__nav-item--desktop" aria-role="button" onClick={() => setUserDropdownVisible(!userDropdownVisible)}>
-                <strong>{UserService.currentUser?.username}</strong> ▾
+            {UserStore.isUserLoggedIn ? (
+              <a class="header__nav-item--desktop" onClick={() => setUserDropdownVisible(!userDropdownVisible)}>
+                <strong>{UserStore.currentUserProfile!.username}</strong> ▾
               </a>
             ) : (
                 <Link class="header__nav-item--desktop" activeClassName="is-active" href="/login">Log in</Link>
@@ -43,9 +43,9 @@ const Header = observer(() => {
               <div class="header__user-dropdown">
                 <Link class="header__user-dropdown__item" activeClassName="is-active" href="/user-profile">
                   User profile
-                  </Link>
+                </Link>
 
-                <a class="header__user-dropdown__item" aria-role="button" onClick={() => UserService.logOut()}>Log out</a>
+                <Link class="header__user-dropdown__item" activeClassName="is-active" href="/logout">Log out</Link>
               </div>
             )}
           </nav>
@@ -61,13 +61,13 @@ const Header = observer(() => {
 
               <div class="header__nav--mobile__item--divider"></div>
 
-              {UserService.isLoggedIn ? (
+              {UserStore.isUserLoggedIn ? (
                 <Fragment>
                   <Link class="header__nav--mobile__item" activeClassName="is-active" href="/user-profile">
-                    🐈 <strong>{UserService.currentUser?.username}</strong>
+                    🐈 <strong>{UserStore.currentUserProfile!.username}</strong>
                   </Link>
 
-                  <a class="header__nav--mobile__item" aria-role="button" onClick={() => UserService.logOut()}>Log out</a>
+                  <Link class="header__nav--mobile__item" activeClassName="is-active" href="/logout">Log out</Link>
                 </Fragment>
               ) : (
                   <Link class="header__nav--mobile__item" activeClassName="is-active" href="/login">
