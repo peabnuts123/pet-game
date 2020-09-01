@@ -36,7 +36,8 @@ export default {
       //  where you reference the variable. So this must be converted to `'world'` i.e. a string
       //  within a string, so that the resulting code receives a string
 
-      API_BASE: JSON.stringify(process.env.NODE_ENV === 'development' ? `https://localhost:5001` : `@TODO PRODUCTION?`),
+      // @TODO BETTER environment config
+      API_BASE: JSON.stringify(process.env.NODE_ENV === 'development' ? `https://localhost:5001` : `https://pet-game-dev.herokuapp.com`),
     }));
   },
 };
