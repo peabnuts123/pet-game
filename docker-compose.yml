@@ -13,3 +13,15 @@ services:
       - './src/devdb/data:/var/lib/postgresql/data'
     ports:
       - '5432:5432/tcp'
+  api:
+    image: "pet-game:latest"
+    build: ./src/api
+    container_name: petgame_api
+    restart: unless-stopped
+    environment:
+      Auth0__ClientSecret: "${DOCKER_API_AUTH0_CLIENT_SECRET}"
+      DATABASE_URL: "${DOCKER_DATABASE_URL}"
+      PORT: "${PORT}"
+    ports:
+      # @TODO change production port
+      - '5000:${PORT}/tcp'
