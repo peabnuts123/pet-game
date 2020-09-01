@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,11 +32,12 @@ namespace PetGame.Web
         [HttpPost]
         [Route("donate")]
         [Authorize]
-        public ActionResult<IList<TakingTreeInventoryItem>> UserDonateItem(TakingTreeDonateItemDto dto)
+        public async Task<ActionResult<IList<TakingTreeInventoryItem>>> UserDonateItem(TakingTreeDonateItemDto dto)
         {
-            User user = HttpContext.Items[LookupUserObjectMiddleware.AUTHENTICATED_USER] as User;
+            string userAuthId = HttpContext.User.GetSubject();
 
-            this.takingTreeService.UserDonateItem(dto.PlayerInventoryItemId, user);
+            User user = await this.userService.GetUserByAuthId(userAuthId);
+            await this.takingTreeService.UserDonateItem(user, dto.PlayerInventoryItemId);
 
             return Ok(this.takingTreeService.GetAllItems());
         }
@@ -43,11 +45,11 @@ namespace PetGame.Web
         [HttpPost]
         [Route("claim")]
         [Authorize]
-        public ActionResult<IList<Item>> UserClaimItem(TakingTreeClaimItemDto dto)
+        public async Task<ActionResult<IList<Item>>> UserClaimItem(TakingTreeClaimItemDto dto)
         {
-            User user = HttpContext.Items[LookupUserObjectMiddleware.AUTHENTICATED_USER] as User;
-
-            this.takingTreeService.UserClaimItem(dto.TakingTreeInventoryItemId, user);
+            string userAuthId = HttpContext.User.GetSubject();
+            User user = await this.userService.GetUserByAuthId(userAuthId);
+            await this.takingTreeService.UserClaimItem(user, dto.TakingTreeInventoryItemId);
 
             return Ok(this.takingTreeService.GetAllItems());
         }

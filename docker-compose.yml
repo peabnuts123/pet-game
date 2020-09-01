@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  devdb:
+    image: "postgres:alpine"
+    container_name: petgame_devdb
+    restart: unless-stopped
+    env_file: src/devdb/.env
+    volumes:
+      # Timezone
+      - '${LOCAL_TIME_MOUNT:-/etc/localtime}:/etc/localtime:ro'
+      # Data directory
+      - './src/devdb/data:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432/tcp'

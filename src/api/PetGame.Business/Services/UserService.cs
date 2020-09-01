@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetGame.Data;
 
@@ -8,14 +10,14 @@ namespace PetGame.Business
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<User> userRepository;
-        private readonly ILogger<UserService> logger;
+        private readonly PetGameContext db;
         private readonly IItemService itemService;
+        private readonly ILogger<UserService> logger;
 
 
-        public UserService(IRepository<User> userRepository, IItemService itemService, ILogger<UserService> logger)
+        public UserService(PetGameContext db, IItemService itemService, ILogger<UserService> logger)
         {
-            this.userRepository = userRepository;
+            this.db = db;
             this.itemService = itemService;
             this.logger = logger;
         }
@@ -23,16 +25,52 @@ namespace PetGame.Business
         /// @TODO @DEBUG Remove.
         public IList<User> debug_GetAllUsers()
         {
-            return this.userRepository.GetAll().ToList();
+            return this.db.Users
+                .Include(user => user.Inventory)
+                .ThenInclude((item) => item.Item)
+                .ToList();
         }
 
-        public void AddItemToUser(User user, Guid itemId)
+
+        /// <summary>
+        /// Retrieve a User object by their Auth ID
+        /// </summary>
+        /// <param name="userId">Auth ID for the User</param>
+        /// <returns>User object if one exists with this ID, null otherwise</returns>
+        public async Task<User> GetUserByAuthId(string userAuthId)
+        {
+            // @TODO how can we share this `Include()` logic?
+            return await this.db.Users
+                .Include((user) => user.Inventory)
+                .ThenInclude((item) => item.Item)
+                .SingleOrDefaultAsync((User user) => user.AuthId == userAuthId);
+        }
+
+        /// <summary>
+        /// Retrieve a User object by their unique ID
+        /// </summary>
+        /// <param name="userId">Unique ID for the User</param>
+        /// <returns>User object if one exists with this ID, null otherwise</returns>
+        public User GetUserById(Guid userId)
+        {
+            return this.db.Users
+                .Include((user) => user.Inventory)
+                .ThenInclude((item) => item.Item)
+                .SingleOrDefault((User user) => user.Id == userId);
+        }
+
+        /// <summary>
+        /// Give the user an item.
+        /// </summary>
+        /// <param name="user">User for which to give this item</param>
+        /// <param name="itemId">Unique ID of the item to give to this user. A PlayerInventoryItem "slot" will be created if one doesn't exist already</param>
+        public async Task AddItemToUser(User user, Guid itemId, int amount)
         {
             // Look up item to add (validation)
             Item item = this.itemService.GetItemById(itemId);
             if (item == null)
             {
-                throw new ArgumentException($"Cannot add item to user, no item with id '{itemId}' exists", nameof(itemId));
+                throw new ArgumentException($"Cannot add item to user. No item exists with id '{itemId}'", nameof(itemId));
             }
 
             // See if player already holds this item
@@ -41,36 +79,44 @@ namespace PetGame.Business
             if (existingInventoryItem != null)
             {
                 // Update inventory item
-                existingInventoryItem.Count++;
+                existingInventoryItem.Count += amount;
             }
             else
             {
                 // Create new inventory item
                 PlayerInventoryItem newInventoryItem = new PlayerInventoryItem
                 {
-                    Id = Guid.NewGuid(),
-                    Item = item,
-                    Count = 1,
+                    Count = amount,
                     UserId = user.Id,
-                    User = user,
+                    ItemId = item.Id,
                 };
                 user.Inventory.Add(newInventoryItem);
             }
+
+            // Save changes to DB
+            this.db.Users.Update(user);
+            await this.db.SaveChangesAsync();
         }
 
-        public void RemoveItemFromUser(User user, Guid playerInventoryItemId, int amount)
+        /// <summary>
+        /// Remove a number of an item from this user.
+        /// </summary>
+        /// <param name="user">User from which to remove this/these item(s)</param>
+        /// <param name="playerInventoryItemId">PlayerInventoryItem "slot" from which to remove items</param>
+        /// <param name="amount">The amount of this item to remove. Will throw an exception if this is greater than the amount the User currently has</param>
+        public async Task RemoveItemFromUser(User user, Guid playerInventoryItemId, int amount)
         {
             PlayerInventoryItem existingInventoryItem = GetInventoryItemById(user, playerInventoryItemId);
 
             // Validate user has an item with this id
             if (existingInventoryItem == null)
             {
-                throw new System.ArgumentException($"Cannot remove item from user; User '{user.Id}' has no inventory item with id '{playerInventoryItemId}'");
+                throw new System.ArgumentException($"Cannot remove item from user. User '{user.Id}' has no inventory item with id '{playerInventoryItemId}'");
             }
             // Validate user has enough of this item to remove
             else if (existingInventoryItem.Count < amount)
             {
-                throw new InvalidOperationException($"Cannot remove {amount} of item from user; User '{user.Id}' only has {existingInventoryItem.Count} of item '{playerInventoryItemId}'");
+                throw new InvalidOperationException($"Cannot remove {amount} of item from user. User '{user.Id}' only has {existingInventoryItem.Count} of item '{playerInventoryItemId}'");
             }
 
             // Decrease amount
@@ -81,53 +127,80 @@ namespace PetGame.Business
                 // Remove from user entirely
                 user.Inventory.Remove(existingInventoryItem);
             }
+
+            // Save changes to DB
+            this.db.Users.Update(user);
+            await this.db.SaveChangesAsync();
         }
 
-        public void Login(string userId)
+        /// <summary>
+        /// Log the user in. Will create them in the DB if they don't exist
+        /// </summary>
+        /// <param name="userAuthId">Unique ID for the user</param>
+        public async Task Login(string userAuthId)
         {
-            User existingUser = GetUserById(userId);
+            User existingUser = await GetUserByAuthId(userAuthId);
 
             if (existingUser == null)
             {
-                this.userRepository.Add(CreateNewUser(userId));
+                await CreateNewUser(userAuthId);
             }
         }
 
-        private User CreateNewUser(string userId)
+        /// <summary>
+        /// Look up a PlayerInventoryItem by ID, for a given User.
+        /// </summary>
+        /// <param name="user">User to look up this PlayerInventoryItem for</param>
+        /// <param name="playerInventoryItemId">Id of the existing PlayerInventoryItem to look up</param>
+        /// <returns>PlayerInventoryItem object if one already exists for this User with this ID, null otherwise</returns>
+        public PlayerInventoryItem GetInventoryItemById(User user, Guid playerInventoryItemId)
+        {
+            return user.Inventory.SingleOrDefault((PlayerInventoryItem inventoryItem) => inventoryItem.Id == playerInventoryItemId);
+        }
+
+        /// <summary>
+        /// Look up a PlayerInventoryItem by the ID of a particular Item, for a given User.
+        /// </summary>
+        /// <param name="user">User to look up this PlayerInventoryItem for</param>
+        /// <param name="itemId">Id of the Item to look up an existing PlayerInventoryItem by</param>
+        /// <returns>PlayerInventoryItem object if one already exists for this User with the item with this ID, null otherwise</returns>
+        public PlayerInventoryItem GetInventoryItemByItemId(User user, Guid itemId)
+        {
+            return user.Inventory.SingleOrDefault((PlayerInventoryItem inventoryItem) => inventoryItem.Item.Id == itemId);
+        }
+
+        /// <summary>
+        /// Create a new User in the Database and populate them with various data.
+        /// </summary>
+        /// <param name="userAuthId">Unique ID for the new user</param>
+        /// <returns>Newly created User object</returns>
+        private async Task<User> CreateNewUser(string userAuthId)
         {
             Random rng = new Random();
 
             // Create new user object
             User newUser = new User
             {
-                Id = userId,
+                AuthId = userAuthId,
                 Username = $"User {rng.Next(10000, 99999)}",
-                Inventory = new List<PlayerInventoryItem>(),
             };
+
+            // Save new user to DB first
+            await this.db.Users.AddAsync(newUser);
+            await this.db.SaveChangesAsync();
+
+            // Refresh user from DB
+            newUser = await GetUserByAuthId(userAuthId);
 
             // Add random items to new user
             IList<Item> AllItems = this.itemService.GetAllItems();
             for (int i = 0; i < rng.Next(4, 7); i++)
             {
-                this.AddItemToUser(newUser, AllItems[rng.Next(AllItems.Count)].Id);
+                // @TODO don't make a trip to the DB every time
+                await this.AddItemToUser(newUser, AllItems[rng.Next(AllItems.Count)].Id, 1);
             }
 
             return newUser;
-        }
-
-        public User GetUserById(string userId)
-        {
-            return this.userRepository.GetAll().FirstOrDefault((User user) => user.Id == userId);
-        }
-
-        public PlayerInventoryItem GetInventoryItemById(User user, Guid playerInventoryItemId)
-        {
-            return user.Inventory.FirstOrDefault((PlayerInventoryItem inventoryItem) => inventoryItem.Id == playerInventoryItemId);
-        }
-
-        private PlayerInventoryItem GetInventoryItemByItemId(User user, Guid itemId)
-        {
-            return user.Inventory.FirstOrDefault((PlayerInventoryItem inventoryItem) => inventoryItem.Item.Id == itemId);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PetGame.Data;
 
 namespace PetGame.Business
@@ -7,7 +8,9 @@ namespace PetGame.Business
     public interface ITakingTreeService
     {
         IList<TakingTreeInventoryItem> GetAllItems();
-        void UserDonateItem(Guid playerInventoryItemId, User user);
-        void UserClaimItem(Guid takingTreeInventoryItemId, User user);
+        Task UserDonateItem(User user, Guid playerInventoryItemId);
+        Task UserClaimItem(User user, Guid takingTreeInventoryItemId);
+        TakingTreeInventoryItem GetTakingTreeInventoryItemById(Guid takingTreeInventoryItemId);
+
     }
 }

@@ -1,64 +1,75 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PetGame.Data;
 
 namespace PetGame.Business
 {
     public class TakingTreeService : ITakingTreeService
     {
-        private readonly IRepository<TakingTreeInventoryItem> takingTreeInventory;
+        private readonly PetGameContext db;
         private readonly IUserService userService;
         private readonly IItemService itemService;
 
-        public TakingTreeService(IRepository<TakingTreeInventoryItem> takingTreeInventory, IUserService userService, IItemService itemService)
+        public TakingTreeService(PetGameContext db, IUserService userService, IItemService itemService)
         {
-            this.takingTreeInventory = takingTreeInventory;
+            this.db = db;
             this.userService = userService;
             this.itemService = itemService;
         }
 
         public IList<TakingTreeInventoryItem> GetAllItems()
         {
-            return this.takingTreeInventory.GetAll().ToList();
+            return this.db.TakingTreeInventoryItems
+                .Include(item => item.Item)
+                .ToList();
         }
 
-        public void UserDonateItem(Guid playerInventoryItemId, User user)
+        public async Task UserDonateItem(User user, Guid playerInventoryItemId)
         {
-            // Lookup item by ID
-            PlayerInventoryItem playerInventoryItem = this.userService.GetInventoryItemById(user, playerInventoryItemId);
+            // @TODO less trips to the database
 
-            // Validate item ID
+            // Fetch and validate playerInventoryItemId
+            PlayerInventoryItem playerInventoryItem = this.userService.GetInventoryItemById(user, playerInventoryItemId);
             if (playerInventoryItem == null)
             {
-                throw new ArgumentException($"Cannot add item to taking tree - player has no item with id '{playerInventoryItemId}'", nameof(playerInventoryItemId));
+                throw new ArgumentException($"Cannot donate item to taking tree. Player has no item with id '{playerInventoryItemId}'", nameof(playerInventoryItemId));
             }
 
-            // Remove item from user (will throw if invalid)
-            this.userService.RemoveItemFromUser(user, playerInventoryItemId, 1);
+            // Remove item from user
+            await this.userService.RemoveItemFromUser(user, playerInventoryItemId, 1);
             // Add item to taking tree
-            this.takingTreeInventory.Add(new TakingTreeInventoryItem
+            await this.db.TakingTreeInventoryItems.AddAsync(new TakingTreeInventoryItem
             {
-                Id = Guid.NewGuid(),
-                Item = playerInventoryItem.Item,
+                ItemId = playerInventoryItem.Item.Id,
             });
+            await this.db.SaveChangesAsync();
         }
 
-        public void UserClaimItem(Guid takingTreeInventoryItemId, User user)
+        public async Task UserClaimItem(User user, Guid takingTreeInventoryItemId)
         {
-            // Look up / validate item exists in Taking Tree inventory
-            TakingTreeInventoryItem existingInventoryItem = this.takingTreeInventory.GetAll()
-                .FirstOrDefault((TakingTreeInventoryItem inventoryItem) => inventoryItem.Id == takingTreeInventoryItemId);
-
+            // Fetch and validate takingTreeInventoryItemId
+            TakingTreeInventoryItem existingInventoryItem = GetTakingTreeInventoryItemById(takingTreeInventoryItemId);
             if (existingInventoryItem == null)
             {
-                throw new ArgumentException($"Cannot take item from taking tree - no taking tree inventory item exists with id '{takingTreeInventoryItemId}'", nameof(takingTreeInventoryItemId));
+                throw new ArgumentException($"Cannot take item from taking tree. No taking tree inventory item exists with id '{takingTreeInventoryItemId}'", nameof(takingTreeInventoryItemId));
             }
 
             // Remove this item from the taking tree
-            this.takingTreeInventory.Remove(existingInventoryItem);
+            this.db.TakingTreeInventoryItems.Remove(existingInventoryItem);
+            await this.db.SaveChangesAsync();
+
             // Add this item to the user
-            this.userService.AddItemToUser(user, existingInventoryItem.Item.Id);
+            await this.userService.AddItemToUser(user, existingInventoryItem.Item.Id, 1);
+        }
+
+        public TakingTreeInventoryItem GetTakingTreeInventoryItemById(Guid takingTreeInventoryItemId)
+        {
+            return this.db.TakingTreeInventoryItems
+                .Include(item => item.Item)
+                .SingleOrDefault((TakingTreeInventoryItem inventoryItem) => inventoryItem.Id == takingTreeInventoryItemId);
         }
     }
 }

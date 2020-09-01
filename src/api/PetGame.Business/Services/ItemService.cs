@@ -8,24 +8,24 @@ namespace PetGame.Business
 {
     public class ItemService : IItemService
     {
+        private readonly PetGameContext db;
         private readonly ILogger<ItemService> logger;
-        private readonly IItemRepository itemRepository;
 
 
-        public ItemService(IItemRepository itemRepository, ILogger<ItemService> logger)
+        public ItemService(PetGameContext db, ILogger<ItemService> logger)
         {
-            this.itemRepository = itemRepository;
+            this.db = db;
             this.logger = logger;
         }
 
         public IList<Item> GetAllItems()
         {
-            return this.itemRepository.GetAll().ToList();
+            return this.db.Items.ToList();
         }
 
         public Item GetItemById(Guid id)
         {
-            return this.itemRepository.GetAll().FirstOrDefault((Item item) => item.Id == id);
+            return this.db.Items.SingleOrDefault((Item item) => item.Id == id);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PetGame.Data;
 
 namespace PetGame.Business
@@ -12,10 +13,12 @@ namespace PetGame.Business
         IList<User> debug_GetAllUsers();
 
 
-        User GetUserById(string userId);
-        void AddItemToUser(User user, Guid itemId);
-        void RemoveItemFromUser(User user, Guid playerInventoryItemId, int amount);
+        Task<User> GetUserByAuthId(string userAuthId);
+        User GetUserById(Guid userId);
+        Task AddItemToUser(User user, Guid itemId, int amount);
+        Task RemoveItemFromUser(User user, Guid playerInventoryItemId, int amount);
+        Task Login(string userAuthId);
         PlayerInventoryItem GetInventoryItemById(User user, Guid playerInventoryItemId);
-        void Login(string userId);
+        PlayerInventoryItem GetInventoryItemByItemId(User user, Guid itemId);
     }
 }

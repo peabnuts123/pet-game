@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.EntityFrameworkCore;
 
 namespace PetGame.Web
 {
@@ -27,32 +28,34 @@ namespace PetGame.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddTransient<LookupUserObjectMiddleware>();
+            string[] requiredConfigValues = new string[] {
+                "Auth0:Domain",
+                "Auth0:ClientId",
+                "Auth0:ClientSecret",
+                "ConnectionStrings:PetGameContext",
+            };
+            foreach (string requiredConfig in requiredConfigValues)
+            {
+                if (String.IsNullOrEmpty(Configuration[requiredConfig]))
+                {
+                    throw new ApplicationException($"Configuration value '{requiredConfig}' is required and cannot be null or empty.");
+                }
+            }
 
-            // Singletons
-            services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
-            services.AddSingleton(typeof(IItemRepository), typeof(ItemRepository));
+            // ASP.NET
+            services.AddControllers();
 
             // Services
             services.AddTransient(typeof(ITakingTreeService), typeof(TakingTreeService));
             services.AddTransient(typeof(IUserService), typeof(UserService));
             services.AddTransient(typeof(IItemService), typeof(ItemService));
 
-            // CONFIGURATION FOR AUTH0
-            string[] requiredConfigValues = new string[] {
-                "Auth0:Domain",
-                "Auth0:ClientId",
-                "Auth0:ClientSecret",
-            };
-            foreach (string requiredConfig in requiredConfigValues)
-            {
-                if (String.IsNullOrEmpty(Configuration[requiredConfig]))
-                {
-                    throw new ApplicationException($"Auth0 configuration value '{requiredConfig}' cannot be null or empty.");
-                }
-            }
+            // DB
+            services.AddDbContext<PetGameContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("PetGameContext"))
+            );
 
+            // CONFIGURATION FOR AUTH0
             // > Cookie-based auth
             services.AddAuthentication(options =>
             {
@@ -92,13 +95,11 @@ namespace PetGame.Web
                 options.Events = new OpenIdConnectEvents
                 {
                     // Handle login success
-                    OnTokenValidated = (context) =>
+                    OnTokenValidated = async (context) =>
                     {
-                        string userId = context.SecurityToken.Subject;
+                        string userAuthId = context.SecurityToken.Subject;
                         IUserService userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        userService.Login(userId);
-
-                        return Task.CompletedTask;
+                        await userService.Login(userAuthId);
                     },
 
                     // Handle Logout
@@ -163,7 +164,6 @@ namespace PetGame.Web
             });
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<LookupUserObjectMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
