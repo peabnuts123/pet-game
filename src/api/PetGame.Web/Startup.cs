@@ -155,7 +155,7 @@ namespace PetGame.Web
             app.UseRouting();
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:8080")
+                builder.WithOrigins("http://localhost:8080", "https://pet-game.netlify.app")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
