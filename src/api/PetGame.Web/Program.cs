@@ -20,7 +20,9 @@ namespace PetGame.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                        .UseStartup<Startup>()
+                        .UseUrls($"http://+:{Environment.GetEnvironmentVariable("PORT")}");
                 });
     }
 }

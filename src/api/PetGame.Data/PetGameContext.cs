@@ -1,5 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace PetGame.Data
 {
@@ -9,13 +10,25 @@ namespace PetGame.Data
 
         public PetGameContext() { }
 
-        /// <summary>
-        /// Design-time connection string for DB (e.g. running migrations). From environment variable 'ConnectionStrings__PetGameContext',
-        /// which can also be used for project run-time connection (i.e. `dotnet run`)
-        /// </summary>
-        /// <param name="options"></param>
-        protected override void OnConfiguring(DbContextOptionsBuilder options) =>
-            options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionStrings__PetGameContext"));
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            // Parse `postgres://[user]:[password]@[host]/[database]`-formatted connection string
+            string databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            Uri databaseUri = new Uri(databaseUrl);
+            string[] userInfo = Uri.UnescapeDataString(databaseUri.UserInfo).Split(':');
+
+            var builder = new NpgsqlConnectionStringBuilder
+            {
+                Host = databaseUri.Host,
+                Port = databaseUri.Port,
+                Username = userInfo[0],
+                Password = userInfo[1],
+                Database = databaseUri.LocalPath.TrimStart('/'),
+                SslMode = SslMode.Prefer,
+                TrustServerCertificate = true, // @TODO validate server certificate
+            };
+            options.UseNpgsql(builder.ToString());
+        }
 
 
         // Tables

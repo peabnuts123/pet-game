@@ -32,7 +32,7 @@ namespace PetGame.Web
                 "Auth0:Domain",
                 "Auth0:ClientId",
                 "Auth0:ClientSecret",
-                "ConnectionStrings:PetGameContext",
+                "DATABASE_URL",
             };
             foreach (string requiredConfig in requiredConfigValues)
             {
@@ -51,9 +51,7 @@ namespace PetGame.Web
             services.AddTransient(typeof(IItemService), typeof(ItemService));
 
             // DB
-            services.AddDbContext<PetGameContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("PetGameContext"))
-            );
+            services.AddDbContext<PetGameContext>();
 
             // CONFIGURATION FOR AUTH0
             // > Cookie-based auth
@@ -152,7 +150,7 @@ namespace PetGame.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseCors(builder =>
