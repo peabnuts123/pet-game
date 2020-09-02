@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace PetGame.Web
 {
@@ -66,6 +66,15 @@ namespace PetGame.Web
             {
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.HttpOnly = false;
+                options.Events = new CookieAuthenticationEvents
+                {
+                    // Do not redirect to login, just tell the user to go away
+                    OnRedirectToLogin = async (context) =>
+                    {
+                        context.Response.StatusCode = 401;
+                        await context.Response.WriteAsync("Not authorized");
+                    }
+                };
             })
             // > OIDC configuration
             .AddOpenIdConnect("Auth0", options =>
@@ -140,6 +149,16 @@ namespace PetGame.Web
 
             //     });
             // });
+
+            // Reverse-proxy configuration for Heroku
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -150,7 +169,25 @@ namespace PetGame.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            // app.UseHttpsRedirection();
+            app.UseForwardedHeaders();
+
+            // Really simple logging middleware
+            // @TODO put into a class
+            app.Use(async (context, next) =>
+            {
+                ILogger<Startup> logger = context.RequestServices.GetRequiredService<ILogger<Startup>>();
+                string message = "";
+                message += $"[{DateTime.Now.ToString("o")}] Request - Trace ID {context.TraceIdentifier}\n";
+                message += $"{context.Request.Method} {context.Request.Scheme}://{context.Request.Host}/{context.Request.Path} {context.Request.Protocol}\n";
+                foreach (var header in context.Request.Headers)
+                {
+                    message += $"{header.Key}: {header.Value}\n";
+                }
+                message += "\n";
+                logger.LogInformation(message);
+
+                await next();
+            });
 
             app.UseRouting();
             app.UseCors(builder =>
