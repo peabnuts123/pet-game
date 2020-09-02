@@ -20,6 +20,11 @@ namespace PetGame.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    string hostProtocol = Environment.GetEnvironmentVariable("HOST_PROTOCOL");
+                    if (String.IsNullOrEmpty(hostProtocol))
+                    {
+                        hostProtocol = "http";
+                    }
                     string port = Environment.GetEnvironmentVariable("PORT");
                     if (String.IsNullOrEmpty(port))
                     {
@@ -28,7 +33,7 @@ namespace PetGame.Web
 
                     webBuilder
                         .UseStartup<Startup>()
-                        .UseUrls($"http://+:{port}");
+                        .UseUrls($"{hostProtocol}://+:{port}");
                 });
     }
 }
