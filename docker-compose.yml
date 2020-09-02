@@ -21,7 +21,7 @@ services:
     environment:
       Auth0__ClientSecret: "${DOCKER_API_AUTH0_CLIENT_SECRET}"
       DATABASE_URL: "${DOCKER_DATABASE_URL}"
-      PORT: "${PORT}"
+      PORT: "${DOCKER_PORT}"
     ports:
       # @TODO change production port
-      - '5000:${PORT}/tcp'
+      - '5000:${DOCKER_PORT}/tcp'
