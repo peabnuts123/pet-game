@@ -172,22 +172,8 @@ namespace PetGame.Web
             app.UseForwardedHeaders();
 
             // Really simple logging middleware
-            // @TODO put into a class
-            app.Use(async (context, next) =>
-            {
-                ILogger<Startup> logger = context.RequestServices.GetRequiredService<ILogger<Startup>>();
-                string message = "";
-                message += $"[{DateTime.Now.ToString("o")}] Request - Trace ID {context.TraceIdentifier}\n";
-                message += $"{context.Request.Method} {context.Request.Scheme}://{context.Request.Host}/{context.Request.Path} {context.Request.Protocol}\n";
-                foreach (var header in context.Request.Headers)
-                {
-                    message += $"{header.Key}: {header.Value}\n";
-                }
-                message += "\n";
-                logger.LogInformation(message);
+            app.UseMiddleware<RequestLoggingMiddleware>();
 
-                await next();
-            });
 
             app.UseRouting();
             app.UseCors(builder =>
