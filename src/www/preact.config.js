@@ -37,7 +37,7 @@ export default {
       //  within a string, so that the resulting code receives a string
 
       // @TODO BETTER environment config
-      API_BASE: JSON.stringify(process.env.NODE_ENV === 'development' ? `https://localhost:5001` : `https://pet-game-dev.herokuapp.com`),
+      API_BASE: JSON.stringify(process.env.NODE_ENV === 'development' ? `https://localhost:5000` : `https://pet-game-dev.herokuapp.com`),
     }));
   },
 };
