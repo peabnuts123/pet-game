@@ -33,6 +33,7 @@ namespace PetGame.Web
                 "Auth0:ClientId",
                 "Auth0:ClientSecret",
                 "DATABASE_URL",
+                "WebClient:AbsoluteUrl",
             };
             foreach (string requiredConfig in requiredConfigValues)
             {
@@ -44,6 +45,7 @@ namespace PetGame.Web
 
             // ASP.NET
             services.AddControllers();
+            services.AddTransient<RequestLoggingMiddleware>();
 
             // Services
             services.AddTransient(typeof(ITakingTreeService), typeof(TakingTreeService));
@@ -142,7 +144,7 @@ namespace PetGame.Web
             // {
             //     options.AddDefaultPolicy(builder =>
             //     {
-            //         builder.WithOrigins("http://localhost:8080/")
+            //         builder.WithOrigins(Configuration["WebClient:AbsoluteUrl"])
             //             .AllowAnyMethod()
             //             .AllowAnyHeader()
             //             .AllowCredentials();
@@ -178,7 +180,7 @@ namespace PetGame.Web
             app.UseRouting();
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:8080", "https://pet-game.netlify.app")
+                builder.WithOrigins(Configuration["WebClient:AbsoluteUrl"])
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
