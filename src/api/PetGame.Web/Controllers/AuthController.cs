@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PetGame.Business;
@@ -22,11 +23,13 @@ namespace PetGame.Web
     {
         private readonly IUserService userService;
         private readonly ILogger<AuthController> logger;
+        private readonly IConfiguration appSettings;
 
-        public AuthController(IUserService userService, ILogger<AuthController> logger)
+        public AuthController(IUserService userService, ILogger<AuthController> logger, IConfiguration appSettings)
         {
             this.userService = userService;
             this.logger = logger;
+            this.appSettings = appSettings;
         }
 
         [HttpGet]
@@ -69,9 +72,7 @@ namespace PetGame.Web
                 // Indicate here where Auth0 should redirect the user after a logout.
                 // Note that the resulting absolute Uri must be added to the
                 // **Allowed Logout URLs** settings for the app.
-
-                // @TODO don't hard code this - request.referer?
-                RedirectUri = "http://localhost:8080"
+                RedirectUri = this.appSettings["WebClient:AbsoluteUrl"],
             });
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
