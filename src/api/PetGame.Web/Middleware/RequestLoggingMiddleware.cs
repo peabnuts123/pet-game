@@ -23,7 +23,7 @@ namespace PetGame.Web
         {
             string message = "";
             message += $"[{DateTime.Now.ToString("o")}] Request - Trace ID {context.TraceIdentifier}\n";
-            message += $"{context.Request.Method} {context.Request.Scheme}://{context.Request.Host}/{context.Request.Path} {context.Request.Protocol}\n";
+            message += $"{context.Request.Method} {context.Request.Scheme}://{context.Request.Host}{context.Request.Path} {context.Request.Protocol}\n";
             foreach (var header in context.Request.Headers)
             {
                 message += $"{header.Key}: {CensorHeader(header)}\n";
