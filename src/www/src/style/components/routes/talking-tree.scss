@@ -1,0 +1,88 @@
+// ========================
+// Taking Tree Route
+// ========================
+// .taking-tree {}
+
+// ========================
+// ELEMENTS
+// ========================
+// .taking-tree__title {}
+
+.taking-tree__whats-under-the-tree-title {
+  margin-top: 2 * $m;
+}
+
+// .taking-tree__loading-text {}
+
+.taking-tree__item-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.taking-tree__item {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+  height: 120px;
+  background-color: rgba($primary, 0.15);
+  margin: $m / 2;
+  color: $bark;
+
+  @include media-query('tablet') {
+    width: 160px;
+    height: 160px;
+  }
+
+  &.is-enabled {
+    box-shadow: 0 4px 4px rgba($black, 0.1);
+    transition: box-shadow 0.2s ease-in-out, background-color 0.1s ease-in-out;
+    user-select: none;
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba($primary, 0.4);
+      box-shadow: 0 4px 8px rgba($black, 0.2);
+    }
+  }
+}
+
+.taking-tree__item__label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: $font-size-h5;
+  line-height: 1rem;
+  flex-grow: 1;
+  padding: $m;
+
+  @include media-query('tablet') {
+    font-size: $font-size-h4;
+  }
+}
+
+.taking-tree__item__button {
+  display: block;
+  height: 30px;
+
+  .button {
+    height: 100%;
+    width: 100%;
+  }
+
+  @include media-query('tablet') {
+    height: 40px;
+  }
+}
+
+.taking-tree__logged-out-text {
+  font-style: italic;
+}
+
+// ========================
+// MODIFIERS
+// ========================
+.taking-tree__text--strikethrough {
+  text-decoration: line-through;
+}

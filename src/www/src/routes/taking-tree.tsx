@@ -1,8 +1,10 @@
-import { h, FunctionalComponent, Fragment } from "preact";
+import { h, FunctionalComponent } from "preact";
 import { useEffect } from "preact/hooks";
+import { Link } from "preact-router";
 import { observer } from "mobx-react-lite";
 
 import { useStores } from '@app/stores';
+import classNames from "classnames";
 
 const TakingTreeRoute = observer(() => {
   const { TakingTreeStore, UserStore } = useStores();
@@ -16,46 +18,54 @@ const TakingTreeRoute = observer(() => {
   }, [TakingTreeStore]);
 
   const claimItem = async (takingTreeInventoryItemId: string): Promise<void> => {
+    if (UserStore.isUserLoggedOut) {
+      // No-op
+      return;
+    }
+
     await TakingTreeStore.claimItem(takingTreeInventoryItemId);
     await UserStore.refreshUserProfile();
   };
 
   return (
-    <Fragment>
-      <h1>The Taking Tree</h1>
+    <div class="taking-tree">
+      <h1 class="taking-tree__title">The Taking Tree</h1>
 
-      {UserStore.isUserLoggedIn ? (
-        <p>You are logged in. You can take and also donate items to The Taking Tree.</p>
-      ) : (
-          <p>You must be logged in to take items from The Taking Tree.</p>
-        )}
+      <p>It&apos;s The Taking Tree! Everybody&apos;s favourite place to camp out and <span class="taking-tree__text--strikethrough">mercilessly snatch anything you can</span> have a picnic. People leave items here from time to time for others to take, see if you can get your hands on something great!</p>
+
 
       {/* Tree contents */}
-      <h2>Items under the tree</h2>
+      <h2 class="taking-tree__whats-under-the-tree-title">What&apos;s under the tree right now?</h2>
 
       {!hasLoadedItems ? (
         /* Loading state */
-        <em>Loading items...</em>
+        <p class="taking-tree__loading-text">Loading items...</p>
       ) : (
           /* Finished loading */
           (!hasItems ? (
             /* Tree inventory is empty */
-            <em>There&apos;s nothing under the tree right now.</em>
+            <p>There&apos;s nothing under the tree right now. Why don&apos;t you head to <Link href="/user-profile">your profile</Link> and donate something?</p>
           ) : (
               /* Tree inventory contents */
-              <ul>
+              <div class="taking-tree__item-list">
                 {inventoryItems!.map((inventoryItem) => (
-                  <li key={inventoryItem.id}>
-                    {inventoryItem.item.name} &nbsp;
+                  <div class={classNames('taking-tree__item', { 'is-enabled': UserStore.isUserLoggedIn })} onClick={() => claimItem(inventoryItem.id)} key={inventoryItem.id}>
+                    <div class="taking-tree__item__label">{inventoryItem.item.name}</div>
                     {UserStore.isUserLoggedIn && (
-                      <button class="button" onClick={() => claimItem(inventoryItem.id)}>Claim</button>
+                      <div class="taking-tree__item__button">
+                        <button class="button">Claim</button>
+                      </div>
                     )}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             ))
         )}
-    </Fragment>
+
+      {UserStore.isUserLoggedOut && (
+        <p class="taking-tree__logged-out-text">You must be logged in to claim items from The Taking Tree.</p>
+      )}
+    </div>
   );
 }) as FunctionalComponent;
 
