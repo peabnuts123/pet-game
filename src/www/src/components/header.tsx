@@ -15,11 +15,20 @@ const Header = observer(() => {
   if (UserStore.isUserLoggedOut) {
     setUserDropdownVisible(false);
   }
+  // @TODO close mobile menu if window goes to tablet breakpoint
+
+  const hideMenus = (): void => {
+    setUserDropdownVisible(false);
+    setMobileMenuVisible(false);
+  };
 
   return (
     <Fragment>
-      {mobileMenuVisible && (
-        <div className={classNames("header__nav--mobile__background", { 'is-open': mobileMenuVisible })} onClick={() => setMobileMenuVisible(false)} />
+      {(mobileMenuVisible) && (
+        <div className={classNames("header__nav--mobile__background", { 'is-open': mobileMenuVisible })} onClick={() => hideMenus()} />
+      )}
+      {(userDropdownVisible) && (
+        <div className={classNames("header__nav--desktop__background")} onClick={() => hideMenus()} />
       )}
 
       <header class="header">
@@ -36,7 +45,7 @@ const Header = observer(() => {
                 <strong>{UserStore.currentUserProfile!.username}</strong> ▾
               </a>
             ) : (
-                <Link class="header__nav-item--desktop" activeClassName="is-active" href="/login">Log in</Link>
+                <Link class="header__nav-item--desktop" activeClassName="is-active" href="/login">Log in / Register</Link>
               )}
 
             {userDropdownVisible && (

@@ -57,6 +57,7 @@
   width: 200px;
   background: $primary;
   padding: $m;
+  z-index: 20; // higher than .header__nav--desktop__background
 }
 
 .header__user-dropdown__item {
@@ -147,4 +148,13 @@
       cursor: initial;
     }
   }
+}
+
+.header__nav--desktop__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10; // Lower than .header__user-dropdown
 }
