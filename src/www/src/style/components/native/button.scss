@@ -19,10 +19,12 @@ $button-height: 40px;
 
   &:hover {
     background-color: darken($primary, 5%);
+    color: $secondary;
   }
 
   &:active {
     background-color: darken($primary, 10%);
+    color: $secondary;
   }
 }
 
@@ -32,9 +34,11 @@ $button-height: 40px;
 
   &:hover {
     background-color: darken($secondary, 5%);
+    color: $primary;
   }
 
   &:active {
     background-color: darken($secondary, 10%);
+    color: $primary;
   }
 }

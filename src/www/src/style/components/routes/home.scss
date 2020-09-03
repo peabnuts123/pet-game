@@ -1,0 +1,50 @@
+
+// ========================
+// Home Route
+// ========================
+// .home {}
+
+// ========================
+// ELEMENTS
+// ========================
+// .home__title {}
+
+// .home__description {}
+
+.home__title {
+  margin-bottom: $m;
+}
+
+.home__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.home__list-item {
+  display: block;
+  margin-bottom: $m;
+
+  a {
+    @extend .button;
+    display: flex;
+    background-color: $grey-light;
+    height: 80px;
+    font-size: $font-size-h3;
+
+    &:hover {
+      background-color: $primary;
+    }
+  }
+}
+
+
+// ========================
+// MODIFIERS
+// ========================
+
+// ========================
+// UI STATES
+// ========================

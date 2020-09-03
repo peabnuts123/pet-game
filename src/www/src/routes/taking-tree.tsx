@@ -27,7 +27,7 @@ const TakingTreeRoute = observer(() => {
       {UserStore.isUserLoggedIn ? (
         <p>You are logged in. You can take and also donate items to The Taking Tree.</p>
       ) : (
-          <p>You must log in to take items from The Taking Tree.</p>
+          <p>You must be logged in to take items from The Taking Tree.</p>
         )}
 
       {/* Tree contents */}
