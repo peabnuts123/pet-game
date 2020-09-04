@@ -18,9 +18,9 @@ namespace PetGame.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup()
         {
-            Configuration = configuration;
+            Configuration = Program.Configuration;
         }
 
         public IConfiguration Configuration { get; }

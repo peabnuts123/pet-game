@@ -7,8 +7,6 @@ services:
     restart: unless-stopped
     env_file: src/devdb/.env
     volumes:
-      # Timezone
-      - '${LOCAL_TIME_MOUNT:-/etc/localtime}:/etc/localtime:ro'
       # Data directory
       - './src/devdb/data:/var/lib/postgresql/data'
     ports:
@@ -18,11 +16,12 @@ services:
     build: ./src/api
     container_name: petgame_api
     restart: unless-stopped
+    volumes:
+      - '${ASPNETCORE_Kestrel__Certificates__Default__Path}:/app/aspnetapp.pfx:ro'
     environment:
-      Auth0__ClientSecret: "${DOCKER_API_AUTH0_CLIENT_SECRET}"
-      DATABASE_URL: "${DOCKER_DATABASE_URL}"
-      PORT: "${DOCKER_PORT}"
-      HOST_PROTOCOL: "${DOCKER_HOST_PROTOCOL}"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "${ASPNETCORE_Kestrel__Certificates__Default__Password}"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /app/aspnetapp.pfx
+      ASPNETCORE_ENVIRONMENT: Docker
+      PORT: 8080 # Must match port mounted in `ports`
     ports:
-      # @TODO change production port
-      - '5000:${DOCKER_PORT}/tcp'
+      - '5000:8080/tcp'

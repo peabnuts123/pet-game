@@ -27,5 +27,10 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 
-.env
 mono_crash*.json
+
+# Sensitive config
+.env
+!.env.sample
+_secrets*.json
+!_secrets.sample.json
