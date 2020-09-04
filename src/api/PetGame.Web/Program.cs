@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace PetGame.Web
 {
@@ -22,19 +22,42 @@ namespace PetGame.Web
             .AddEnvironmentVariables()
             .Build();
 
-            CreateHostBuilder(args).Build().Run();
+        public static int Main(string[] args)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            try
+            {
+                Log.Information("Starting web host");
+                CreateHostBuilder(args).Build().Run();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    string hostProtocol = Environment.GetEnvironmentVariable("HOST_PROTOCOL");
+                    string hostProtocol = Configuration["HOST_PROTOCOL"];
                     if (String.IsNullOrEmpty(hostProtocol))
                     {
                         hostProtocol = "http";
                     }
-                    string port = Environment.GetEnvironmentVariable("PORT");
+                    string port = Configuration["PORT"];
                     if (String.IsNullOrEmpty(port))
                     {
                         port = "5000";

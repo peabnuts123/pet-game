@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.HttpOverrides;
+using Serilog;
 
 namespace PetGame.Web
 {
@@ -45,7 +46,6 @@ namespace PetGame.Web
 
             // ASP.NET
             services.AddControllers();
-            services.AddTransient<RequestLoggingMiddleware>();
 
             // Services
             services.AddTransient(typeof(ITakingTreeService), typeof(TakingTreeService));
@@ -173,8 +173,7 @@ namespace PetGame.Web
 
             app.UseForwardedHeaders();
 
-            // Really simple logging middleware
-            app.UseMiddleware<RequestLoggingMiddleware>();
+            app.UseSerilogRequestLogging();
 
 
             app.UseRouting();
