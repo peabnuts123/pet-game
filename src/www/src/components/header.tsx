@@ -3,9 +3,17 @@ import { Link } from "preact-router/match";
 import { observer } from "mobx-react-lite";
 import { useState } from "preact/hooks";
 import classNames from 'classnames';
+import {
+  ChevronDown as ChevronDownIcon,
+  ChevronUp as ChevronUpIcon,
+  LogIn as LogInIcon,
+  LogOut as LogOutIcon,
+  User as UserIcon,
+  Menu as MenuIcon,
+} from 'react-feather';
 
 import { useStores } from "@app/stores";
-import NeedsUserProfile from "@app/components/needs-user-profile";
+import LoadingSpinner from "./loading-spinner";
 
 const Header = observer(() => {
   const [userDropdownVisible, setUserDropdownVisible] = useState<boolean>(false);
@@ -38,56 +46,92 @@ const Header = observer(() => {
             Pet Game
           </Link>
 
+          {/* DESKTOP NAV */}
           <nav class="header__nav--desktop">
+            {/* Links */}
             <Link class="header__nav-item--desktop" activeClassName="is-active" href="/taking-tree">The Taking Tree</Link>
 
-            {UserStore.isUserLoggedIn ? (
-              <a class="header__nav-item--desktop" onClick={() => setUserDropdownVisible(!userDropdownVisible)}>
-                <strong>{UserStore.currentUserProfile!.username}</strong> ▾
-              </a>
-            ) : (
+            {/* Loading spinner */}
+            {UserStore.isFetchingUserProfile && (
               <div class="header__nav-item--desktop">
-                <NeedsUserProfile inverted={true}>
-                  <Link activeClassName="is-active" href="/login">Log in / Register</Link>
-                </NeedsUserProfile>
+                <LoadingSpinner inverted={true} />
               </div>
-              )}
+            )}
 
+            {/* Profile button */}
+            {UserStore.isUserLoggedIn && (
+              /* Profile */
+              <a class="header__nav-item--desktop" onClick={() => setUserDropdownVisible(!userDropdownVisible)}>
+                <strong>{UserStore.currentUserProfile!.username}</strong>
+                {userDropdownVisible ? (
+                  <ChevronUpIcon />
+                ) : (
+                    <ChevronDownIcon size={20} />
+                  )}
+              </a>
+            )}
+
+            {/* Log in button */}
+            {UserStore.isUserLoggedOut && (
+              <Link class="header__nav-item--desktop" activeClassName="is-active" href="/login"><LogInIcon className="u-margin-right-md" /> Log in / Register</Link>
+            )}
+
+            {/* Desktop dropdown */}
             {userDropdownVisible && (
               <div class="header__user-dropdown">
                 <Link class="header__user-dropdown__item" activeClassName="is-active" href="/user-profile">
-                  User profile
+                  <UserIcon className="u-margin-right-md" /> User profile
                 </Link>
 
-                <Link class="header__user-dropdown__item" activeClassName="is-active" href="/logout">Log out</Link>
+                <Link class="header__user-dropdown__item" activeClassName="is-active" href="/logout">
+                  <LogOutIcon className="u-margin-right-md" /> Log out
+                </Link>
               </div>
             )}
           </nav>
 
+          {/* MOBILE NAV */}
           <nav class="header__nav--mobile">
+            {/* Menu toggle */}
             <div class="header__nav-item--mobile">
-              <button class="button button--secondary" onClick={() => setMobileMenuVisible(!mobileMenuVisible)}>≡</button>
+              <button class="button button--secondary" onClick={() => setMobileMenuVisible(!mobileMenuVisible)}><MenuIcon size={20} /></button>
             </div>
 
+            {/* Mobile menu */}
             <div class={classNames("header__nav--mobile__container", { 'is-open': mobileMenuVisible })}>
+              {/* Links */}
               <Link class="header__nav--mobile__item" activeClassName="is-active" href="/">Home</Link>
               <Link class="header__nav--mobile__item" activeClassName="is-active" href="/taking-tree">The Taking Tree</Link>
 
+              {/* Divider */}
               <div class="header__nav--mobile__item--divider"></div>
 
-              {UserStore.isUserLoggedIn ? (
+              {/* Loading spinner */}
+              {UserStore.isFetchingUserProfile && (
+                <div class="header__nav--mobile__item">
+                  <LoadingSpinner inverted={true} />
+                </div>
+              )}
+
+              {/* Profile / log-out */}
+              {UserStore.isUserLoggedIn && (
                 <Fragment>
                   <Link class="header__nav--mobile__item" activeClassName="is-active" href="/user-profile">
-                    🐈 <strong>{UserStore.currentUserProfile!.username}</strong>
+                    <UserIcon className="u-margin-right-md" /> <strong>{UserStore.currentUserProfile!.username}</strong>
                   </Link>
 
-                  <Link class="header__nav--mobile__item" activeClassName="is-active" href="/logout">Log out</Link>
-                </Fragment>
-              ) : (
-                  <Link class="header__nav--mobile__item" activeClassName="is-active" href="/login">
-                    Log in
+                  <Link class="header__nav--mobile__item" activeClassName="is-active" href="/logout">
+                    <LogOutIcon className="u-margin-right-md" /> Log out
                   </Link>
-                )}
+                </Fragment>
+              )}
+
+              {/* Log-in */}
+              {UserStore.isUserLoggedOut && (
+                <Link class="header__nav--mobile__item" activeClassName="is-active" href="/login">
+                  <LogInIcon className="u-margin-right-md" /> Log in
+                </Link>
+              )}
             </div>
           </nav>
         </div>
