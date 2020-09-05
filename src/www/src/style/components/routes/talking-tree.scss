@@ -33,6 +33,7 @@
   margin: $m / 2;
   color: $bark;
   transition: box-shadow 0.2s ease-in-out, background-color 0.1s ease-in-out;
+  cursor: pointer;
 
   @include media-query('tablet') {
     width: 160px;
@@ -44,7 +45,6 @@
     user-select: none;
 
     &:hover:not(.is-taking) {
-      cursor: pointer;
       background-color: rgba($primary, 0.4);
       box-shadow: 0 4px 8px rgba($black, 0.2);
     }
