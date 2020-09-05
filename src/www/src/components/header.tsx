@@ -14,6 +14,7 @@ import {
 
 import { useStores } from "@app/stores";
 import LoadingSpinner from "./loading-spinner";
+import useRouteChange from "@app/hooks/use-route-change";
 
 const Header = observer(() => {
   const [userDropdownVisible, setUserDropdownVisible] = useState<boolean>(false);
@@ -24,12 +25,17 @@ const Header = observer(() => {
   if (UserStore.isUserLoggedOut) {
     setUserDropdownVisible(false);
   }
-  // @TODO close mobile menu if window goes to tablet breakpoint
 
+  // @TODO close mobile menu if window goes to tablet breakpoint
   const hideMenus = (): void => {
     setUserDropdownVisible(false);
     setMobileMenuVisible(false);
   };
+
+  // Close menus on route change (i.e. when you navigate using on the of the menus)
+  useRouteChange((_args) => {
+    hideMenus();
+  });
 
   return (
     <Fragment>
