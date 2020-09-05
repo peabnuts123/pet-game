@@ -1,9 +1,9 @@
-import { Fragment, FunctionalComponent, h } from "preact";
+import { h } from "preact";
 import { Link } from "preact-router";
 import { observer } from 'mobx-react-lite';
 
 import { useStores } from "@app/stores";
-
+import NeedsUserProfile from "@app/components/needs-user-profile";
 
 const HomeRoute = observer(() => {
   const { UserStore } = useStores();
@@ -18,19 +18,25 @@ const HomeRoute = observer(() => {
 
       <p>Right now there is not a lot you can do, but you can take a poke around, visit The Taking Tree, or view your own profile (including your inventory).</p>
 
-      <ul class="home__list">
-        {UserStore.isUserLoggedIn ? (
-          <li class="home__list-item"><Link class="" href="/logout">Log out</Link></li>
-        ) : (
-            <li class="home__list-item"><Link class="" href="/login">Log in / Register</Link></li>
-          )}
+      <div class="home__list">
+        <div class="home__list-item">
+          <NeedsUserProfile>
+            {UserStore.isUserLoggedIn ? (
+              /* User logged in */
+              <Link class="" href="/logout">Log out</Link>
+            ) : (
+                /* User logged out */
+                <Link class="" href="/login">Log in / Register</Link>
+              )}
+          </NeedsUserProfile>
+        </div>
 
-        <li class="home__list-item"><Link class="" href="/taking-tree">Visit The Taking Tree</Link></li>
-        <li class="home__list-item"><Link class="" href="/user-profile">View your profile</Link></li>
-      </ul>
+        <div class="home__list-item"><Link class="" href="/taking-tree">Visit The Taking Tree</Link></div>
+        <div class="home__list-item"><Link class="" href="/user-profile">View your profile</Link></div>
+      </div>
 
     </div>
   );
-}) as FunctionalComponent;
+});
 
 export default HomeRoute;

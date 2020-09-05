@@ -27,12 +27,13 @@
   height: 100%;
 
   @include media-query('tablet') {
-    display: block;
+    display: flex;
+    flex-direction: row;
   }
 }
 
 .header__nav-item--desktop {
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   padding: 0 $m * 2;

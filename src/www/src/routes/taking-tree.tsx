@@ -1,10 +1,11 @@
-import { h, FunctionalComponent } from "preact";
+import { h, FunctionalComponent, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { Link } from "preact-router";
 import { observer } from "mobx-react-lite";
+import classNames from "classnames";
 
 import { useStores } from '@app/stores';
-import classNames from "classnames";
+import LoadingSpinner from "@app/components/loading-spinner";
 
 const TakingTreeRoute = observer(() => {
   const { TakingTreeStore, UserStore } = useStores();
@@ -37,34 +38,59 @@ const TakingTreeRoute = observer(() => {
       {/* Tree contents */}
       <h2 class="taking-tree__whats-under-the-tree-title">What&apos;s under the tree right now?</h2>
 
-      {!hasLoadedItems ? (
-        /* Loading state */
-        <p class="taking-tree__loading-text">Loading items...</p>
-      ) : (
-          /* Finished loading */
-          (!hasItems ? (
-            /* Tree inventory is empty */
-            <p>There&apos;s nothing under the tree right now. Why don&apos;t you head to <Link href="/user-profile">your profile</Link> and donate something?</p>
-          ) : (
-              /* Tree inventory contents */
-              <div class="taking-tree__item-list">
-                {inventoryItems!.map((inventoryItem) => (
-                  <div class={classNames('taking-tree__item', { 'is-enabled': UserStore.isUserLoggedIn })} onClick={() => claimItem(inventoryItem.id)} key={inventoryItem.id}>
-                    <div class="taking-tree__item__label">{inventoryItem.item.name}</div>
-                    {UserStore.isUserLoggedIn && (
-                      <div class="taking-tree__item__button">
-                        <button class="button">Claim</button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ))
-        )}
+      <div class="taking-tree__item-list">
 
-      {UserStore.isUserLoggedOut && (
-        <p class="taking-tree__logged-out-text">You must be logged in to claim items from The Taking Tree.</p>
-      )}
+        {!hasLoadedItems ? (
+          /* Loading state */
+          <div class="taking-tree__loading">
+            <LoadingSpinner />
+            <span class="u-margin-top-lg">Loading items&hellip;</span>
+          </div>
+        ) : (
+            /* Finished loading */
+            (!hasItems ? (
+              /* Tree inventory is empty */
+              <p class="u-margin-top-0">There&apos;s nothing under the tree right now. Why don&apos;t you head to <Link href="/user-profile">your profile</Link> and donate something?</p>
+            ) : (
+              <Fragment>
+                  {/* Tree inventory contents */}
+                  {inventoryItems!.map((inventoryItem) => (
+                    /* Item card container */
+                    <div
+                      class={classNames('taking-tree__item', {
+                        'is-enabled': UserStore.isUserLoggedIn,
+                        'is-taking': TakingTreeStore.isItemBeingClaimed(inventoryItem.id),
+                      })}
+                      onClick={() => claimItem(inventoryItem.id)}
+                      key={inventoryItem.id}
+                    >
+                      {/* Label */}
+                      <div class="taking-tree__item__label">
+                        {inventoryItem.item.name}
+                        {(TakingTreeStore.isItemBeingClaimed(inventoryItem.id)) && (
+                          <LoadingSpinner />
+                        )}
+                      </div>
+
+                      {/* Claim button */}
+                      {UserStore.isUserLoggedIn && !(TakingTreeStore.isItemBeingClaimed(inventoryItem.id)) && (
+                        <div class="taking-tree__item__button">
+                          <button class="button">Claim</button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Logged out message */}
+                  {UserStore.isUserLoggedOut && (
+                    <p class="taking-tree__logged-out-text">You must be logged in to claim items from The Taking Tree.</p>
+                  )}
+                </Fragment>
+              ))
+          )}
+      </div>
+
+
     </div>
   );
 }) as FunctionalComponent;

@@ -5,6 +5,7 @@ import { useState } from "preact/hooks";
 import classNames from 'classnames';
 
 import { useStores } from "@app/stores";
+import NeedsUserProfile from "@app/components/needs-user-profile";
 
 const Header = observer(() => {
   const [userDropdownVisible, setUserDropdownVisible] = useState<boolean>(false);
@@ -45,7 +46,11 @@ const Header = observer(() => {
                 <strong>{UserStore.currentUserProfile!.username}</strong> ▾
               </a>
             ) : (
-                <Link class="header__nav-item--desktop" activeClassName="is-active" href="/login">Log in / Register</Link>
+              <div class="header__nav-item--desktop">
+                <NeedsUserProfile inverted={true}>
+                  <Link activeClassName="is-active" href="/login">Log in / Register</Link>
+                </NeedsUserProfile>
+              </div>
               )}
 
             {userDropdownVisible && (

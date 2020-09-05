@@ -9,10 +9,13 @@ import Store from './base/store';
 class TakingTreeStore extends Store {
   @observable
   private _inventoryItems: TakingTreeInventoryItem[] | null;
+  @observable
+  private _itemsBeingClaimed: string[];
 
   public constructor() {
     super();
     this._inventoryItems = null;
+    this._itemsBeingClaimed = [];
   }
 
   @action
@@ -34,13 +37,24 @@ class TakingTreeStore extends Store {
 
   @action
   public async claimItem(takingTreeInventoryItemId: string): Promise<void> {
+    // Add to collection of items being claimed
+    this._itemsBeingClaimed.push(takingTreeInventoryItemId);
+
+    // Inform the API
     const inventoryItemDtos = await Api.postJson<TakingTreeInventoryItemDto[]>(Endpoints.TakingTree.claimItem(), {
       body: {
         TakingTreeInventoryItemId: takingTreeInventoryItemId,
       } as TakingTreeClaimItemDto,
     });
 
+    // Update collection to remove this item
+    this._itemsBeingClaimed = this._itemsBeingClaimed.filter((item) => item !== takingTreeInventoryItemId);
+
     this.updateCollectionFromDtos(inventoryItemDtos);
+  }
+
+  public isItemBeingClaimed(takingTreeInventoryItemId: string): boolean {
+    return this._itemsBeingClaimed.includes(takingTreeInventoryItemId);
   }
 
   @action

@@ -24,19 +24,37 @@
 }
 
 .home__list-item {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: $m;
+  background-color: rgba($primary, 0.15);
+  transition: box-shadow 0.2s ease-in-out, background-color 0.1s ease-in-out;
+  height: 80px;
+  font-size: $font-size-h3;
+  cursor: pointer;
+  user-select: none;
 
-  a {
-    @extend .button;
+  * {
     display: flex;
-    background-color: $grey-light;
-    height: 80px;
-    font-size: $font-size-h3;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: $secondary;
+    height: 100%;
+    width: 100%;
 
     &:hover {
-      background-color: $primary;
+      color: $secondary;
     }
+
+    &:active {
+      color: $secondary;
+    }
+  }
+
+  &:hover {
+    background-color: rgba($primary, 0.4);
   }
 }
 

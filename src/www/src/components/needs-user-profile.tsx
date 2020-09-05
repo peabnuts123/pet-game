@@ -1,5 +1,6 @@
 import { useStores } from '@app/stores';
-import { FunctionalComponent, h, RenderableProps } from 'preact';
+import { observer } from 'mobx-react-lite';
+import { h, RenderableProps } from 'preact';
 import { Fragment } from 'preact';
 import LoadingSpinner from './loading-spinner';
 
@@ -7,7 +8,7 @@ interface Props {
   inverted?: boolean;
 }
 
-const NeedsUserProfile: FunctionalComponent<RenderableProps<Props>> = ({ children, inverted }) => {
+const NeedsUserProfile = observer(({ children, inverted }: RenderableProps<Props>) => {
   const { UserStore } = useStores();
 
   return (
@@ -23,6 +24,6 @@ const NeedsUserProfile: FunctionalComponent<RenderableProps<Props>> = ({ childre
       )}
     </Fragment>
   );
-};
+});
 
 export default NeedsUserProfile;

@@ -12,7 +12,11 @@
   margin-top: 2 * $m;
 }
 
-// .taking-tree__loading-text {}
+.taking-tree__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 .taking-tree__item-list {
   display: flex;
@@ -28,6 +32,7 @@
   background-color: rgba($primary, 0.15);
   margin: $m / 2;
   color: $bark;
+  transition: box-shadow 0.2s ease-in-out, background-color 0.1s ease-in-out;
 
   @include media-query('tablet') {
     width: 160px;
@@ -36,20 +41,25 @@
 
   &.is-enabled {
     box-shadow: 0 4px 4px rgba($black, 0.1);
-    transition: box-shadow 0.2s ease-in-out, background-color 0.1s ease-in-out;
     user-select: none;
 
-    &:hover {
+    &:hover:not(.is-taking) {
       cursor: pointer;
       background-color: rgba($primary, 0.4);
       box-shadow: 0 4px 8px rgba($black, 0.2);
     }
   }
+
+  &.is-taking {
+    background-color: scale-color(rgba($primary, 0.1), $saturation: -70%, $lightness: 10%);
+    box-shadow: 0 4px 16px rgba($black, 0.1);
+  }
 }
 
 .taking-tree__item__label {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
   text-align: center;
   font-size: $font-size-h5;
