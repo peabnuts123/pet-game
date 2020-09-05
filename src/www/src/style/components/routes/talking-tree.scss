@@ -29,9 +29,9 @@
   flex-direction: column;
   width: 120px;
   height: 120px;
-  background-color: rgba($primary, 0.15);
+  background-color: rgba($secondary, 0.15);
   margin: $m / 2;
-  color: $bark;
+  color: $secondary-text;
   transition: box-shadow 0.2s ease-in-out, background-color 0.1s ease-in-out;
   cursor: pointer;
 
@@ -45,13 +45,13 @@
     user-select: none;
 
     &:hover:not(.is-taking) {
-      background-color: rgba($primary, 0.4);
+      background-color: rgba($secondary, 0.4);
       box-shadow: 0 4px 8px rgba($black, 0.2);
     }
   }
 
   &.is-taking {
-    background-color: scale-color(rgba($primary, 0.1), $saturation: -70%, $lightness: 10%);
+    background-color: scale-color(rgba($secondary, 0.1), $saturation: -70%, $lightness: 10%);
     box-shadow: 0 4px 16px rgba($black, 0.1);
   }
 }

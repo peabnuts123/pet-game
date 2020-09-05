@@ -12,7 +12,7 @@ $duration: 1.2s;
 
 .spinner {
   .rect {
-    background-color: rgba($primary, 0.7);
+    background-color: rgba($secondary, 0.7);
     height: 100%;
     width: 6px;
     margin: 1px;
@@ -40,7 +40,7 @@ $duration: 1.2s;
 
 .spinner.spinner--inverted {
   .rect {
-    background-color: rgba($secondary, 0.7);
+    background-color: rgba($primary-text, 0.7);
   }
 }
 

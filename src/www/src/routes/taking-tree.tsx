@@ -75,7 +75,7 @@ const TakingTreeRoute = observer(() => {
                       {/* Claim button */}
                       {UserStore.isUserLoggedIn && !(TakingTreeStore.isItemBeingClaimed(inventoryItem.id)) && (
                         <div class="taking-tree__item__button">
-                          <button class="button">Claim</button>
+                          <button class="button button--secondary">Claim</button>
                         </div>
                       )}
                     </div>

@@ -28,7 +28,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: $m;
-  background-color: rgba($primary, 0.15);
+  background-color: rgba($secondary, 0.15);
   transition: box-shadow 0.2s ease-in-out, background-color 0.1s ease-in-out;
   height: 80px;
   font-size: $font-size-h3;
@@ -40,21 +40,21 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    color: $secondary;
+    color: $secondary-text;
     height: 100%;
     width: 100%;
 
     &:hover {
-      color: $secondary;
+      color: $secondary-text;
     }
 
     &:active {
-      color: $secondary;
+      color: $secondary-text;
     }
   }
 
   &:hover {
-    background-color: rgba($primary, 0.4);
+    background-color: rgba($secondary, 0.4);
   }
 }
 

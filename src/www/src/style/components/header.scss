@@ -4,7 +4,7 @@
   position: relative;
 
   & a {
-    color: $secondary;
+    color: $primary-text;
     text-decoration: none;
   }
 }
@@ -39,15 +39,16 @@
   padding: 0 $m * 2;
   height: 100%;
   cursor: pointer;
+  font-weight: bold;
   z-index: 20; // higher than .header__nav--desktop__background
 
   &:hover,
   &:active {
-    background: rgba($bark, 0.1);
+    background: rgba($primary-text, 0.1);
   }
 
   &.is-active {
-    background: rgba($bark, 0.2);
+    background: rgba($primary-text, 0.2);
   }
 }
 
@@ -67,6 +68,7 @@
   flex-direction: row;
   align-items: center;
   padding: 2 * $m $m;
+  font-weight: bold;
   cursor: pointer;
 
   &:not(:last-child) {
@@ -75,7 +77,7 @@
 
   &:hover,
   &:active {
-    background: rgba($bark, 0.1);
+    background: rgba($primary-text, 0.1);
   }
 }
 
@@ -115,6 +117,7 @@
   flex-direction: row;
   align-items: center;
   padding: $m 2 * $m;
+  font-weight: bold;
   cursor: pointer;
 
   &:not(:last-child) {
@@ -123,11 +126,11 @@
 
   &:hover,
   &:active {
-    background: rgba($bark, 0.1);
+    background: rgba($primary-text, 0.1);
   }
 
   &.is-active {
-    background: rgba($bark, 0.2);
+    background: rgba($primary-text, 0.2);
   }
 }
 

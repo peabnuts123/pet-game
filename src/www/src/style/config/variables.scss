@@ -1,6 +1,7 @@
 // Colors
-$purple: #2D173D;
-$pink: #FF98B7;
+$purple: #dfb3ff;
+$purple-dark: #442c59;
+$pink: #ffabf2;
 $blue: #5FB2FF;
 $tangerine: #FFA286;
 $peach: #fdf6f0;
@@ -19,12 +20,14 @@ $grey-light: #F3F1F1;
 $white:      #FFFFFF;
 
 // Aliases
-$text: rgba($black, 0.9);
-$primary: $gold;
-$secondary: $bark;
+$text: rgba($black, 0.8);
+$primary: $purple;
+$primary-text: $purple-dark;
+$secondary: $pink;
+$secondary-text: $primary-text;
 $link: $blue;
-$selection: $fanta;
-$border: $bark;
+$selection: rgba($pink, 0.5);
+$border: $primary-text;
 
 // Breakpoints
 $breakpoint-mobile: 768px;

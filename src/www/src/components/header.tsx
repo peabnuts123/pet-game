@@ -68,7 +68,7 @@ const Header = observer(() => {
             {UserStore.isUserLoggedIn && (
               /* Profile */
               <a class="header__nav-item--desktop" onClick={() => setUserDropdownVisible(!userDropdownVisible)}>
-                <strong>{UserStore.currentUserProfile!.username}</strong>
+                {UserStore.currentUserProfile!.username}
                 {userDropdownVisible ? (
                   <ChevronUpIcon />
                 ) : (
@@ -100,7 +100,7 @@ const Header = observer(() => {
           <nav class="header__nav--mobile">
             {/* Menu toggle */}
             <div class="header__nav-item--mobile">
-              <button class="button button--secondary" onClick={() => setMobileMenuVisible(!mobileMenuVisible)}><MenuIcon size={20} /></button>
+              <button class="button" onClick={() => setMobileMenuVisible(!mobileMenuVisible)}><MenuIcon size={20} /></button>
             </div>
 
             {/* Mobile menu */}
@@ -123,7 +123,7 @@ const Header = observer(() => {
               {UserStore.isUserLoggedIn && (
                 <Fragment>
                   <Link class="header__nav--mobile__item" activeClassName="is-active" href="/user-profile">
-                    <UserIcon className="u-margin-right-md" /> <strong>{UserStore.currentUserProfile!.username}</strong>
+                    <UserIcon className="u-margin-right-md" /> {UserStore.currentUserProfile!.username}
                   </Link>
 
                   <Link class="header__nav--mobile__item" activeClassName="is-active" href="/logout">
