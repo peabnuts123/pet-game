@@ -1,8 +1,12 @@
-.authenticated__loading-message {
+.logout {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.logout__message {
+  font-style: italic;
 }

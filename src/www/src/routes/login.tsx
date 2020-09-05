@@ -5,6 +5,7 @@ import { route } from "preact-router";
 import Config from '@app/config';
 import Endpoints from "@app/constants/endpoints";
 import { useStores } from "@app/stores";
+import LoadingSpinner from "@app/components/loading-spinner";
 
 const LoginRoute: FunctionalComponent = observer(() => {
   const { UserStore } = useStores();
@@ -17,7 +18,10 @@ const LoginRoute: FunctionalComponent = observer(() => {
   }
 
   return (
-    <p><em>Redirecting you to Auth0 for login...</em></p>
+    <div class="login">
+      <LoadingSpinner />
+      <p class="login__message">Redirecting you to Auth0 for login&hellip;</p>
+    </div>
   );
 }) as FunctionalComponent;
 
