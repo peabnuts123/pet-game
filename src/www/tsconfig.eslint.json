@@ -14,6 +14,5 @@
     "test/**/*.ts",
     "test/**/*.jsx",
     "test/**/*.js",
-    "types/**/*.d.ts",
   ],
 }

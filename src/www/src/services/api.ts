@@ -1,3 +1,5 @@
+import Config from '@app/config';
+
 export class ApiError extends Error {
   public response: Response;
 
@@ -12,7 +14,7 @@ export class ApiError extends Error {
  */
 class Api {
   private async request(path: string, options: RequestInit = {}): Promise<any> {
-    const response = await fetch(`${API_BASE}${path}`, Object.assign({}, options, {
+    const response = await fetch(`${Config.ApiHost}${path}`, Object.assign({}, options, {
       credentials: 'include',
     } as RequestInit));
 

@@ -21,6 +21,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     // === @app
+    "^@app/config$": "<rootDir>/src/config/environments/test.ts",
     "^@app/(.*)$": "<rootDir>/src/$1",
     // === @test
     "^@test/(.*)$": "<rootDir>/test/$1",

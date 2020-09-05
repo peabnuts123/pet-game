@@ -2,6 +2,7 @@ import { h, FunctionalComponent } from "preact";
 import { observer } from "mobx-react-lite";
 import { route } from "preact-router";
 
+import Config from '@app/config';
 import Endpoints from "@app/constants/endpoints";
 import { useStores } from "@app/stores";
 
@@ -11,7 +12,7 @@ const LoginRoute: FunctionalComponent = observer(() => {
   if (UserStore.isUserLoggedIn) {
     route("/", true);
   } else {
-    const loginUrl = `${API_BASE}${Endpoints.Auth.login(location.origin)}`;
+    const loginUrl = `${Config.ApiHost}${Endpoints.Auth.login(location.origin)}`;
     window.location.href = loginUrl;
   }
 

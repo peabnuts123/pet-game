@@ -1,5 +1,7 @@
 import path from "path";
-import { DefinePlugin } from 'webpack';
+import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack';
+import { version as PACKAGE_VERSION } from './package.json';
+
 
 export default {
   /**
@@ -26,8 +28,19 @@ export default {
         "index",
       ),
 
+      // es6 version of mobx - smaller bundle
       mobx: path.resolve(__dirname + "/node_modules/mobx/lib/mobx.es6.js"),
     });
+
+    // Read environment in from NODE_ENV
+    const ENVIRONMENT = (process.env['NODE_ENV'] || 'development').toLocaleLowerCase();
+
+    // Configure webpack plugins
+    // Rewrite imports to `@app/config` to the environment-specific version
+    // This means configuration is type-safe, easy, and hot-reloads at runtime!
+    config.plugins.push(new NormalModuleReplacementPlugin(/^@app\/config$/, (resource) => {
+      resource.request = resource.request.replace(/.*/, `@app/config/environments/${ENVIRONMENT}`);
+    }));
 
     // Define these variables as globals in resulting JavaScript
     config.plugins.push(new DefinePlugin({
@@ -35,9 +48,7 @@ export default {
       //  i.e. if the value is "world" it will plop the string "world" into your code
       //  where you reference the variable. So this must be converted to `'world'` i.e. a string
       //  within a string, so that the resulting code receives a string
-
-      // @TODO BETTER environment config
-      API_BASE: JSON.stringify(process.env.NODE_ENV === 'development' ? `https://localhost:5000` : `https://pet-game-dev.herokuapp.com`),
+      'process.env.PACKAGE_VERSION': JSON.stringify(PACKAGE_VERSION),
     }));
   },
 };

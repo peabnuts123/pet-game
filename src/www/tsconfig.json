@@ -61,6 +61,5 @@
     "src/**/*.ts",
     "test/**/*.tsx",
     "test/**/*.ts",
-    "types/**/*.d.ts",
   ]
 }
