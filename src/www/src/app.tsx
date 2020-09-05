@@ -23,7 +23,7 @@ if ((module as any).hot) {
 }
 
 const App: FunctionalComponent = () => {
-  const { UserStore } = useStores();
+  const { UserStore, RouteStore } = useStores();
 
   useEffect(() => {
     Logger.log(LogLevel.debug, "App loading");
@@ -35,7 +35,7 @@ const App: FunctionalComponent = () => {
       <Header />
 
       <div class="container u-padding-top-lg">
-        <Router>
+        <Router onChange={(args) => RouteStore.onRouteChange(args)}>
           <Route path="/" component={HomeRoute} />
           <Route path="/login" component={LoginRoute} />
           <Route path="/logout" component={LogoutRoute} />
