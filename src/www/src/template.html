@@ -6,10 +6,15 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-capable" content="yes">
-		<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+
+    <% const config = require('@app/config').default %>
+    <meta name="app-environment" content="<%= config.EnvironmentId %>">
+    <meta name="app-version" content="<%= config.AppVersion %>">
+
 		<% preact.headEnd %>
 	</head>
 	<body>
-		<% preact.bodyEnd %>
+    <% preact.bodyEnd %>
 	</body>
 </html>
