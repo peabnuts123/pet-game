@@ -1,4 +1,5 @@
-import Logger, { LogLevel } from '@app/util/Logger';
+import Config from '@app/config';
+import Logger from '@app/util/Logger';
 
 // Configure log level
-Logger.setLogLevel(LogLevel.none);
+Logger.setLogLevel(Config.LogLevel);
