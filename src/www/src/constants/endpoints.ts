@@ -5,9 +5,12 @@ const Endpoints = {
     claimItem: (): string => '/api/taking-tree/claim',
   },
   Auth: {
-    getProfile: (): string => '/api/auth/profile',
     login: (returnUrl?: string): string => '/api/auth/login' + (returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : ''),
     logout: (): string => '/api/auth/logout',
+  },
+  User: {
+    getProfile: (): string => '/api/user/profile',
+    updateProfile: (): string => '/api/user/profile',
   },
 };
 

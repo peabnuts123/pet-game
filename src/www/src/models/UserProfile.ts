@@ -5,12 +5,14 @@ import PlayerInventoryItem, { PlayerInventoryItemDto } from "./PlayerInventoryIt
 
 export interface UserProfileDto {
   id: string;
+  authId: string;
   username: string;
   inventory: PlayerInventoryItemDto[];
 }
 
 class UserProfile extends ApiModel<UserProfileDto>{
   public readonly id: string;
+  public readonly authId: string;
   @observable
   public username: string;
   @observable
@@ -20,6 +22,7 @@ class UserProfile extends ApiModel<UserProfileDto>{
     super();
 
     this.id = dto.id;
+    this.authId = dto.authId;
     this.username = dto.username;
     this.inventory = dto.inventory.map((dto: PlayerInventoryItemDto) => new PlayerInventoryItem(dto));
   }
@@ -27,6 +30,7 @@ class UserProfile extends ApiModel<UserProfileDto>{
   public toDto(): UserProfileDto {
     return {
       id: this.id,
+      authId: this.authId,
       username: this.username,
       inventory: this.inventory.map((inventoryItem) => inventoryItem.toDto()),
     };

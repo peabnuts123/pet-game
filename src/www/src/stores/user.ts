@@ -1,6 +1,6 @@
 import { action, computed, observable } from "mobx";
 
-import UserProfile from "@app/models/UserProfile";
+import UserProfile, { UserProfileDto } from "@app/models/UserProfile";
 import Api, { ApiError } from '@app/services/api';
 import Endpoints from "@app/constants/endpoints";
 import Logger from "@app/util/Logger";
@@ -23,7 +23,8 @@ class UserStore extends Store {
   public async refreshUserProfile(): Promise<void> {
     try {
       this._hasFetchedUserProfile = false || this._hasFetchedUserProfile;
-      this._currentUserProfile = await Api.get<UserProfile>(Endpoints.Auth.getProfile());
+      const userProfileDto: UserProfileDto = await Api.get<UserProfileDto>(Endpoints.User.getProfile());
+      this._currentUserProfile = new UserProfile(userProfileDto);
     } catch (e) {
       if (!(e instanceof ApiError)) {
         Logger.logError("Unknown occurred while fetching user profile", e);
@@ -35,6 +36,14 @@ class UserStore extends Store {
     } finally {
       this._hasFetchedUserProfile = true;
     }
+  }
+
+  @action
+  public async updateUserProfile(updatedProfile: UserProfileDto): Promise<void> {
+    const userProfileDto: UserProfileDto = await Api.patchJson<UserProfileDto>(Endpoints.User.getProfile(), {
+      body: updatedProfile,
+    });
+    this._currentUserProfile = new UserProfile(userProfileDto);
   }
 
   @computed

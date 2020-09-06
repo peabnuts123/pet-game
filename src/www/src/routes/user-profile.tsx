@@ -7,12 +7,19 @@ import { useStores } from "@app/stores";
 import LoadingSpinner from "@app/components/loading-spinner";
 
 import AuthenticatedRoute from "./common/authenticated";
+import { useRef } from "react";
+import UserProfile from "@app/models/UserProfile";
 
 const UserProfileRoute = AuthenticatedRoute(observer(() => {
   const { UserStore, TakingTreeStore } = useStores();
   const [itemsBeingDonated, setItemsBeingDonated] = useState<string[]>([]);
 
-  const user = UserStore.currentUserProfile;
+  // Editing profile form
+  const usernameEl = useRef<HTMLInputElement>();
+  const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
+  const [isSavingProfile, setIsSavingProfile] = useState<boolean>(false);
+
+  const user: UserProfile = UserStore.currentUserProfile!;
 
   const isItemBeingDonated = (playerInventoryItemId: string): boolean => itemsBeingDonated.includes(playerInventoryItemId);
 
@@ -23,11 +30,66 @@ const UserProfileRoute = AuthenticatedRoute(observer(() => {
     setItemsBeingDonated(itemsBeingDonated.filter((item) => item !== playerInventoryItemId));
   };
 
+  const beginEditingProfile = (): void => {
+    setIsEditingProfile(true);
+
+    setTimeout(() => {
+      usernameEl.current!.value = user.username;
+    });
+  };
+
+  const onSaveProfile = async (e: h.JSX.TargetedEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isSavingProfile) return;
+    if (usernameEl.current!.value.trim().length < 1) return;
+
+    setIsSavingProfile(true);
+
+    await UserStore.updateUserProfile({
+      ...user,
+      username: usernameEl.current!.value,
+    });
+    setIsSavingProfile(false);
+    setIsEditingProfile(false);
+  };
+
   return (
     <div class="user-profile">
-      <h1 class="user-profile__title">{user!.username}</h1>
+      <div class="user-profile__title-container">
+        <h1 class="user-profile__title">{user.username}</h1>
 
-      <p>Hi! My name is {user!.username} and I love my pets sooo much! I feed them and play games with them every day!! Check out my store for great prices on paint brushes!! This theme was made by neolover_88.</p>
+        {!isEditingProfile && (
+          <button class="button button--small user-profile__title-button" onClick={() => beginEditingProfile()}>Edit</button>
+        )}
+      </div>
+
+      {isEditingProfile && (
+        <form action="#" class="form" onSubmit={onSaveProfile}>
+          <label htmlFor="profile__username" class="form__input-label">Username
+            <input id="profile__username"
+              name="profile__username"
+              type="text"
+              class="input input--text form__input"
+              ref={usernameEl}
+              disabled={isSavingProfile}
+              minLength={1}
+              maxLength={40}
+            />
+          </label>
+
+          <button type="submit" class="form__button button button--small u-margin-bottom-md" disabled={isSavingProfile}>Save</button>
+
+          {isSavingProfile && (
+            <LoadingSpinner />
+          )}
+        </form>
+      )}
+
+      {!isEditingProfile && (
+        <p>Hi! My name is {user.username} and I love my pets sooo much! I feed them and play games with them every day!! Check out my store for great prices on paint brushes!! This theme was made by neolover_88.</p>
+      )}
 
       <h2 class="user-profile__inventory-title">Inventory</h2>
       <div class="user-profile__inventory-list">

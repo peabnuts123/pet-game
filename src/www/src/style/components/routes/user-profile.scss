@@ -6,7 +6,19 @@
 // ========================
 // ELEMENTS
 // ========================
-// .user-profile__title {}
+
+.user-profile__title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: $m * 2;
+}
+
+.user-profile__title {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: $m;
+}
 
 // .user-profile__inventory-title {}
 

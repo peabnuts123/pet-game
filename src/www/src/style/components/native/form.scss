@@ -16,6 +16,8 @@
   width: 100%;
 
   @include media-query('tablet') {
-    width: 200px;
+    padding-left: $m * 2;
+    padding-right: $m * 2;
+    width: inherit;
   }
 }
