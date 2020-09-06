@@ -19,12 +19,14 @@ namespace PetGame.Web
 {
     public class Startup
     {
-        public Startup()
+        public Startup(IWebHostEnvironment HostEnvironment)
         {
-            Configuration = Program.Configuration;
+            this.Configuration = Program.Configuration;
+            this.HostEnvironment = HostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment HostEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -103,6 +105,16 @@ namespace PetGame.Web
                 // OIDC Callbacks @TODO move these into something separate (they contain business logic)
                 options.Events = new OpenIdConnectEvents
                 {
+                    // Tweak OIDC redirect_uri param to point at frontend so cookies work
+                    OnRedirectToIdentityProvider = async (context) =>
+                    {
+                        if (HostEnvironment.IsProduction())
+                        {
+                            context.ProtocolMessage.RedirectUri = $"{Configuration["WebClient:AbsoluteUrl"]}{options.CallbackPath}";
+                        }
+                        await Task.CompletedTask;
+                    },
+
                     // Handle login success
                     OnTokenValidated = async (context) =>
                     {
