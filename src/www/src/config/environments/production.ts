@@ -3,7 +3,7 @@ import { LogLevel } from "@app/util/Logger";
 
 const ProductionConfig: ApplicationConfig = {
   EnvironmentId: "Production",
-  ApiHost: 'https://pet-game-dev.herokuapp.com',
+  ApiHost: '',
   LogLevel: LogLevel.none,
   AppVersion: process.env.PACKAGE_VERSION!,
 };
