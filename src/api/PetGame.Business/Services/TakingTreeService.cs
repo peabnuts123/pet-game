@@ -24,6 +24,7 @@ namespace PetGame.Business
         {
             return this.db.TakingTreeInventoryItems
                 .Include(item => item.Item)
+                .Include(item => item.DonatedBy)
                 .ToList();
         }
 
@@ -44,6 +45,7 @@ namespace PetGame.Business
             await this.db.TakingTreeInventoryItems.AddAsync(new TakingTreeInventoryItem
             {
                 ItemId = playerInventoryItem.Item.Id,
+                DonatedById = user.Id,
             });
             await this.db.SaveChangesAsync();
         }
@@ -69,6 +71,7 @@ namespace PetGame.Business
         {
             return this.db.TakingTreeInventoryItems
                 .Include(item => item.Item)
+                .Include(item => item.DonatedBy)
                 .SingleOrDefault((TakingTreeInventoryItem inventoryItem) => inventoryItem.Id == takingTreeInventoryItemId);
         }
     }

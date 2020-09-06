@@ -11,8 +11,12 @@ namespace PetGame.Data
         [Required]
         [JsonIgnore]
         public Guid ItemId { get; set; }
+        [Required]
+        [JsonIgnore]
+        public Guid DonatedById { get; set; }
 
         // Relationships
         public Item Item { get; set; }
+        public User DonatedBy { get; set; }
     }
 }
