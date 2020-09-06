@@ -24,7 +24,7 @@ class UserProfile extends ApiModel<UserProfileDto>{
     this.id = dto.id;
     this.authId = dto.authId;
     this.username = dto.username;
-    this.inventory = dto.inventory.map((dto: PlayerInventoryItemDto) => new PlayerInventoryItem(dto));
+    this.inventory = dto.inventory?.map((dto: PlayerInventoryItemDto) => new PlayerInventoryItem(dto));
   }
 
   public toDto(): UserProfileDto {

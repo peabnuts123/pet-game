@@ -65,8 +65,9 @@ const TakingTreeRoute = observer(() => {
                       key={inventoryItem.id}
                     >
                       {/* Label */}
-                      <div class="taking-tree__item__label">
-                        {inventoryItem.item.name}
+                      <div class="taking-tree__item__content">
+                        <div class="taking-tree__item__label">{inventoryItem.item.name}</div>
+                        <div class="taking-tree__item__donated-by">donated by {inventoryItem.donatedBy.username}</div>
                         {(TakingTreeStore.isItemBeingClaimed(inventoryItem.id)) && (
                           <LoadingSpinner />
                         )}
