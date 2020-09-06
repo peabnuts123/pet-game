@@ -20,5 +20,6 @@ namespace PetGame.Business
         Task Login(string userAuthId);
         PlayerInventoryItem GetInventoryItemById(User user, Guid playerInventoryItemId);
         PlayerInventoryItem GetInventoryItemByItemId(User user, Guid itemId);
+        Task<User> UpdateUser(Guid userId, User updatedUser);
     }
 }

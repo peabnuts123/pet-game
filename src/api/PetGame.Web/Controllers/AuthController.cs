@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using PetGame.Business;
-using PetGame.Data;
 
 namespace PetGame.Web
 {
@@ -30,29 +28,6 @@ namespace PetGame.Web
             this.userService = userService;
             this.logger = logger;
             this.appSettings = appSettings;
-        }
-
-        [HttpGet]
-        [Route("profile")]
-        [Authorize]
-        public async Task<ActionResult<User>> Profile()
-        {
-            string userAuthId = HttpContext.User.GetSubject();
-            User user = await this.userService.GetUserByAuthId(userAuthId);
-
-            if (user == null)
-            {
-                // Bad state. User is authenticated but does not exist in database (this should not ever happen)
-                this.logger.LogError($"Cannot get user profile. User is authenticated but not found in database. User Id: {userAuthId}.");
-
-
-                return BadRequest(JsonConvert.SerializeObject(new
-                {
-                    Error = $"No user exists with auth id '{userAuthId}'.",
-                }));
-            }
-
-            return Ok(user);
         }
 
         [HttpGet]

@@ -170,6 +170,25 @@ namespace PetGame.Business
         }
 
         /// <summary>
+        /// Given a User object with updated values, look up the the model in the database and
+        /// apply valid changes. Note that many fields (e.g. Id, AuthId) cannot be changed.
+        /// </summary>
+        /// <param name="updatedUser">Updated user object</param>
+        /// <returns>The full updated record from the DB</returns>
+        public async Task<User> UpdateUser(Guid userId, User updatedUser)
+        {
+            User existingUser = GetUserById(userId);
+
+            existingUser.Username = updatedUser.Username.Trim();
+
+            // Save user to DB
+            this.db.Update(existingUser);
+            await this.db.SaveChangesAsync();
+
+            return existingUser;
+        }
+
+        /// <summary>
         /// Create a new User in the Database and populate them with various data.
         /// </summary>
         /// <param name="userAuthId">Unique ID for the new user</param>
