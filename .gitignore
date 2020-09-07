@@ -34,3 +34,6 @@ mono_crash*.json
 !.env.sample
 _secrets*.json
 !_secrets.sample.json
+
+# devdb
+src/devdb/data
