@@ -1,13 +1,19 @@
+# Pipeline triggers
+trigger: none
 pr:
 - master
 
+# Pipeline config
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- task: CmdLine@2
-  displayName: "DEBUG"
-  inputs:
-    script: |
-      echo "I am the PR build for this app";
-
+# Jobs
+jobs:
+- job: build
+  displayName: "Debug"
+  steps:
+  - task: CmdLine@2
+    displayName: "DEBUG"
+    inputs:
+      script: |
+        echo "I am the PR build for this app";
