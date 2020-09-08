@@ -10,12 +10,19 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: Docker@2
+- task: CmdLine@2
   inputs:
-    containerRegistry: 'Heroku Docker Registry'
-    repository: 'pet-game-dev/web'
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
-    tags: |
-      $(Build.BuildId)
-      latest
+    script: |
+      curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+      
+      echo "Heroku: $(which heroku)";
+# - task: Docker@2
+#   inputs:
+#     containerRegistry: 'Heroku Docker Registry'
+#     repository: 'pet-game-dev/web'
+#     command: 'buildAndPush'
+#     Dockerfile: '**/Dockerfile'
+#     tags: |
+#       $(Build.BuildId)
+#       latest
+
