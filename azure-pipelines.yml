@@ -11,12 +11,15 @@ pool:
 
 steps:
 - task: CmdLine@2
+  displayName: "Install Heroku CLI"
   inputs:
     script: |
       curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
       
       echo "Heroku: $(which heroku)";
+      heroku releases --app "$HEROKU_APP_NAME"
 # - task: Docker@2
+#   displayName: "Build and Push API container to Heroku"
 #   inputs:
 #     containerRegistry: 'Heroku Docker Registry'
 #     repository: 'pet-game-dev/web'
