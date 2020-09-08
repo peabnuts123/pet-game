@@ -13,9 +13,9 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'Heroku Docker Registry'
+    repository: 'registry.heroku.com/pet-game-dev/web'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
     tags: |
-      registry.heroku.com/pet-game-dev/web:$(Build.BuildId)
-      registry.heroku.com/pet-game-dev/web:latest
-  displayName: 'Heroku - Build and Push container'
+      $(Build.BuildId)
+      latest
