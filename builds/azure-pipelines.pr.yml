@@ -10,10 +10,15 @@ pool:
 # Jobs
 jobs:
 - job: build
-  displayName: "Debug"
+  displayName: "Verify API"
   steps:
-  - task: CmdLine@2
-    displayName: "DEBUG"
+  - task: DotNetCoreCLI@2
+    displayName: "Build project"
     inputs:
-      script: |
-        echo "I am the PR build for this app";
+      command: 'build'
+      projects: 'src/api/PetGame.sln'
+  - task: DotNetCoreCLI@2
+    displayName: "Run test"
+    inputs:
+      command: 'test'
+      projects: 'src/api/PetGame.sln'
