@@ -1,42 +1,42 @@
 trigger:
-  - master
+- master
 
-  pool:
-    vmImage: 'ubuntu-latest'
+pool:
+  vmImage: 'ubuntu-latest'
 
-  jobs:
-  - deployment: "API"
-    displayName: "Deploy API to Heroku"
-    environment: "Production"
-    strategy:
-      runOnce:
-        preDeploy:
-          steps:
-          - task: CmdLine@2
-            displayName: "Install Heroku CLI"
-            inputs:
-              script: |
-                curl https://cli-assets.heroku.com/install-ubuntu.sh | sh;
+jobs:
+- deployment: "API"
+  displayName: "Deploy API to Heroku"
+  environment: "Production"
+  strategy:
+    runOnce:
+      preDeploy:
+        steps:
+        - task: CmdLine@2
+          displayName: "Install Heroku CLI"
+          inputs:
+            script: |
+              curl https://cli-assets.heroku.com/install-ubuntu.sh | sh;
 
-                echo "Successfully installed Heroku CLI to: $(which heroku)";
-          - task: Docker@2
-            displayName: "Build and Push API container to Heroku"
-            inputs:
-              containerRegistry: 'Heroku Docker Registry'
-              repository: 'pet-game-dev/$(HEROKU_PROCESS_NAME__API)'
-              command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile'
-              tags: |
-                $(Build.BuildId)
-                latest
-        deploy:
-          steps:
-          - task: CmdLine@2
-            displayName: "Release API in Heroku"
-            inputs:
-              script: |
-                echo "Releasing API container in Heroku"
-                heroku container:release "$(HEROKU_PROCESS_NAME__API)" --app "$HEROKU_APP_NAME"
-              failOnStderr: true
-            env:
-              HEROKU_API_KEY: $(HEROKU_API_KEY)
+              echo "Successfully installed Heroku CLI to: $(which heroku)";
+        - task: Docker@2
+          displayName: "Build and Push API container to Heroku"
+          inputs:
+            containerRegistry: 'Heroku Docker Registry'
+            repository: 'pet-game-dev/$(HEROKU_PROCESS_NAME__API)'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            tags: |
+              $(Build.BuildId)
+              latest
+      deploy:
+        steps:
+        - task: CmdLine@2
+          displayName: "Release API in Heroku"
+          inputs:
+            script: |
+              echo "Releasing API container in Heroku"
+              heroku container:release "$(HEROKU_PROCESS_NAME__API)" --app "$HEROKU_APP_NAME"
+            failOnStderr: true
+          env:
+            HEROKU_API_KEY: $(HEROKU_API_KEY)
