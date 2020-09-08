@@ -17,7 +17,9 @@ steps:
       curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
       
       echo "Heroku: $(which heroku)";
-      HEROKU_API_KEY="$HEROKU_API_KEY" heroku releases --app "$HEROKU_APP_NAME"
+      heroku releases --app "$HEROKU_APP_NAME"
+  env:
+    HEROKU_API_KEY: $(HEROKU_API_KEY) 
 # - task: Docker@2
 #   displayName: "Build and Push API container to Heroku"
 #   inputs:
