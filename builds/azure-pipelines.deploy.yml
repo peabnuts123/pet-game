@@ -13,6 +13,15 @@ jobs:
       preDeploy:
         steps:
         - task: CmdLine@2
+          displayName: "[DEBUG] Where am I"
+          inputs:
+            script: |
+              echo "PWD";
+              pwd;
+              echo "ls -hal";
+              ls -hal;
+
+        - task: CmdLine@2
           displayName: "Install Heroku CLI"
           inputs:
             script: |
