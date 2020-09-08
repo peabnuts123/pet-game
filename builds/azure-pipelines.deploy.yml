@@ -30,6 +30,5 @@ steps:
     script: |
       echo "Releasing API container in Heroku"
       heroku container:release "$(HEROKU_PROCESS_NAME__API)" --app "$HEROKU_APP_NAME"
-    failOnStderr: true
   env:
     HEROKU_API_KEY: $(HEROKU_API_KEY)
