@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using PetGame.Config;
 
 namespace PetGame.Data
 {
@@ -12,20 +13,10 @@ namespace PetGame.Data
 
         public PetGameContext() { }
 
-        // @TODO can this just move to PetGame.Web and run migrations from there?
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            // Read general configuration from config files (if any)
-            //  as well as environment variables
-            IConfiguration Configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("_secrets.json", optional: true)
-                .AddJsonFile($"_secrets.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-                .AddEnvironmentVariables()
-                .Build();
-
             // Parse `postgres://[user]:[password]@[host]/[database]`-formatted connection string
-            string databaseUrl = Configuration["DATABASE_URL"];
+            string databaseUrl = Configuration.Base["DATABASE_URL"];
             Uri databaseUri = new Uri(databaseUrl);
             string[] userInfo = Uri.UnescapeDataString(databaseUri.UserInfo).Split(':');
 

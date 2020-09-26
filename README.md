@@ -2,6 +2,12 @@
 
 So you can like adopt pets and stuff. You can play games with your pets and look after them. You can interact with other pet owners on the site too. It's totally an original idea and _absolutely not_ a clone of another popular website.
 
+## TODO for real
+  - Replace references to Heroku
+  - Rewrite this documentation
+    - Document how to deploy this thing
+  - Remove un-needed infrastructure in Heroku
+
 ## Architecture
 
 The first phase of this project will have the following architecture:

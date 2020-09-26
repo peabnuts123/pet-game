@@ -12,16 +12,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
 namespace PetGame.Web
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment HostEnvironment)
+        public Startup(IWebHostEnvironment HostEnvironment, IConfiguration configuration)
         {
-            this.Configuration = Program.Configuration;
+            this.Configuration = configuration;
             this.HostEnvironment = HostEnvironment;
         }
 
@@ -49,6 +48,12 @@ namespace PetGame.Web
             // ASP.NET
             services.AddControllers();
 
+            // Store data protection keys in AWS (only in production)
+            if (this.HostEnvironment.IsProduction()) {
+                services.AddDataProtection()
+                    .PersistKeysToAWSSystemsManager(PetGame.Config.Configuration.AWS_PARAMETER_STORE_DATA_PROTECTION_PATH);
+            }
+
             // Services
             services.AddTransient(typeof(ITakingTreeService), typeof(TakingTreeService));
             services.AddTransient(typeof(IUserService), typeof(UserService));
@@ -68,8 +73,6 @@ namespace PetGame.Web
             // > Cookie settings
             .AddCookie(options =>
             {
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.HttpOnly = false;
                 options.Events = new CookieAuthenticationEvents
                 {
                     // Do not redirect to login, just tell the user to go away
@@ -163,16 +166,6 @@ namespace PetGame.Web
 
             //     });
             // });
-
-            // Reverse-proxy configuration for Heroku
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-                options.KnownNetworks.Clear();
-                options.KnownProxies.Clear();
-            });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -182,8 +175,6 @@ namespace PetGame.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseForwardedHeaders();
 
             app.UseSerilogRequestLogging();
 

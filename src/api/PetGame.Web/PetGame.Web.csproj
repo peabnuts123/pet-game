@@ -2,9 +2,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PetGame.Business\PetGame.Business.csproj" />
+    <ProjectReference Include="..\PetGame.Config\PetGame.Config.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Amazon.AspNetCore.DataProtection.SSM" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="5.1.4" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
@@ -12,6 +16,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="_secrets.*.json" CopyToPublishDirectory="Never" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -31,9 +31,16 @@ mono_crash*.json
 
 # Sensitive config
 .env
+.env.*
 !.env.sample
 _secrets*.json
 !_secrets.sample.json
 
 # devdb
 src/devdb/data
+
+# terraform
+.terraform/
+
+# Keys
+*.pem
