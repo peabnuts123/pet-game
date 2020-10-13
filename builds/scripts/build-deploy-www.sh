@@ -16,6 +16,8 @@ fi
 
 # Arguments
 s3_bucket_name="${1}";
+# @NOTE shellcheck complains because this isn't used, but it is used by sub-process when deploying
+NODE_ENV='production';
 
 function exit_with_message_and_code() {
   code="$1";
