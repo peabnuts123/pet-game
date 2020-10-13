@@ -14,5 +14,7 @@
     "test/**/*.ts",
     "test/**/*.jsx",
     "test/**/*.js",
+    "export-routes/*.ts",
+    "export-routes/*.tsx",
   ],
 }

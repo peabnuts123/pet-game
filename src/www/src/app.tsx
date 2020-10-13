@@ -9,12 +9,7 @@ import { useStores } from "@app/stores";
 import Header from "@app/components/header";
 
 // Routes
-import HomeRoute from "@app/routes/home";
-import NotFoundRoute from "@app/routes/not-found";
-import TakingTreeRoute from '@app/routes/taking-tree';
-import UserProfileRoute from '@app/routes/user-profile';
-import LoginRoute from "@app/routes/login";
-import LogoutRoute from "@app/routes/logout";
+import RouteMap from './route-map';
 
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -36,12 +31,15 @@ const App: FunctionalComponent = () => {
 
       <div class="container u-padding-top-lg">
         <Router onChange={(args) => RouteStore.onRouteChange(args)}>
-          <Route path="/" component={HomeRoute} />
-          <Route path="/login" component={LoginRoute} />
-          <Route path="/logout" component={LogoutRoute} />
-          <Route path="/taking-tree" component={TakingTreeRoute} />
-          <Route path="/user-profile" component={UserProfileRoute} />
-          <NotFoundRoute default />
+          {RouteMap.map((route) => {
+            if (route.default) {
+              // Default route
+              return (<Route component={route.component} default />);
+            } else {
+              // Normal route
+              return (<Route path={route.path} component={route.component} />);
+            }
+          })}
         </Router>
       </div>
     </div>
