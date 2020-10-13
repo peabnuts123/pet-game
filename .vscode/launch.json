@@ -16,7 +16,8 @@
       "stopAtEntry": false,
       "envFile": "${workspaceFolder}/.env", // @NOTE you need to make this file if it does not exist
       "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ENVIRONMENT_ID": "local",
       },
     },
     {
