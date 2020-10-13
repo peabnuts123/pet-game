@@ -31,30 +31,35 @@ jobs:
   steps:
   # npm install
   - task: Npm@1
+    displayName: "npm install"
     inputs:
       command: 'install'
       workingDir: 'src/www'
-  # npm run test
+  # npm test
   - task: Npm@1
+    displayName: "npm test"
     inputs:
       command: 'custom'
       workingDir: 'src/www'
       customCommand: 'test'
   # npm run lint
   - task: Npm@1
+    displayName: "npm run lint"
     inputs:
       command: 'custom'
       workingDir: 'src/www'
       customCommand: 'run lint'
   # npm run type-check
   - task: Npm@1
+    displayName: "npm run type-check"
     inputs:
       command: 'custom'
       workingDir: 'src/www'
       customCommand: 'run type-check'
   # npm run build
   - task: Npm@1
+    displayName: "npm run build"
     inputs:
       command: 'custom'
       workingDir: 'src/www'
-      customCommand: 'run run build'
+      customCommand: 'run build'
