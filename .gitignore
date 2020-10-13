@@ -39,8 +39,10 @@ _secrets*.json
 # devdb
 src/devdb/data
 
-# terraform
-.terraform/
-
-# Keys
-*.pem
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+terraform/tmp/
