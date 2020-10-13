@@ -42,7 +42,7 @@ namespace PetGame.Web
             if (user == null)
             {
                 // Bad state. User is authenticated but does not exist in database (this should not ever happen)
-                this.logger.LogError($"Cannot get user profile. User is authenticated but not found in database. User Id: {userAuthId}.");
+                this.logger.LogError("Cannot get user profile. User is authenticated but not found in database. User Id: {UserAuthId}.", userAuthId);
 
 
                 return BadRequest(JsonConvert.SerializeObject(new

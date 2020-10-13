@@ -18,18 +18,15 @@ namespace PetGame.Web
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment HostEnvironment, IConfiguration configuration)
-        {
-            this.Configuration = configuration;
-            this.HostEnvironment = HostEnvironment;
-        }
-
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostEnvironment { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public Startup(IConfiguration Configuration, IWebHostEnvironment HostEnvironment)
         {
+            this.Configuration = Configuration;
+            this.HostEnvironment = HostEnvironment;
+
+            // Validate configuration
             string[] requiredConfigValues = new string[] {
                 "Auth0:Domain",
                 "Auth0:ClientId",
@@ -39,17 +36,22 @@ namespace PetGame.Web
             };
             foreach (string requiredConfig in requiredConfigValues)
             {
-                if (String.IsNullOrEmpty(Configuration[requiredConfig]))
+                if (string.IsNullOrEmpty(this.Configuration[requiredConfig]))
                 {
                     throw new ApplicationException($"Configuration value '{requiredConfig}' is required and cannot be null or empty.");
                 }
             }
+        }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
             // ASP.NET
             services.AddControllers();
 
             // Store data protection keys in AWS (only in production)
-            if (this.HostEnvironment.IsProduction()) {
+            if (this.HostEnvironment.IsProduction())
+            {
                 services.AddDataProtection()
                     .PersistKeysToAWSSystemsManager(PetGame.Config.Configuration.AWS_PARAMETER_STORE_DATA_PROTECTION_PATH);
             }
@@ -62,7 +64,7 @@ namespace PetGame.Web
             // DB
             services.AddDbContext<PetGameContext>();
 
-            // CONFIGURATION FOR AUTH0
+            // CONFIGURATION FOR AUTH
             // > Cookie-based auth
             services.AddAuthentication(options =>
             {
@@ -130,7 +132,7 @@ namespace PetGame.Web
                     OnRedirectToIdentityProviderForSignOut = (context) =>
                     {
                         ILogger<Startup> logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
-                        logger.LogInformation($"Event 'OnRedirectToIdentityProviderForSignOut' is firing");
+                        logger.LogInformation("Event 'OnRedirectToIdentityProviderForSignOut' is firing");
 
                         var logoutUri = $"https://{Configuration["Auth0:Domain"]}/v2/logout?client_id={Configuration["Auth0:ClientId"]}";
 
@@ -153,19 +155,6 @@ namespace PetGame.Web
                     }
                 };
             });
-
-            // @TODO CORS better?
-            // services.AddCors((options) =>
-            // {
-            //     options.AddDefaultPolicy(builder =>
-            //     {
-            //         builder.WithOrigins(Configuration["WebClient:AbsoluteUrl"])
-            //             .AllowAnyMethod()
-            //             .AllowAnyHeader()
-            //             .AllowCredentials();
-
-            //     });
-            // });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -174,19 +163,22 @@ namespace PetGame.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
 
-            app.UseSerilogRequestLogging();
-
-
-            app.UseRouting();
-            app.UseCors(builder =>
+                app.UseCors(builder =>
             {
                 builder.WithOrigins(Configuration["WebClient:AbsoluteUrl"])
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
             });
+            }
+
+            ILogger<Startup> logger = app.ApplicationServices.GetRequiredService<ILogger<Startup>>();
+            logger.LogInformation("Environment Id: {Id}", Configuration["ENVIRONMENT_ID"]);
+
+            app.UseSerilogRequestLogging();
+
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
