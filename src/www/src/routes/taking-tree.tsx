@@ -1,4 +1,4 @@
-import { h, FunctionalComponent, Fragment } from "preact";
+import { h, FunctionalComponent } from "preact";
 import { useEffect } from "preact/hooks";
 import { Link } from "preact-router";
 import { observer } from "mobx-react-lite";
@@ -52,44 +52,42 @@ const TakingTreeRoute = observer(() => {
               /* Tree inventory is empty */
               <p class="u-margin-top-0">There&apos;s nothing under the tree right now. Why don&apos;t you head to <Link href="/user-profile">your profile</Link> and donate something?</p>
             ) : (
-              <Fragment>
-                  {/* Tree inventory contents */}
-                  {inventoryItems!.map((inventoryItem) => (
-                    /* Item card container */
-                    <div
-                      class={classNames('taking-tree__item', {
-                        'is-enabled': UserStore.isUserLoggedIn,
-                        'is-taking': TakingTreeStore.isItemBeingClaimed(inventoryItem.id),
-                      })}
-                      onClick={() => claimItem(inventoryItem.id)}
-                      key={inventoryItem.id}
-                    >
-                      {/* Label */}
-                      <div class="taking-tree__item__content">
-                        <div class="taking-tree__item__label">{inventoryItem.item.name}</div>
-                        <div class="taking-tree__item__donated-by">donated by {inventoryItem.donatedBy.username}</div>
-                        {(TakingTreeStore.isItemBeingClaimed(inventoryItem.id)) && (
-                          <LoadingSpinner />
-                        )}
-                      </div>
-
-                      {/* Claim button */}
-                      {UserStore.isUserLoggedIn && !(TakingTreeStore.isItemBeingClaimed(inventoryItem.id)) && (
-                        <div class="taking-tree__item__button">
-                          <button class="button button--secondary">Claim</button>
-                        </div>
+                // Tree inventory contents
+                (inventoryItems!.map((inventoryItem) => (
+                  /* Item card container */
+                  <div
+                    class={classNames('taking-tree__item', {
+                      'is-enabled': UserStore.isUserLoggedIn,
+                      'is-taking': TakingTreeStore.isItemBeingClaimed(inventoryItem.id),
+                    })}
+                    onClick={() => claimItem(inventoryItem.id)}
+                    key={inventoryItem.id}
+                  >
+                    {/* Label */}
+                    <div class="taking-tree__item__content">
+                      <div class="taking-tree__item__label">{inventoryItem.item.name}</div>
+                      <div class="taking-tree__item__donated-by">donated by {inventoryItem.donatedBy.username}</div>
+                      {(TakingTreeStore.isItemBeingClaimed(inventoryItem.id)) && (
+                        <LoadingSpinner />
                       )}
                     </div>
-                  ))}
 
-                  {/* Logged out message */}
-                  {UserStore.isUserLoggedOut && (
-                    <p class="taking-tree__logged-out-text">You must be logged in to claim items from The Taking Tree.</p>
-                  )}
-                </Fragment>
+                    {/* Claim button */}
+                    {UserStore.isUserLoggedIn && !(TakingTreeStore.isItemBeingClaimed(inventoryItem.id)) && (
+                      <div class="taking-tree__item__button">
+                        <button class="button button--secondary">Claim</button>
+                      </div>
+                    )}
+                  </div>
+                )))
               ))
           )}
       </div>
+
+      {/* Logged out message */}
+      {UserStore.isUserLoggedOut && hasItems && (
+        <div class="taking-tree__logged-out-text">You must be logged in to claim items from The Taking Tree.</div>
+      )}
 
 
     </div>
