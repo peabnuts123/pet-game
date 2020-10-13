@@ -29,6 +29,7 @@ module.exports = {
     '@typescript-eslint/no-inferrable-types': DISABLED,
     '@typescript-eslint/no-use-before-define': DISABLED,
     '@typescript-eslint/no-non-null-assertion': DISABLED,
+    '@typescript-eslint/restrict-template-expressions': DISABLED,
 
     // Rules that are explicitly a warning
     // - none at present -

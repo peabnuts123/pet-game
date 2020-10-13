@@ -8,72 +8,210 @@ exports[`App Matches snapshot 1`] = `
         class="header"
       >
         <div
-          class="header__container"
+          class="header__container container"
         >
           <a
-            class="is-active"
+            class="header__brand is-active"
+            data-testid="header__brand"
             href="/"
           >
-            <h1>
-              Pet Game
-            </h1>
+            Pet Game
           </a>
-          <nav>
+          <nav
+            class="header__nav--desktop"
+          >
             <a
-              class=""
+              class="header__nav-item--desktop"
               href="/taking-tree"
             >
               The Taking Tree
             </a>
-            <a
-              class=""
-              href="/login"
+            <div
+              class="header__nav-item--desktop"
             >
-              Log in
-            </a>
+              <div
+                class="spinner spinner--inverted"
+              >
+                <div
+                  class="rect rect1"
+                />
+                <div
+                  class="rect rect2"
+                />
+                <div
+                  class="rect rect3"
+                />
+                <div
+                  class="rect rect4"
+                />
+                <div
+                  class="rect rect5"
+                />
+              </div>
+            </div>
+          </nav>
+          <nav
+            class="header__nav--mobile"
+          >
+            <div
+              class="header__nav-item--mobile"
+            >
+              <button
+                class="button"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line
+                    x1="3"
+                    x2="21"
+                    y1="12"
+                    y2="12"
+                  />
+                  <line
+                    x1="3"
+                    x2="21"
+                    y1="6"
+                    y2="6"
+                  />
+                  <line
+                    x1="3"
+                    x2="21"
+                    y1="18"
+                    y2="18"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              class="header__nav--mobile__container"
+            >
+              <a
+                class="header__nav--mobile__item is-active"
+                href="/"
+              >
+                Home
+              </a>
+              <a
+                class="header__nav--mobile__item"
+                href="/taking-tree"
+              >
+                The Taking Tree
+              </a>
+              <div
+                class="header__nav--mobile__item--divider"
+              />
+              <div
+                class="header__nav--mobile__item"
+              >
+                <div
+                  class="spinner spinner--inverted"
+                >
+                  <div
+                    class="rect rect1"
+                  />
+                  <div
+                    class="rect rect2"
+                  />
+                  <div
+                    class="rect rect3"
+                  />
+                  <div
+                    class="rect rect4"
+                  />
+                  <div
+                    class="rect rect5"
+                  />
+                </div>
+              </div>
+            </div>
           </nav>
         </div>
       </header>
       <div
         class="container u-padding-top-lg"
       >
-        <h1>
-          Home
-        </h1>
-        <p>
-          This is a pet game. You play it.
-        </p>
-        <p>
-          Things you can do right now:
-        </p>
-        <ul>
-          <li
-            class="u-margin-bottom-md"
+        <div
+          class="home"
+        >
+          <h1
+            class="home__title"
           >
-            <a
-              class="button"
-              href="/login"
+            Welcome!
+          </h1>
+          <p
+            class="home__description"
+          >
+            Welcome to Pet Game, a totally original game that is 
+            <em>
+              definitely not
+            </em>
+             a clone of a popular virtual pet website. As you can probably tell, the site is only in the early stages of development right now, but eventually you will be able to have lots of fun here. You will be able to adopt pets, play games with them, and explore!
+          </p>
+          <h2
+            class="home__what-can-i-do-title"
+          >
+            What things can I do?
+          </h2>
+          <p>
+            Right now there is not a lot you can do, but you can take a poke around, visit The Taking Tree, or view your own profile (including your inventory).
+          </p>
+          <div
+            class="home__list"
+          >
+            <div
+              class="home__list-item"
             >
-              Log in
-            </a>
-          </li>
-          <li>
-            <a
-              class="button u-margin-bottom-md"
-              href="/taking-tree"
+              <div
+                class="spinner"
+              >
+                <div
+                  class="rect rect1"
+                />
+                <div
+                  class="rect rect2"
+                />
+                <div
+                  class="rect rect3"
+                />
+                <div
+                  class="rect rect4"
+                />
+                <div
+                  class="rect rect5"
+                />
+              </div>
+            </div>
+            <div
+              class="home__list-item"
             >
-              Visit The Taking Tree
-            </a>
-          </li>
-          <li>
-            <a
-              class="button"
-              href="/user-profile"
+              <a
+                class=""
+                href="/taking-tree"
+              >
+                Visit The Taking Tree
+              </a>
+            </div>
+            <div
+              class="home__list-item"
             >
-              View your profile
-            </a>
-          </li>
-        </ul>
+              <a
+                class=""
+                href="/user-profile"
+              >
+                View your profile
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

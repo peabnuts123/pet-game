@@ -1,7 +1,5 @@
 import fetchMock, { enableFetchMocks, disableFetchMocks } from 'jest-fetch-mock';
 
-export const NotMockedError = new Error('Fetch has not been mocked');
-
 /**
  * Mock 'fetch' calls.
  * This allows tests to control responses from external dependencies such as the API.
@@ -12,7 +10,12 @@ export const NotMockedError = new Error('Fetch has not been mocked');
 // Turn mocks off / on between tests so that they don't bleed into other tests
 beforeEach(() => {
   enableFetchMocks();
-  fetchMock.mockResponse(() => fail(NotMockedError));
+  fetchMock.mockResponse((request) => {
+    fail({
+      message: "Fetch has not been mocked",
+      request: `${request.method} ${request.url}`,
+    });
+  });
 });
 
 afterEach(() => {

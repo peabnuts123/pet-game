@@ -7,29 +7,131 @@ exports[`Initial Test of the Header Matches snapshot 1`] = `
       class="header"
     >
       <div
-        class="header__container"
+        class="header__container container"
       >
         <a
-          class="is-active"
+          class="header__brand is-active"
+          data-testid="header__brand"
           href="/"
         >
-          <h1>
-            Pet Game
-          </h1>
+          Pet Game
         </a>
-        <nav>
+        <nav
+          class="header__nav--desktop"
+        >
           <a
-            class=""
+            class="header__nav-item--desktop"
             href="/taking-tree"
           >
             The Taking Tree
           </a>
-          <a
-            class=""
-            href="/login"
+          <div
+            class="header__nav-item--desktop"
           >
-            Log in
-          </a>
+            <div
+              class="spinner spinner--inverted"
+            >
+              <div
+                class="rect rect1"
+              />
+              <div
+                class="rect rect2"
+              />
+              <div
+                class="rect rect3"
+              />
+              <div
+                class="rect rect4"
+              />
+              <div
+                class="rect rect5"
+              />
+            </div>
+          </div>
+        </nav>
+        <nav
+          class="header__nav--mobile"
+        >
+          <div
+            class="header__nav-item--mobile"
+          >
+            <button
+              class="button"
+            >
+              <svg
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="12"
+                  y2="12"
+                />
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="6"
+                  y2="6"
+                />
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="18"
+                  y2="18"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            class="header__nav--mobile__container"
+          >
+            <a
+              class="header__nav--mobile__item is-active"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="header__nav--mobile__item"
+              href="/taking-tree"
+            >
+              The Taking Tree
+            </a>
+            <div
+              class="header__nav--mobile__item--divider"
+            />
+            <div
+              class="header__nav--mobile__item"
+            >
+              <div
+                class="spinner spinner--inverted"
+              >
+                <div
+                  class="rect rect1"
+                />
+                <div
+                  class="rect rect2"
+                />
+                <div
+                  class="rect rect3"
+                />
+                <div
+                  class="rect rect4"
+                />
+                <div
+                  class="rect rect5"
+                />
+              </div>
+            </div>
+          </div>
         </nav>
       </div>
     </header>

@@ -48,7 +48,7 @@ const Header = observer(() => {
 
       <header class="header">
         <div class="header__container container">
-          <Link class="header__brand" activeClassName="is-active" href="/">
+          <Link data-testid="header__brand" class="header__brand" activeClassName="is-active" href="/">
             Pet Game
           </Link>
 
