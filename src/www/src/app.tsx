@@ -12,7 +12,6 @@ import Header from "@app/components/header";
 import RouteMap from './route-map';
 
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 if ((module as any).hot) {
   require("preact/debug");
 }
@@ -23,7 +22,15 @@ const App: FunctionalComponent = () => {
   useEffect(() => {
     Logger.log(LogLevel.debug, "App loading");
     void UserStore.refreshUserProfile();
-  }, [UserStore]);
+
+    // Listen to route changes, and refresh the page when crossing between a 404/200 response
+    //  i.e. when going to/from the not-found "default" route
+    RouteStore.addRouteChangeListener((args) => {
+      if ((args.currentRoute.props as any).default !== (args.previousRoute?.props as any)?.default) {
+        location.reload();
+      }
+    });
+  }, [UserStore, RouteStore]);
 
   return (
     <div>
