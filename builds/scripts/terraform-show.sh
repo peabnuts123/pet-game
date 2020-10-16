@@ -11,4 +11,4 @@ function exit_with_message_and_code() {
 
 cd terraform || exit_with_message_and_code 1 "Must run $0 from project root.";
 
-terraform show | tail -n 5;
+terraform show | tail -n 6;
