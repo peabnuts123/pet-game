@@ -29,6 +29,9 @@ msbuild.wrn
 
 mono_crash*.json
 
+# Node.js
+node_modules/
+
 # Sensitive config
 .env
 .env.*
