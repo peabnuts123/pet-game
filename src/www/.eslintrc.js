@@ -1,6 +1,6 @@
 // Simple constants for configuring rules
 const DISABLED = 'off';
-const WARNING = ['warn'];
+// const WARNING = ['warn'];
 const ERROR = ['error'];
 
 module.exports = {
@@ -20,7 +20,8 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
-    project: "./tsconfig.eslint.json",
+    createDefaultProgram: true,
+    project: "./tsconfig.json",
   },
   rules: {
     // Rules that are explicitly disabled
@@ -30,6 +31,8 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': DISABLED,
     '@typescript-eslint/no-non-null-assertion': DISABLED,
     '@typescript-eslint/restrict-template-expressions': DISABLED,
+    '@typescript-eslint/no-unsafe-member-access': DISABLED, // Too restrictive, you need `any` in certain situations
+
 
     // Rules that are explicitly a warning
     // - none at present -
@@ -55,5 +58,5 @@ module.exports = {
         '@typescript-eslint/no-unsafe-assignment': DISABLED,
       },
     },
-  ]
+  ],
 };
