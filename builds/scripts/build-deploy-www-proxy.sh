@@ -18,8 +18,9 @@ fi
 # Arguments
 lambda_function_name="${1}";
 zip_file_name="www-proxy.zip";
-NODE_ENV='production';
 
+# Environment
+export NODE_ENV='production';
 
 function exit_with_message_and_code() {
   code="$1";
