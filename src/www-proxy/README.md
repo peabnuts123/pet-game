@@ -11,7 +11,6 @@ This is a reverse proxy that fetches the frontend's content from S3. It looks at
     - Remove static hosting from S3
     - Remove origin-access-identity
     - Change Cloudfront to point at API gateway instead of S3, cache aggressively. Can we make an exception for index.html, though?
-  - Change `www` to do hard-reloads when crossing between 404/200
   - Tests
     - Mock S3 requests somehow and simulate requests / responses
     - Add test step back to `simulate-build`
