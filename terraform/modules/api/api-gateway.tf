@@ -1,7 +1,6 @@
 # API Gateway
 resource "aws_apigatewayv2_api" "default" {
-  name          = "Pet Game (${var.environment_id})"
-  description   = "The Pet Game ${var.environment_name} environment"
+  name          = "Pet Game - API (${var.environment_id})"
   protocol_type = "HTTP"
 
   tags = {
