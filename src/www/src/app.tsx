@@ -9,15 +9,9 @@ import { useStores } from "@app/stores";
 import Header from "@app/components/header";
 
 // Routes
-import HomeRoute from "@app/routes/home";
-import NotFoundRoute from "@app/routes/not-found";
-import TakingTreeRoute from '@app/routes/taking-tree';
-import UserProfileRoute from '@app/routes/user-profile';
-import LoginRoute from "@app/routes/login";
-import LogoutRoute from "@app/routes/logout";
+import RouteMap from './route-map';
 
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 if ((module as any).hot) {
   require("preact/debug");
 }
@@ -28,7 +22,15 @@ const App: FunctionalComponent = () => {
   useEffect(() => {
     Logger.log(LogLevel.debug, "App loading");
     void UserStore.refreshUserProfile();
-  }, [UserStore]);
+
+    // Listen to route changes, and refresh the page when crossing between a 404/200 response
+    //  i.e. when going to/from the not-found "default" route
+    RouteStore.addRouteChangeListener((args) => {
+      if ((args.currentRoute.props as any).default !== (args.previousRoute?.props as any)?.default) {
+        location.reload();
+      }
+    });
+  }, [UserStore, RouteStore]);
 
   return (
     <div>
@@ -36,12 +38,15 @@ const App: FunctionalComponent = () => {
 
       <div class="container u-padding-top-lg">
         <Router onChange={(args) => RouteStore.onRouteChange(args)}>
-          <Route path="/" component={HomeRoute} />
-          <Route path="/login" component={LoginRoute} />
-          <Route path="/logout" component={LogoutRoute} />
-          <Route path="/taking-tree" component={TakingTreeRoute} />
-          <Route path="/user-profile" component={UserProfileRoute} />
-          <NotFoundRoute default />
+          {RouteMap.map((route) => {
+            if (route.default) {
+              // Default route
+              return (<Route component={route.component} default />);
+            } else {
+              // Normal route
+              return (<Route path={route.path} component={route.component} />);
+            }
+          })}
         </Router>
       </div>
     </div>

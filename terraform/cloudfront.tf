@@ -17,13 +17,16 @@ resource "aws_cloudfront_distribution" "www" {
   #   PriceClass_All takes about ~45m to geo-replicate
   price_class = "PriceClass_100"
 
-  # WWW
+  # WWW (through www-proxy)
   origin {
-    domain_name = module.www.s3_bucket_regional_domain_name
+    domain_name = module.www_proxy.invoke_url
     origin_id   = local.www_origin_id
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.www.cloudfront_access_identity_path
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
 
@@ -43,10 +46,15 @@ resource "aws_cloudfront_distribution" "www" {
   # Cache config for WWW
   default_cache_behavior {
     allowed_methods        = ["HEAD", "GET", "OPTIONS"]
-    cached_methods         = ["HEAD", "GET", "OPTIONS"]
+    cached_methods         = ["HEAD", "GET"]
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
     target_origin_id       = local.www_origin_id
+
+    # Cache retention (1 hour)
+    default_ttl = 3600
+    min_ttl     = 0
+    max_ttl     = 3600
 
     forwarded_values {
       query_string = false
@@ -66,7 +74,7 @@ resource "aws_cloudfront_distribution" "www" {
     viewer_protocol_policy = "redirect-to-https"
     target_origin_id       = local.api_origin_id
 
-    # Cache retention
+    # Cache retention (disabled)
     default_ttl = 0
     min_ttl     = 0
     max_ttl     = 0
@@ -76,6 +84,29 @@ resource "aws_cloudfront_distribution" "www" {
 
       cookies {
         forward = "all"
+      }
+    }
+  }
+
+  // Do not cache root
+  ordered_cache_behavior {
+    allowed_methods        = ["HEAD", "GET", "OPTIONS"]
+    cached_methods         = ["HEAD", "GET"]
+    path_pattern           = "/"
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+    target_origin_id       = local.www_origin_id
+
+    # Cache retention (disabled)
+    default_ttl = 0
+    min_ttl     = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
       }
     }
   }
@@ -100,8 +131,4 @@ resource "aws_cloudfront_distribution" "www" {
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2018"
   }
-}
-
-resource "aws_cloudfront_origin_access_identity" "www" {
-  comment = "Access to bucket: ${var.project_id}_${var.environment_id}_www"
 }

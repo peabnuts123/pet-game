@@ -1,6 +1,6 @@
 # OUTPUTS
 
-output "s3_bucket_name" {
+output "www_bucket_name" {
   value       = module.www.s3_bucket_name
   description = "S3 bucket name, for uploading www files to. Use `aws s3 sync <DEPLOY_FOLDER> s3://<BUCKET_NAME> --acl 'private'` to deploy"
 }
@@ -12,7 +12,12 @@ output "cloudfront_domain_name" {
   description = "CloudFront distribution domain name. Add DNS record `CNAME <DOMAIN_NAME> <CLOUDFRONT_DOMAIN_NAME>` to finish configuration"
 }
 
-output "lambda_function_name" {
+output "api_lambda_function_name" {
   value = module.api.lambda_function_name
-  description = "Lambda function name, for deploying code. Use `aws lambda update-function-code --function-name <LAMBDA_FUNCTION_NAME> --zip-file fileb://<API_CODE_PACKAGE>.zip` to deploy."
+  description = "Lambda function name, for deploying api component to. Use `aws lambda update-function-code --function-name <LAMBDA_FUNCTION_NAME> --zip-file fileb://<API_CODE_PACKAGE>.zip` to deploy."
+}
+
+output "www-proxy_lambda_function_name" {
+  value = module.www_proxy.lambda_function_name
+  description = "Lambda function name, for deploying api component to. Use `aws lambda update-function-code --function-name <LAMBDA_FUNCTION_NAME> --zip-file fileb://<API_CODE_PACKAGE>.zip` to deploy."
 }
