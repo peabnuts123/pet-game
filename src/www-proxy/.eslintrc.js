@@ -41,7 +41,11 @@ module.exports = {
     'semi': ERROR,
     'comma-dangle': ['error', 'always-multiline'],
     '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
-    '@typescript-eslint/no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warn', {
+      'argsIgnorePattern': '^_',
+      'varsIgnorePattern': '^_',
+      'caughtErrorsIgnorePattern': '^_',
+     }],
   },
   overrides: [
     // JavaScript-specific rules
