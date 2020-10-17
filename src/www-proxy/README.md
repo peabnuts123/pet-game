@@ -4,13 +4,6 @@ This is a reverse proxy that fetches the frontend's content from S3. It looks at
 
 ## Work backlog
 
-  - Infrastructure
-    - IAM role for parameter store, logs, s3 bucket
-    - Node.js Lambda w/ execution role
-    - API gateway proxying all requests to the Lambda
-    - Remove static hosting from S3
-    - Remove origin-access-identity
-    - Change Cloudfront to point at API gateway instead of S3, cache aggressively. Can we make an exception for index.html, though?
   - Tests
     - Mock S3 requests somehow and simulate requests / responses
     - Add test step back to `simulate-build`
