@@ -1,6 +1,8 @@
+/* eslint-env node */
+
 // Simple constants for configuring rules
 const DISABLED = 'off';
-const WARNING = ['warn'];
+// const WARNING = ['warn'];
 const ERROR = ['error'];
 
 // @NOTE implicitly extends from the config in ../.eslintrc.js
@@ -19,7 +21,7 @@ module.exports = {
   ],
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
   },
   rules: {
@@ -36,7 +38,7 @@ module.exports = {
   settings: {
     react: {
       pragma: 'h',
-      version: 'detect'
+      version: 'detect',
     },
   },
 };
