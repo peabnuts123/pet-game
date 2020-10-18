@@ -74,25 +74,25 @@ jobs:
     displayName: "npm install"
     inputs:
       command: 'install'
-      workingDir: 'src/www'
+      workingDir: 'src/www-proxy'
   # npm test (disabled)
   # - task: Npm@1
   #   displayName: "npm test"
   #   inputs:
   #     command: 'custom'
-  #     workingDir: 'src/www'
+  #     workingDir: 'src/www-proxy'
   #     customCommand: 'test'
   # npm run lint
   - task: Npm@1
     displayName: "npm run lint"
     inputs:
       command: 'custom'
-      workingDir: 'src/www'
+      workingDir: 'src/www-proxy'
       customCommand: 'run lint'
   # npm run build
   - task: Npm@1
     displayName: "npm run build"
     inputs:
       command: 'custom'
-      workingDir: 'src/www'
+      workingDir: 'src/www-proxy'
       customCommand: 'run build'
