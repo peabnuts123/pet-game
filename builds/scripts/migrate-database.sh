@@ -22,7 +22,7 @@ fi
 
 # Arguments
 # @NOTE shellcheck complains because this isn't used, but it is used by sub-process when migrating
-DATABASE_URL="${1}";
+export DATABASE_URL="${1}";
 
 function exit_with_message_and_code() {
   code="$1";

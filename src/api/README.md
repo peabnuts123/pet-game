@@ -131,5 +131,19 @@ The API component can also run in an AWS cloud environment, on Lambda functions 
     ./builds/scripts/terraform-show.sh
     ```
 
+## Migrating a database hosted in a cloud environment
+
+We also need to ensure the database in our cloud environment is running on the correct schema version, or else the api won't work.
+
+When running `dotnet ef database update` we need to make sure we are using the right connection string for the database we are targeting. Because you rarely have a production environment's connection string laying around in a `_secrets.___.json` config file, you'll usually need to specify `DATABASE_URL` manually. You can do this by setting an environment variable called `DATABASE_URL` to a connection string pointing to your database. Note that the value of this connection string is highly sensitive, so you should be very careful with it!
+
+A convenience script has been written to do all this for you. You just need to pass the connection string in as a parameter, like so (make sure you are in the project root):
+
+```sh
+./builds/scripts/migrate-database.sh [CONNECTION STRING]
+```
+
+This will set the environment variable just for the scope of the migration and unset it when you are done.
+
 ## Work backlog / TODO
  - Remove pet-game Auth0 config from `appsettings.json`
