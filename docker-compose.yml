@@ -21,7 +21,22 @@ services:
     environment:
       ASPNETCORE_Kestrel__Certificates__Default__Password: "${ASPNETCORE_Kestrel__Certificates__Default__Password}"
       ASPNETCORE_Kestrel__Certificates__Default__Path: /app/aspnetapp.pfx
-      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_ENVIRONMENT: Development
+      ENVIRONMENT_ID: docker
       PORT: 8080 # Must match port mounted in `ports`
     ports:
       - '5000:8080/tcp'
+
+  www:
+    image: "node:alpine"
+    container_name: "petgame_www"
+    restart: unless-stopped
+    user: "1000:1000"
+    volumes:
+      - "./src/www/:/home/user/node/"
+    environment:
+      NODE_ENV: development
+    ports:
+      - '8080:8080/tcp'
+    working_dir: /home/user/node
+    entrypoint: "./docker-run.sh"

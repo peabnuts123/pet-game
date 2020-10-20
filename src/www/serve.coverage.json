@@ -1,0 +1,11 @@
+{
+  "cleanUrls": false,
+  "public": "coverage/lcov-report",
+  "directoryListing": false,
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    }
+  ]
+}

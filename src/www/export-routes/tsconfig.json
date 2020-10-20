@@ -1,0 +1,32 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2018",
+    "baseUrl": "..",
+    "paths": {
+      "@app/*": [
+        "src/*"
+      ],
+      "@app/config": [
+        "src/config/environments/development",
+      ],
+      "@test/*": [
+        "test/*"
+      ],
+      // "preact-router": [
+      //   "preact-router-exporter/index",
+      // ],
+      // "_preact-router": [
+      //   "node_modules/preact-router",
+      // ],
+      "react": [
+        "node_modules/preact/compat"
+      ],
+    },
+  },
+  "include": [
+    "*.ts",
+    "*.tsx",
+  ],
+}

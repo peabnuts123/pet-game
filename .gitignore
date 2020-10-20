@@ -29,11 +29,23 @@ msbuild.wrn
 
 mono_crash*.json
 
+# Node.js
+node_modules/
+
 # Sensitive config
 .env
+.env.*
 !.env.sample
 _secrets*.json
 !_secrets.sample.json
 
 # devdb
 src/devdb/data
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+terraform/tmp/

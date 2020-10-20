@@ -3,7 +3,8 @@
     "src/api/**/{bin,obj}": true
   },
   "eslint.workingDirectories": [
-    "src/www"
+    "src/www",
+    "src/www-proxy",
   ],
   "typescript.tsdk": "src/www/node_modules/typescript/lib",
 }

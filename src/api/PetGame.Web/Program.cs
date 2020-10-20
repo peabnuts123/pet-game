@@ -7,28 +7,44 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using PetGame.Config;
 
 namespace PetGame.Web
 {
     public class Program
     {
-        // Explicit configuration
-        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-            .AddJsonFile("_secrets.json", optional: true)
-            .AddJsonFile($"_secrets.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-            .AddEnvironmentVariables()
-            .Build();
-
-        public static int Main(string[] args)
+        public static void ConfigureLogging()
         {
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
+                .ReadFrom.Configuration(Configuration.Base)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
+        }
+
+        public static void ConfigureHost(IHostBuilder builder) =>
+            builder
+                .ConfigureAppConfiguration(builder =>
+                    builder.AddConfiguration(Configuration.Base))
+                .UseSerilog();
+
+        public static void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            // Host:Port configuration, only use if specified (e.g. in Docker)
+            string hostProtocol = Configuration.Base["HOST_PROTOCOL"];
+            string port = Configuration.Base["PORT"];
+            if (!String.IsNullOrEmpty(port) && !String.IsNullOrEmpty(hostProtocol))
+            {
+                builder.UseUrls($"{hostProtocol}://+:{port}");
+            }
+
+            builder
+                .UseStartup<Startup>();
+        }
+
+        public static int Main(string[] args)
+        {
+            ConfigureLogging();
 
             try
             {
@@ -47,25 +63,13 @@ namespace PetGame.Web
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    string hostProtocol = Configuration["HOST_PROTOCOL"];
-                    if (String.IsNullOrEmpty(hostProtocol))
-                    {
-                        hostProtocol = "http";
-                    }
-                    string port = Configuration["PORT"];
-                    if (String.IsNullOrEmpty(port))
-                    {
-                        port = "5000";
-                    }
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args);
+            ConfigureHost(hostBuilder);
 
-                    webBuilder
-                        .UseStartup<Startup>()
-                        .UseUrls($"{hostProtocol}://+:{port}");
-                });
+            hostBuilder.ConfigureWebHostDefaults(ConfigureWebHost);
+            return hostBuilder;
+        }
     }
 }
