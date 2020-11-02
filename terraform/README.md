@@ -73,3 +73,12 @@ Once you have everything you need, you can do the following to create the infras
 Each component has code that needs to be deployed into the environment as a separate step. There are scripts in the `builds/scripts/` directory for deploying each of these, and the documentation for deploying the code for each component lives in each respective README.
 
 Generally speaking, these scripts just need the ID of the infrastructure component they are deploying to e.g. the name S3 bucket, or the name Lambda function. These come from the Terraform outputs, and can be viewed by running `./builds/scripts/terraform-show.sh` (from the project root).
+
+## Backlog / TODO
+
+  - Update project_id/environment_id validation to remove underscores
+  - Probably redo the whole "common variable" thing and just use the variables that are needed
+  - Document that you need an AWS CLI profile named `petgame`
+  - For that matter, document build/deploy scripts dependencies
+  - Add `terraform init` to documentation
+  - Add "Comment" to each Cloudfront to describe what the heck it is
