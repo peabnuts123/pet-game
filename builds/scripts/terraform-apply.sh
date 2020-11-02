@@ -2,6 +2,9 @@
 
 set -e;
 
+# Prerequisites
+#   - Terraform CLI
+
 # Validate arguments
 if [ -z "$1" ]
 then

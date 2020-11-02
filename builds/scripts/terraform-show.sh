@@ -2,6 +2,9 @@
 
 set -e;
 
+# Prerequisites
+#   - Terraform CLI
+
 function exit_with_message_and_code() {
   code="$1";
   message="$2";
