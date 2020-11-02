@@ -55,6 +55,7 @@ const Header = observer(() => {
           {/* DESKTOP NAV */}
           <nav class="header__nav--desktop">
             {/* Links */}
+            <Link class="header__nav-item--desktop" activeClassName="is-active" href="/games">Games</Link>
             <Link class="header__nav-item--desktop" activeClassName="is-active" href="/taking-tree">The Taking Tree</Link>
 
             {/* Loading spinner */}
@@ -108,6 +109,7 @@ const Header = observer(() => {
               {/* Links */}
               <Link class="header__nav--mobile__item" activeClassName="is-active" href="/">Home</Link>
               <Link class="header__nav--mobile__item" activeClassName="is-active" href="/taking-tree">The Taking Tree</Link>
+              <Link class="header__nav--mobile__item" activeClassName="is-active" href="/games">Games</Link>
 
               {/* Divider */}
               <div class="header__nav--mobile__item--divider"></div>

@@ -7,6 +7,7 @@ import TakingTreeRoute from '@app/routes/taking-tree';
 import UserProfileRoute from '@app/routes/user-profile';
 import LoginRoute from "@app/routes/login";
 import LogoutRoute from "@app/routes/logout";
+import GamesRoute from '@app/routes/games';
 
 interface RouteMapEntry extends RouteProps<any> {
   path?: string;
@@ -19,6 +20,7 @@ const RouteMap: RouteMapEntry[] = [
   { path: "/logout", component: LogoutRoute },
   { path: "/taking-tree", component: TakingTreeRoute },
   { path: "/user-profile", component: UserProfileRoute },
+  { path: "/games", component: GamesRoute },
   { default: true, component: NotFoundRoute },
 ];
 
