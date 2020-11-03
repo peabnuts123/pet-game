@@ -9,25 +9,36 @@ const GamesRoute = observer(() => {
   const aspectRatioMaintainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    /** Time period to debounce resize function calls */
+    const RESIZE_DEBOUNCE_TIME_MS = 30;
+    /** Timer handle to last setTimeout */
+    let onResizeTimer: number | undefined = undefined;
+
+    /**
+     * OnResize callback, called at most every `RESIZE_DEBOUNCE_TIME_MS`
+     */
+    const onResize = (): void => {
+      clearTimeout(onResizeTimer);
+      onResizeTimer = window.setTimeout(() => {
+        // Ensure we don't do this after user has navigated to a different page
+        if (getCurrentUrl().startsWith('/games') && aspectRatioMaintainerRef.current) {
+          // Set the aspect ration on the "aspect ratio maintainer" element
+          //  equal to the aspect ratio of the current window
+          const aspectRatioMaintainerEl = aspectRatioMaintainerRef.current;
+          const windowAspectRatio = window.innerHeight / window.innerWidth;
+          aspectRatioMaintainerEl.style['paddingBottom'] = `${100 * windowAspectRatio}%`;
+        }
+      }, RESIZE_DEBOUNCE_TIME_MS);
+    };
+
+    Logger.log(LogLevel.debug, "Subscring to resize listener");
+
+    // Subscribe to 'resize' event (and invoke immediately)
     window.addEventListener('resize', onResize);
     onResize();
 
-    const RESIZE_DEBOUNCE_TIME_MS = 30;
-    let onResizeTimer: number | undefined = undefined;
-
+    // Remove listener on leaving page
     return () => window.removeEventListener('resize', onResize);
-
-    function onResize(): void {
-      clearTimeout(onResizeTimer);
-      onResizeTimer = window.setTimeout(() => {
-        // Ensure we don't do this after user has navigated
-        if (getCurrentUrl().startsWith('/games') && aspectRatioMaintainerRef.current) {
-          Logger.log(LogLevel.debug, "Game route is resizing", getCurrentUrl());
-          const aspectRatioMaintainerEl = aspectRatioMaintainerRef.current;
-          aspectRatioMaintainerEl.style['paddingBottom'] = `${100 * (window.innerHeight / window.innerWidth)}%`;
-        }
-      }, RESIZE_DEBOUNCE_TIME_MS);
-    }
   }, []);
 
   return (
