@@ -43,13 +43,17 @@ const GamesRoute = observer(() => {
 
   return (
     <Fragment>
-      <h1>Games!</h1>
+      <h1>Games</h1>
+      <p>Here you can play various games with your pets. There aren&apos;t very many games here yet 😢 but there will be more in the future!</p>
 
       <div class="games__aspect-maintainer" ref={aspectRatioMaintainerRef}>
         <div class="games__container">
           <iframe src="https://pet-game-dev-game-bappy-flirb.s3.ap-southeast-2.amazonaws.com/index.html" frameBorder="0" class="games__iframe"></iframe>
         </div>
       </div>
+
+      <h2>Leaderboard</h2>
+      <p>Coming soon!</p>
     </Fragment>
   );
 }) as FunctionalComponent;
