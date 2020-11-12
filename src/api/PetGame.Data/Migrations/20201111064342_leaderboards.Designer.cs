@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetGame.Data;
@@ -9,9 +10,10 @@ using PetGame.Data;
 namespace PetGame.Data.Migrations
 {
     [DbContext(typeof(PetGameContext))]
-    partial class PetGameContextModelSnapshot : ModelSnapshot
+    [Migration("20201111064342_leaderboards")]
+    partial class leaderboards
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

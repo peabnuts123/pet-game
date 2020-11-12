@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Npgsql;
 using PetGame.Config;
 
@@ -39,6 +37,8 @@ namespace PetGame.Data
         public DbSet<PlayerInventoryItem> PlayerInventoryItems { get; set; }
         public DbSet<TakingTreeInventoryItem> TakingTreeInventoryItems { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<LeaderboardEntry> LeaderboardEntries { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,6 +47,7 @@ namespace PetGame.Data
             //  rather than just putting ALL the models' logic in this one place
             modelBuilder.Entity<Item>().HasData(Item.ALL_ITEMS);
             modelBuilder.Entity<User>().HasIndex(u => u.AuthId).IsUnique();
+            modelBuilder.Entity<Game>().HasData(Game.ALL_GAMES);
         }
     }
 }
