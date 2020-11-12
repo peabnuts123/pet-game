@@ -32,9 +32,9 @@ namespace PetGame.Config
                     var builder = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
                         // Read non-sensitive configuration
-                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                         // Override base configuration with environment specific config
-                        .AddJsonFile($"appsettings.{EnvironmentId ?? "__NO_ENVIRONMENT_DEFINED"}.json", optional: false, reloadOnChange: true)
+                        .AddJsonFile($"appsettings.{EnvironmentId ?? "__NO_ENVIRONMENT_DEFINED"}.json", optional: true, reloadOnChange: true)
                         // Read secrets (not in source control)
                         .AddJsonFile($"_secrets.{EnvironmentId ?? "__NO_ENVIRONMENT_DEFINED"}.json", optional: true)
                         // Override previous configuration with environment variables

@@ -15,6 +15,11 @@ namespace PetGame.Data
         {
             // Parse `postgres://[user]:[password]@[host]/[database]`-formatted connection string
             string databaseUrl = Configuration.Base["DATABASE_URL"];
+            if (databaseUrl == null)
+            {
+                throw new ArgumentNullException("Cannot connect to database. Configuration parameter `DATABASE_URL` is null. Are you missing a config file, or environment variable?");
+            }
+
             Uri databaseUri = new Uri(databaseUrl);
             string[] userInfo = Uri.UnescapeDataString(databaseUri.UserInfo).Split(':');
 
