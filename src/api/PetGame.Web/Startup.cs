@@ -60,6 +60,8 @@ namespace PetGame.Web
             services.AddTransient(typeof(ITakingTreeService), typeof(TakingTreeService));
             services.AddTransient(typeof(IUserService), typeof(UserService));
             services.AddTransient(typeof(IItemService), typeof(ItemService));
+            services.AddTransient(typeof(ILeaderboardService), typeof(LeaderboardService));
+            services.AddTransient(typeof(IGameService), typeof(GameService));
 
             // DB
             services.AddDbContext<PetGameContext>();
