@@ -47,7 +47,14 @@ namespace PetGame.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // ASP.NET
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions((options) =>
+                {
+                    // Strip nulls from payload
+                    // @TODO This might be annoying later?
+                    //  In .NET5 you can specify when to omit properties with JsonIgnore
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                });
 
             // Store data protection keys in AWS (only in production)
             if (this.HostEnvironment.IsProduction())
