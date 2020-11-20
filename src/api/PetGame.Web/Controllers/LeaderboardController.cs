@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PetGame.Business;
+using PetGame.Common;
 using PetGame.Data;
 
 namespace PetGame.Web
@@ -66,7 +67,7 @@ namespace PetGame.Web
             IList<LeaderboardEntry> entries = await this.leaderboardService.GetUserEntriesForDate(
                 user.Id,
                 dto.gameId,
-                this.leaderboardService.GetLocalDateTimeNow(dto.timeZoneOffsetMinutes),
+                DateTimeUtility.GetLocalDateTimeNow(dto.timeZoneOffsetMinutes),
                 dto.timeZoneOffsetMinutes
             );
 

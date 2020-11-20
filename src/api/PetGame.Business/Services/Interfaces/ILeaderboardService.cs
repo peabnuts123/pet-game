@@ -33,20 +33,5 @@ namespace PetGame.Business
         /// <param name="timeZoneOffsetMinutes">The timezone, specified by number of minutes ahead of UTC. e.g. UTC+10 is 600, UTC-5 is -300</param>
         /// <returns>Newly created LeaderboardEntry instance</returns>
         Task<LeaderboardEntry> SaveEntry(Guid userId, Guid gameId, int score, int timeZoneOffsetMinutes);
-
-        /// <summary>
-        /// Convert a local time to UTC
-        /// </summary>
-        /// <param name="localTime">The actual local time e.g. 8PM</param>
-        /// <param name="timeZoneOffsetMinutes">The timezone, specified by number of minutes ahead of UTC. e.g. UTC+10 is 600, UTC-5 is -300</param>
-        /// <returns>UTC equivalent of `localTime`</returns>
-        DateTime ConvertLocalTimeToUTC(DateTime localTime, int timeZoneOffsetMinutes);
-
-        /// <summary>
-        /// Get the current time in a local time zone, as specified by `timeZoneOffsetMinutes`
-        /// </summary>
-        /// <param name="timeZoneOffsetMinutes">The timezone, specified by number of minutes ahead of UTC. e.g. UTC+10 is 600, UTC-5 is -300</param>
-        /// <returns>DateTime in local time zone</returns>
-        DateTime GetLocalDateTimeNow(int timeZoneOffsetMinutes);
     }
 }

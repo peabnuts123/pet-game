@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PetGame.Common;
 using PetGame.Data;
 
 namespace PetGame.Business
@@ -16,7 +17,7 @@ namespace PetGame.Business
         /// on any given calendar day within their local time zone (NOT 24-hour period)
         /// </summary>
         public static readonly int MAX_SUBMISSIONS_PER_DAY = 3;
-        
+
 
         private PetGameContext db;
         private ILogger<LeaderboardService> logger;
@@ -38,12 +39,12 @@ namespace PetGame.Business
         public async Task<IList<LeaderboardEntry>> GetUserEntriesForDate(Guid userId, Guid gameId, DateTime localDate, int timeZoneOffsetMinutes)
         {
             // Extract midnight-midnight datetimes from the local time (the time is ignored)
-            var filterStartLocal = new DateTime(localDate.Year, localDate.Month, localDate.Day, 0, 0, 0);
+            var filterStartLocal = localDate.With(second: 0, minute: 0, hour: 0);
             var filterEndLocal = filterStartLocal + TimeSpan.FromDays(1);
 
             // Convert the local datetime to UTC
-            DateTime filterStartUtc = ConvertLocalTimeToUTC(filterStartLocal, timeZoneOffsetMinutes);
-            DateTime filterEndUtc = ConvertLocalTimeToUTC(filterEndLocal, timeZoneOffsetMinutes);
+            DateTime filterStartUtc = DateTimeUtility.ConvertLocalTimeToUTC(filterStartLocal, timeZoneOffsetMinutes);
+            DateTime filterEndUtc = DateTimeUtility.ConvertLocalTimeToUTC(filterEndLocal, timeZoneOffsetMinutes);
 
             return await this.db.LeaderboardEntries.Where((entry) =>
                 // This user's scores
@@ -80,7 +81,7 @@ namespace PetGame.Business
         public async Task<LeaderboardEntry> SaveEntry(Guid userId, Guid gameId, int score, int timeZoneOffsetMinutes)
         {
             // Test to see if the user has reached their max number of submissions for today
-            IList<LeaderboardEntry> entriesForToday = await GetUserEntriesForDate(userId, gameId, GetLocalDateTimeNow(timeZoneOffsetMinutes), timeZoneOffsetMinutes);
+            IList<LeaderboardEntry> entriesForToday = await GetUserEntriesForDate(userId, gameId, DateTimeUtility.GetLocalDateTimeNow(timeZoneOffsetMinutes), timeZoneOffsetMinutes);
             if (entriesForToday.Count >= MAX_SUBMISSIONS_PER_DAY)
             {
                 throw new InvalidOperationException($"Maximum submissions for today reached: {entriesForToday.Count} of {MAX_SUBMISSIONS_PER_DAY}");
@@ -95,7 +96,7 @@ namespace PetGame.Business
                 EntryTimeUTC = DateTime.UtcNow,
             };
 
-            await this.db.AddAsync(newEntry);
+            await this.db.LeaderboardEntries.AddAsync(newEntry);
 
             await this.db.SaveChangesAsync();
 
@@ -104,40 +105,6 @@ namespace PetGame.Business
             return this.db.LeaderboardEntries
                 .Include((entry) => entry.Game)
                 .Single((entry) => entry.Id == newEntry.Id);
-        }
-
-        /// <summary>
-        /// Convert a local time to UTC
-        /// </summary>
-        /// <param name="localTime">The actual local time e.g. 8PM</param>
-        /// <param name="timeZoneOffsetMinutes">The timezone, specified by number of minutes ahead of UTC. e.g. UTC+10 is 600, UTC-5 is -300</param>
-        /// <returns>UTC equivalent of `localTime`</returns>
-        public DateTime ConvertLocalTimeToUTC(DateTime localTime, int timeZoneOffsetMinutes)
-        {
-            // Ensure localTime has correct `Kind` property, which is immutable, 
-            //  so we must construct a new DateTime object
-            DateTime localTimeUnspecified = new DateTime(localTime.Ticks, DateTimeKind.Unspecified);
-            // Create a custom timezone based on `timeZoneOffsetMinutes`
-            TimeZoneInfo localTimeZone = TimeZoneInfo.CreateCustomTimeZone("LocalTime", TimeSpan.FromMinutes(timeZoneOffsetMinutes), "Local timezone", "LocalTime");
-            // Convert the specified local time to UTC as if it is from the specified time zone
-            DateTime utcTime = TimeZoneInfo.ConvertTimeToUtc(localTimeUnspecified, localTimeZone);
-
-            return utcTime;
-        }
-
-        /// <summary>
-        /// Get the current time in a local time zone, as specified by `timeZoneOffsetMinutes`
-        /// </summary>
-        /// <param name="timeZoneOffsetMinutes">The timezone, specified by number of minutes ahead of UTC. e.g. UTC+10 is 600, UTC-5 is -300</param>
-        /// <returns>DateTime in local time zone</returns>
-        public DateTime GetLocalDateTimeNow(int timeZoneOffsetMinutes)
-        {
-            // Create a custom timezone based on `tzOffsetMinutes`
-            TimeZoneInfo localTimeZone = TimeZoneInfo.CreateCustomTimeZone("LocalTime", TimeSpan.FromMinutes(timeZoneOffsetMinutes), "Local timezone", "LocalTime");
-            // Convert the specified local time to UTC as if it is from the specified time zone
-            DateTime localTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, localTimeZone);
-
-            return localTime;
         }
     }
 }

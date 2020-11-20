@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\PetGame.Data\PetGame.Data.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PetGame.Data\PetGame.Data.csproj" />
+    <ProjectReference Include="..\PetGame.Common\PetGame.Common.csproj" />
+  </ItemGroup>
 
 </Project>
