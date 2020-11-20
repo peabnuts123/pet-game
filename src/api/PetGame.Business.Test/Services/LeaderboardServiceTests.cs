@@ -165,7 +165,7 @@ namespace PetGame.Business.Test
             result.UserId.Should().Be(mockUserId);
             result.GameId.Should().Be(mockGameId);
             result.Score.Should().Be(mockScore);
-            result.EntryTimeUTC.Should().BeCloseTo(DateTimeUtility.ConvertLocalTimeToUTC(DateTime.Now, mockTimeZoneOffsetMinutes), 500);
+            result.EntryTimeUTC.Should().BeCloseTo(DateTime.UtcNow, 500);
         }
     }
 }
