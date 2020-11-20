@@ -37,7 +37,7 @@ namespace PetGame.Business.Test
             Guid mockGameId = mockGames[0].Id;
 
             // Seed mock leaderboard entries
-            int mockTimeZoneOffsetMinutes = 780;
+            int mockTimeZoneOffsetMinutes = DateTimeUtility.GetSystemTimeZoneOffsetMinutes();
             var mockLeaderboardEntries = MockDbUtility.GetMockLeaderboardEntries(mockUserId, mockGameId, mockTimeZoneOffsetMinutes);
             await MockDbUtility.SetupMockLeaderboardEntries(db, mockLeaderboardEntries);
 
@@ -73,7 +73,7 @@ namespace PetGame.Business.Test
             Guid seedGameId = mockGames[0].Id;
 
             // Seed mock leaderboard entries
-            int mockTimeZoneOffsetMinutes = 780;
+            int mockTimeZoneOffsetMinutes = DateTimeUtility.GetSystemTimeZoneOffsetMinutes();
             var mockLeaderboardEntries = MockDbUtility.GetMockLeaderboardEntries(mockUserId, seedGameId, mockTimeZoneOffsetMinutes);
             await MockDbUtility.SetupMockLeaderboardEntries(db, mockLeaderboardEntries);
 
@@ -107,7 +107,7 @@ namespace PetGame.Business.Test
             Guid seedGameId = mockGames[0].Id;
 
             // Seed mock leaderboard entries
-            int mockTimeZoneOffsetMinutes = 780;
+            int mockTimeZoneOffsetMinutes = DateTimeUtility.GetSystemTimeZoneOffsetMinutes();
             var mockLeaderboardEntries = MockDbUtility.GetMockLeaderboardEntries(mockUserId, seedGameId, mockTimeZoneOffsetMinutes);
             await MockDbUtility.SetupMockLeaderboardEntries(db, mockLeaderboardEntries);
 
@@ -143,7 +143,7 @@ namespace PetGame.Business.Test
             Guid mockGameId = mockGames[0].Id;
 
             // Seed mock leaderboard entries
-            int mockTimeZoneOffsetMinutes = 780;
+            int mockTimeZoneOffsetMinutes = DateTimeUtility.GetSystemTimeZoneOffsetMinutes();
             var mockLeaderboardEntries = new List<LeaderboardEntry>();
             await MockDbUtility.SetupMockLeaderboardEntries(db, mockLeaderboardEntries);
 

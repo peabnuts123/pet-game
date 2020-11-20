@@ -64,5 +64,14 @@ namespace PetGame.Common
 
             return localTime;
         }
+
+        /// <summary>
+        /// Get the system's local time offset from UTC, expressed in minutes
+        /// </summary>
+        public static int GetSystemTimeZoneOffsetMinutes()
+        {
+            TimeSpan utcOffset = TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
+            return (int)utcOffset.TotalMinutes;
+        }
     }
 }
