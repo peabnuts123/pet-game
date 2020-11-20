@@ -13,6 +13,9 @@ namespace PetGame.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
+            // Skip configuring if configuration has already been supplied elsewhere
+            if (options.IsConfigured) return;
+
             // Parse `postgres://[user]:[password]@[host]/[database]`-formatted connection string
             string databaseUrl = Configuration.Base["DATABASE_URL"];
             if (databaseUrl == null)
