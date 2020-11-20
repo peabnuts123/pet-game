@@ -2,7 +2,7 @@ import { APIGatewayProxyHandlerV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import AWS, { AWSError } from 'aws-sdk';
 import { PromiseResult } from 'aws-sdk/lib/request';
 
-import Logger, { LogLevel } from './util/Logger';
+import Logger from './util/Logger';
 
 const s3 = new AWS.S3();
 const ssm = new AWS.SSM();
