@@ -58,16 +58,19 @@ namespace PetGame.Business
         }
 
         /// <summary>
-        /// Get all scores for a particular game
+        /// Get top N scores for a particular game
         /// </summary>
         /// <param name="gameId">ID of the game</param>
-        /// <returns>List of all LeaderboardEntry objects for the given game</returns>
-        public async Task<IList<LeaderboardEntry>> GetAllEntriesForGame(Guid gameId)
+        /// <param name="topN">Number of top scores to get</param>
+        /// <returns>List of N LeaderboardEntry objects for the given game</returns>
+        public async Task<IList<LeaderboardEntry>> GetTopEntriesForGame(Guid gameId, int topN)
         {
-            // @TODO probably take a param for "top N scores"
             return await this.db.LeaderboardEntries
                 .Include((entry) => entry.User)
-                .Where((entry) => entry.GameId == gameId).ToListAsync();
+                .Where((entry) => entry.GameId == gameId)
+                .OrderByDescending((entry) => entry.Score)
+                .Take(topN)
+                .ToListAsync();
         }
 
         /// <summary>

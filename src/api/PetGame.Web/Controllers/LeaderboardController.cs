@@ -122,8 +122,8 @@ namespace PetGame.Web
         }
 
         [HttpGet]
-        [Route("game/{gameId}")]
-        public async Task<ActionResult<IList<LeaderboardEntry>>> GetAllEntriesForGame(Guid gameId)
+        [Route("game/{gameId}/{topN?}")]
+        public async Task<ActionResult<IList<LeaderboardEntry>>> GetTop100EntriesForGame(Guid gameId, int topN = 10)
         {
             // VALIDATION
             if (!this.gameService.IsValidGameId(gameId))
@@ -134,7 +134,7 @@ namespace PetGame.Web
                 });
             }
 
-            return Ok(await this.leaderboardService.GetAllEntriesForGame(gameId));
+            return Ok(await this.leaderboardService.GetTopEntriesForGame(gameId, topN));
         }
 
         [HttpPost]

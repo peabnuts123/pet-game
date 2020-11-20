@@ -115,7 +115,7 @@ namespace PetGame.Common.Test
                 new LeaderboardEntry {
                     Id = new Guid("cc7ac70f-1e68-4e78-907f-02abaa7ee1e4"),
                     GameId = gameId,
-                    Score = 100,
+                    Score = 400,
                     UserId = userId,
                     EntryTimeUTC = DateTimeUtility.ConvertLocalTimeToUTC(
                         // Today 1am
@@ -126,7 +126,7 @@ namespace PetGame.Common.Test
                 new LeaderboardEntry {
                     Id = new Guid("25fb0dde-423f-4c2e-b793-3bc16fcb5adf"),
                     GameId = gameId,
-                    Score = 200,
+                    Score = 500,
                     UserId = userId,
                     EntryTimeUTC = DateTimeUtility.ConvertLocalTimeToUTC(
                         // Today 2am
@@ -137,7 +137,7 @@ namespace PetGame.Common.Test
                 new LeaderboardEntry {
                     Id = new Guid("7a563cea-6b11-4597-82f9-6e93ff04768a"),
                     GameId = gameId,
-                    Score = 300,
+                    Score = 600,
                     UserId = userId,
                     EntryTimeUTC = DateTimeUtility.ConvertLocalTimeToUTC(
                         // Today 3am

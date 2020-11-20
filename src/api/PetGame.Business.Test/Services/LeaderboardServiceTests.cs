@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -54,10 +55,10 @@ namespace PetGame.Business.Test
         }
 
         // @TODO derive these GUIDs from the mock data rather than copypaste
-        [TestCase("cbb8e1ee-e053-4e7e-9c82-7167a0d5eb8c", 6)]
-        [TestCase("33ff643b-3b5d-4f51-b34e-218155a11462", 0)]
-        [Description("Calling GetAllEntriesForGame() with returns all entries in the DB with that gameId")]
-        public async Task GetAllEntriesForGame_WithSpecifiedGame_ProducesCorrectResult(Guid mockGameId, int expectedNumberOfEntries)
+        [TestCase("cbb8e1ee-e053-4e7e-9c82-7167a0d5eb8c", 2, 2)]
+        [TestCase("33ff643b-3b5d-4f51-b34e-218155a11462", 2, 0)]
+        [Description("Calling GetTopEntriesForGame() returns top entries in the DB with that gameId")]
+        public async Task GetTopEntriesForGame_WithSpecifiedGame_ProducesCorrectResult(Guid mockGameId, int topN, int expectedNumberOfEntries)
         {
             // SETUP
             var db = MockDbUtility.GetMockDb();
@@ -76,16 +77,21 @@ namespace PetGame.Business.Test
             int mockTimeZoneOffsetMinutes = DateTimeUtility.GetSystemTimeZoneOffsetMinutes();
             var mockLeaderboardEntries = MockDbUtility.GetMockLeaderboardEntries(mockUserId, seedGameId, mockTimeZoneOffsetMinutes);
             await MockDbUtility.SetupMockLeaderboardEntries(db, mockLeaderboardEntries);
+            var topEntries = mockLeaderboardEntries.OrderByDescending((entry) => entry.Score).Take(topN).ToList();
 
             // Create mock leaderboardService
             var loggerMock = new Mock<ILogger<LeaderboardService>>();
             LeaderboardService leaderboardService = new LeaderboardService(db, loggerMock.Object);
 
             // TEST
-            IList<LeaderboardEntry> result = await leaderboardService.GetAllEntriesForGame(mockGameId);
+            IList<LeaderboardEntry> result = await leaderboardService.GetTopEntriesForGame(mockGameId, topN);
 
             // ASSERT
             result.Count.Should().Be(expectedNumberOfEntries);
+            for (int i = 0; i < result.Count; i++)
+            {
+                result[i].Id.Should().Be(topEntries[i].Id);
+            }
         }
 
         // @TODO derive these GUIDs from the mock data rather than copypaste

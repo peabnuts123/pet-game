@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2020-11-20T09:16:22.572Z",
+  "__export_date": "2020-11-20T21:09:40.041Z",
   "__export_source": "insomnia.desktop.app:v2020.4.2",
   "resources": [
     {
@@ -151,9 +151,66 @@
       "_type": "request_group"
     },
     {
-      "_id": "req_8cabaa343dc54fc0b3a3e859c3033359",
+      "_id": "req_b0da3e133f224567bbcbd77d72221c6a",
+      "parentId": "fld_ca0b4310f2894729b21484f15aba82f8",
+      "modified": 1605906466559,
+      "created": 1605906460833,
+      "url": "{{API_BASE}}/api/leaderboard/game/bf06df8d-276f-40d2-975a-f57f2042d8c2/3",
+      "name": "200 - Valid request",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "application/json",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "description": "",
+          "id": "pair_051287b182b7425cb6425caa74c4a527",
+          "name": "cookie",
+          "value": "{{COOKIE}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1604762764635.25,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_ca0b4310f2894729b21484f15aba82f8",
       "parentId": "fld_a121cb22093c43aa8d31d6296c5d9057",
-      "modified": 1605863478614,
+      "modified": 1605906456756,
+      "created": 1605906456756,
+      "name": "topN",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1605906456756,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_a121cb22093c43aa8d31d6296c5d9057",
+      "parentId": "fld_83387d7672db4ff3ac7b2e41c80ca644",
+      "modified": 1605863478610,
+      "created": 1605863478610,
+      "name": "game",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1605073952344,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_8cabaa343dc54fc0b3a3e859c3033359",
+      "parentId": "fld_5bac26acf32645ca907c802e02c73f5b",
+      "modified": 1605906452463,
       "created": 1605863478614,
       "url": "{{API_BASE}}/api/leaderboard/game/bf06df8d-276f-40d2-975a-f57f2042d8c2",
       "name": "200 - Valid request",
@@ -184,15 +241,15 @@
       "_type": "request"
     },
     {
-      "_id": "fld_a121cb22093c43aa8d31d6296c5d9057",
-      "parentId": "fld_83387d7672db4ff3ac7b2e41c80ca644",
-      "modified": 1605863478610,
-      "created": 1605863478610,
-      "name": "game",
+      "_id": "fld_5bac26acf32645ca907c802e02c73f5b",
+      "parentId": "fld_a121cb22093c43aa8d31d6296c5d9057",
+      "modified": 1605906445848,
+      "created": 1605906445848,
+      "name": "default",
       "description": "",
       "environment": {},
       "environmentPropertyOrder": null,
-      "metaSortKey": -1605073952344,
+      "metaSortKey": -1605906445848,
       "_type": "request_group"
     },
     {
@@ -949,10 +1006,26 @@
     {
       "_id": "jar_6bddffda6581a1de3a0ae9a84bd3704825efa625",
       "parentId": "wrk_783587fa1f8a4a21bdcb8f50f0298474",
-      "modified": 1605863467083,
+      "modified": 1605906509194,
       "created": 1605863467083,
       "name": "Default Jar",
-      "cookies": [],
+      "cookies": [
+        {
+          "key": ".AspNetCore.Cookies",
+          "value": "CfDJ8JYmiePMN39CoZWevXkNoQW50bQrlTaX8OYzanriQ75oa9QKTKDWEd9cblMPADmz1YqYoREQr4QOGfVmEZko3cTqOrqiN9lTP1SP1k30XNdWesSo712e0158O5FPjv7dASABHEL-glJ8yCSEVoGD4fLLANKRpdwulVnsGx-oX6p5PQp76ezqXLnQb3FJkhwKbAqaHaXy-VCFkOP82dxxhA-T3guWYiEHMWyx9_EugHEUHLXLklELB8hbuChOtUON_LClUIPKYtgYdx_f2WhctiIuNuyyAdwlj2uu74Sn52gTxHHkRPDIQIxqGf18w71AFQU2g66Wg7m2yceUiCUiai5JC3spoliuZT-oBjbRinIQpECoP4P3R45FSUz1voZKDYfozuZiZ-eLi9PpPpHMV0VwbNtHlJAm3yyDxRivmK_5xO0wMbEfx88QNnB4T_4o_BYEQPTPyXxytmoOCoNEKRJgRpNrKAmCr47egyS0QVEkzfJ9c1-6fT0HGCPwdc2_WcspE69PE50L2cldZyMvrEHYbzguMpIRo7Ed32ZZv0jCZY68dagLYvZLo3BPxtk_f_469xKcs1pqOiBtMBBdoh-8VSTIETbxaiapQsxOWLOvPNImND1kyOu5O8YUJwIcqLIHfax-BXfBgCoYGJO6OTMWzp4kW9N3zcNvzSA5ehnqwhuRQr2qnQvpzmONmpjLc-FYTm35Kx3C_WErlg11ceE0Ties8qD4aNTzHdv7g8BzKnTyg5Lassa-eKSxfZpKVKdgBnYKf3BZ97OBRXUlygbHuQ2ImVF2ysjnOjDB8jKDQ6_k33WwRH9wmotwUUj07-8FL3PynbwWZj_MCnQ8shvinlWDTyw-oaNgNc8Rx8buQ6l_qCscllbiUl---K07Mv-ttOMTWiOwYKHNSnXCtCAoqoxpUsLuHo_COWFaee41HHBtUkFrQtbRvPRqxUqdMpcAxpBeW10QKU2B9lshibDh8dMfOvCjYa80miX_4d3K1XqKiAjTCHnSdfHHt796uuBfkRs6ijVZM9rl955nH7pBwKeITP6Odj1GooA_gpCtEcVR0jide5QRn7aBk0uU7u4oHJJkvXIiB7PYAv6YoPqgN_C4XQ2hrzHHO1CvNMu1SpDekLcED0ahsC8OhvA3mPpsngZATumrGYRptzpx72jLQfZo9Lrzq46UMQFOpuxKfjDp1Orv1KizJZabXukvu3VwIZ4zZB9LHsRfRknr6KHBXjvBflo8u6YRkF-tGC8JsVGPwoZpJZxfEeDwYcGVgg828SZ27IzXX9oPRVelEL6WRyUSEJrgRouCzz0EVXK4S7vmE2H7HAwWFqhbUHnzIXoyz0ggUxBLhBRJq4gfZvaobMS9_jfhGBMN8UBkRsqvFBPgaApDD-lLR6fLDX2EIta5umb-jKCKyML5T5gSnA2RYYG0tzgEJhIigJmkuOzw5ymgnE6cBwR6Ojrq15mMKsYGIOqYsQMrhzy0rZfuzRen4y4_Juiy-C_FQ0ieChV2qU2b7ruehzMbH_JTly6Td78sakTbVtW7hVqsaEBC21cWeHk8hCNBpv1D6iWJN80DC_2U7XPY88ZGCEsuKy48t8JrgVtHHznX-ga6mpPQ9jCf4b_Uvn5RKAcPlexYwui9dK3a8JZfy4Lpvc1UnsbViYLOEnd_0221p4U3DSEJIGIA_uzcllSTfuZvZTH3IEMXpcPqjSRcjHKw8j-ozz5cM2_tjGsAmTrFoEVWwoBpynFDzzpasW40iI2ESPzZNtCP",
+          "domain": "localhost",
+          "path": "/",
+          "secure": true,
+          "httpOnly": true,
+          "extensions": [
+            "samesite=lax"
+          ],
+          "hostOnly": true,
+          "creation": "2020-11-20T21:05:42.806Z",
+          "lastAccessed": "2020-11-20T21:08:29.193Z",
+          "id": "043510164337627"
+        }
+      ],
       "_type": "cookie_jar"
     },
     {

@@ -18,11 +18,12 @@ namespace PetGame.Business
         Task<IList<LeaderboardEntry>> GetUserEntriesForDate(Guid userId, Guid gameId, DateTime localDate, int timeZoneOffsetMinutes);
 
         /// <summary>
-        /// Get all scores for a particular game
+        /// Get top N scores for a particular game
         /// </summary>
         /// <param name="gameId">ID of the game</param>
-        /// <returns>List of all LeaderboardEntry objects for the given game</returns>
-        Task<IList<LeaderboardEntry>> GetAllEntriesForGame(Guid gameId);
+        /// <param name="topN">Number of top scores to get</param>
+        /// <returns>List of N LeaderboardEntry objects for the given game</returns>
+        Task<IList<LeaderboardEntry>> GetTopEntriesForGame(Guid gameId, int topN);
 
         /// <summary>
         /// Submit a user's score for a particular game
