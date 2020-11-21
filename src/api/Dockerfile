@@ -5,10 +5,14 @@ WORKDIR /app
 
 # Copy project manifests
 COPY PetGame.sln PetGame.sln
+COPY PetGame.Common/PetGame.Common.csproj PetGame.Common/PetGame.Common.csproj
 COPY PetGame.Web/PetGame.Web.csproj PetGame.Web/PetGame.Web.csproj
 COPY PetGame.Business/PetGame.Business.csproj PetGame.Business/PetGame.Business.csproj
 COPY PetGame.Data/PetGame.Data.csproj PetGame.Data/PetGame.Data.csproj
 COPY PetGame.Config/PetGame.Config.csproj PetGame.Config/PetGame.Config.csproj
+
+COPY PetGame.Common.Test/PetGame.Common.Test.csproj PetGame.Common.Test/PetGame.Common.Test.csproj
+COPY PetGame.Business.Test/PetGame.Business.Test.csproj PetGame.Business.Test/PetGame.Business.Test.csproj
 
 RUN dotnet --version
 
