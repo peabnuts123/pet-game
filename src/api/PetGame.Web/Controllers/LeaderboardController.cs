@@ -123,7 +123,7 @@ namespace PetGame.Web
 
         [HttpGet]
         [Route("game/{gameId}/{topN?}")]
-        public async Task<ActionResult<IList<LeaderboardEntry>>> GetTop100EntriesForGame(Guid gameId, int topN = 10)
+        public async Task<ActionResult<IList<LeaderboardEntry>>> GetTopEntriesForGame(Guid gameId, int topN = 10)
         {
             // VALIDATION
             if (!this.gameService.IsValidGameId(gameId))
