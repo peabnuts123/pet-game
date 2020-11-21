@@ -12,6 +12,17 @@ const Endpoints = {
     getProfile: (): string => '/api/user/profile',
     updateProfile: (): string => '/api/user/profile',
   },
+  Leaderboard: {
+    getEntriesForToday: (): string => `/api/leaderboard/scores/today`,
+    getEntriesForDate: (): string => `/api/leaderboard/scores/date`,
+    getTopEntriesForGame: (gameId: string, topN?: number): string => {
+      let endpoint = `/api/leaderboard/game/${gameId}`;
+      if (topN !== undefined) {
+        endpoint += `/${topN}`;
+      }
+      return endpoint;
+    },
+  },
 };
 
 export default Endpoints;
