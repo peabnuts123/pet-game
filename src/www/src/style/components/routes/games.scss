@@ -30,6 +30,36 @@
   height: 100%;
 }
 
+.games__leaderboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.games__leaderboard__no-scores-message {
+  display: block;
+  width: 100%;
+  font-style: italic;
+}
+
+.games__leaderboard__table {
+  width: 100%;
+
+  th {
+    text-align: center;
+  }
+  
+  td {
+    text-align: center;
+  }
+
+  // .games__leaderboard__table__user--th {}
+  
+  .games__leaderboard__table__user--td {
+    word-break: break-all;
+  }
+}
+
 // ========================
 // MODIFIERS
 // ========================
