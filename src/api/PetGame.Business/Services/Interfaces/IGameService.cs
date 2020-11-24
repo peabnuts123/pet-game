@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace PetGame.Business
 {
@@ -9,6 +10,6 @@ namespace PetGame.Business
         /// </summary>
         /// <param name="gameId">ID of the game</param>
         /// <returns>Whether the game ID is a valid game that exists</returns>
-        bool IsValidGameId(Guid gameId);
+        Task<bool> IsValidGameId(Guid gameId);
     }
 }

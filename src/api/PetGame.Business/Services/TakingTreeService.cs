@@ -20,12 +20,13 @@ namespace PetGame.Business
             this.itemService = itemService;
         }
 
-        public IList<TakingTreeInventoryItem> GetAllItems()
+        public async Task<IList<TakingTreeInventoryItem>> GetAllItems()
         {
-            return this.db.TakingTreeInventoryItems
+            // @TODO sometimes this includes item.DonatedBy.Inventory - I don't want this
+            return await this.db.TakingTreeInventoryItems
                 .Include(item => item.Item)
                 .Include(item => item.DonatedBy)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task UserDonateItem(User user, Guid playerInventoryItemId)
@@ -53,7 +54,7 @@ namespace PetGame.Business
         public async Task UserClaimItem(User user, Guid takingTreeInventoryItemId)
         {
             // Fetch and validate takingTreeInventoryItemId
-            TakingTreeInventoryItem existingInventoryItem = GetTakingTreeInventoryItemById(takingTreeInventoryItemId);
+            TakingTreeInventoryItem existingInventoryItem = await GetTakingTreeInventoryItemById(takingTreeInventoryItemId);
             if (existingInventoryItem == null)
             {
                 throw new ArgumentException($"Cannot take item from taking tree. No taking tree inventory item exists with id '{takingTreeInventoryItemId}'", nameof(takingTreeInventoryItemId));
@@ -67,12 +68,13 @@ namespace PetGame.Business
             await this.userService.AddItemToUser(user, existingInventoryItem.Item.Id, 1);
         }
 
-        public TakingTreeInventoryItem GetTakingTreeInventoryItemById(Guid takingTreeInventoryItemId)
+        public async Task<TakingTreeInventoryItem> GetTakingTreeInventoryItemById(Guid takingTreeInventoryItemId)
         {
-            return this.db.TakingTreeInventoryItems
+            return await this.db.TakingTreeInventoryItems
                 .Include(item => item.Item)
                 .Include(item => item.DonatedBy)
-                .SingleOrDefault((TakingTreeInventoryItem inventoryItem) => inventoryItem.Id == takingTreeInventoryItemId);
+                .SingleOrDefaultAsync((TakingTreeInventoryItem inventoryItem) => inventoryItem.Id == takingTreeInventoryItemId);
+        }
         }
     }
 }

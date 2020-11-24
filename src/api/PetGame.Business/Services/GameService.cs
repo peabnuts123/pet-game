@@ -1,5 +1,6 @@
 using System;
-using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PetGame.Data;
 
 namespace PetGame.Business
@@ -18,9 +19,9 @@ namespace PetGame.Business
         /// </summary>
         /// <param name="gameId">ID of the game</param>
         /// <returns>Whether the game ID is a valid game that exists</returns>
-        public bool IsValidGameId(Guid gameId)
+        public async Task<bool> IsValidGameId(Guid gameId)
         {
-            return this.db.Games.Any((Game game) => game.Id == gameId);
+            return await this.db.Games.AnyAsync((Game game) => game.Id == gameId);
         }
     }
 }

@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PetGame.Data;
 
 namespace PetGame.Business
 {
     public interface IItemService
     {
-        IList<Item> GetAllItems();
-        Item GetItemById(Guid id);
+        Task<IList<Item>> GetAllItems();
+        Task<Item> GetItemById(Guid id);
     }
 }

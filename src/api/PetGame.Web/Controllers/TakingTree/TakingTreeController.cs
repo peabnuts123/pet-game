@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PetGame.Business;
+using PetGame.Common;
 using PetGame.Data;
 
 namespace PetGame.Web
@@ -24,9 +25,11 @@ namespace PetGame.Web
         }
 
         [HttpGet]
-        public ActionResult<IList<TakingTreeInventoryItem>> GetAllItems()
+        [Route("")]
+        public async Task<ActionResult<IList<TakingTreeInventoryItem>>> GetAllItems()
         {
-            return Ok(this.takingTreeService.GetAllItems());
+            var allItems = await this.takingTreeService.GetAllItems();
+            return Ok(allItems);
         }
 
         [HttpPost]
@@ -35,11 +38,12 @@ namespace PetGame.Web
         public async Task<ActionResult<IList<TakingTreeInventoryItem>>> UserDonateItem(TakingTreeDonateItemDto dto)
         {
             string userAuthId = HttpContext.User.GetSubject();
-
             User user = await this.userService.GetUserByAuthId(userAuthId);
-            await this.takingTreeService.UserDonateItem(user, dto.PlayerInventoryItemId);
 
-            return Ok(this.takingTreeService.GetAllItems());
+                await this.takingTreeService.UserDonateItem(user, dto.playerInventoryItemId.Value);
+
+                var allItems = await this.takingTreeService.GetAllItems();
+                return Ok(allItems);
         }
 
         [HttpPost]
@@ -49,9 +53,11 @@ namespace PetGame.Web
         {
             string userAuthId = HttpContext.User.GetSubject();
             User user = await this.userService.GetUserByAuthId(userAuthId);
-            await this.takingTreeService.UserClaimItem(user, dto.TakingTreeInventoryItemId);
 
-            return Ok(this.takingTreeService.GetAllItems());
+                await this.takingTreeService.UserClaimItem(user, dto.takingTreeInventoryItemId.Value);
+
+                var allItems = await this.takingTreeService.GetAllItems();
+                return Ok(allItems);
         }
     }
 }

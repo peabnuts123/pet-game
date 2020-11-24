@@ -22,16 +22,6 @@ namespace PetGame.Business
             this.logger = logger;
         }
 
-        /// @TODO @DEBUG Remove.
-        public IList<User> debug_GetAllUsers()
-        {
-            return this.db.Users
-                .Include(user => user.Inventory)
-                .ThenInclude((item) => item.Item)
-                .ToList();
-        }
-
-
         /// <summary>
         /// Retrieve a User object by their Auth ID
         /// </summary>
@@ -47,16 +37,26 @@ namespace PetGame.Business
         }
 
         /// <summary>
+        /// Test whether a given user ID is a valid user that exists
+        /// </summary>
+        /// <param name="userId">ID of the user</param>
+        /// <returns>Whether the user ID is a valid user that exists</returns>
+        public async Task<bool> IsValidUserId(Guid userId)
+        {
+            return await this.db.Users.AnyAsync((User user) => user.Id == userId);
+        }
+
+        /// <summary>
         /// Retrieve a User object by their unique ID
         /// </summary>
         /// <param name="userId">Unique ID for the User</param>
         /// <returns>User object if one exists with this ID, null otherwise</returns>
-        public User GetUserById(Guid userId)
+        public async Task<User> GetUserById(Guid userId)
         {
-            return this.db.Users
+            return await this.db.Users
                 .Include((user) => user.Inventory)
                 .ThenInclude((item) => item.Item)
-                .SingleOrDefault((User user) => user.Id == userId);
+                .SingleOrDefaultAsync((User user) => user.Id == userId);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace PetGame.Business
         public async Task AddItemToUser(User user, Guid itemId, int amount)
         {
             // Look up item to add (validation)
-            Item item = this.itemService.GetItemById(itemId);
+            Item item = await this.itemService.GetItemById(itemId);
             if (item == null)
             {
                 throw new ArgumentException($"Cannot add item to user. No item exists with id '{itemId}'", nameof(itemId));
@@ -177,12 +177,16 @@ namespace PetGame.Business
         /// <returns>The full updated record from the DB</returns>
         public async Task<User> UpdateUser(Guid userId, User updatedUser)
         {
-            User existingUser = GetUserById(userId);
+            User existingUser = await GetUserById(userId);
 
-            existingUser.Username = updatedUser.Username.Trim();
+            // Username
+            if (updatedUser.Username != null)
+            {
+                existingUser.Username = updatedUser.Username.Trim();
+            }
 
             // Save user to DB
-            this.db.Update(existingUser);
+            this.db.Users.Update(existingUser);
             await this.db.SaveChangesAsync();
 
             return existingUser;
@@ -212,7 +216,7 @@ namespace PetGame.Business
             newUser = await GetUserByAuthId(userAuthId);
 
             // Add random items to new user
-            IList<Item> AllItems = this.itemService.GetAllItems();
+            IList<Item> AllItems = await this.itemService.GetAllItems();
             for (int i = 0; i < rng.Next(4, 7); i++)
             {
                 // @TODO don't make a trip to the DB every time

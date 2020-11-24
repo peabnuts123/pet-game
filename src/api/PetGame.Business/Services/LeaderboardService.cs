@@ -105,9 +105,9 @@ namespace PetGame.Business
 
             // Fetch new record and join with game data
             // @NOTE no need to make a trip to DB if `.Include` is removed
-            return this.db.LeaderboardEntries
+            return await this.db.LeaderboardEntries
                 .Include((entry) => entry.Game)
-                .Single((entry) => entry.Id == newEntry.Id);
+                .SingleAsync((entry) => entry.Id == newEntry.Id);
         }
     }
 }
