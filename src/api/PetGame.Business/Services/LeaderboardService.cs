@@ -87,7 +87,7 @@ namespace PetGame.Business
             IList<LeaderboardEntry> entriesForToday = await GetUserEntriesForDate(userId, gameId, DateTimeUtility.GetLocalDateTimeNow(timeZoneOffsetMinutes), timeZoneOffsetMinutes);
             if (entriesForToday.Count >= MAX_SUBMISSIONS_PER_DAY)
             {
-                throw new InvalidOperationException($"Maximum submissions for today reached: {entriesForToday.Count} of {MAX_SUBMISSIONS_PER_DAY}");
+                throw new MaxSubmissionsPerDayReachedException($"Maximum submissions for today reached: {entriesForToday.Count} of {MAX_SUBMISSIONS_PER_DAY}", ErrorId.Leaderboard_UserCannotSaveEntry_MaximumSubmissionsPerDayReached);
             }
 
             // Construct and save new entry
@@ -108,6 +108,11 @@ namespace PetGame.Business
             return await this.db.LeaderboardEntries
                 .Include((entry) => entry.Game)
                 .SingleAsync((entry) => entry.Id == newEntry.Id);
+        }
+
+        public class MaxSubmissionsPerDayReachedException : PetGameException
+        {
+            public MaxSubmissionsPerDayReachedException(string message, ErrorId errorId) : base(message, errorId) { }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PetGame.Common;
 using PetGame.Data;
 
 namespace PetGame.Business
@@ -37,7 +38,7 @@ namespace PetGame.Business
             PlayerInventoryItem playerInventoryItem = this.userService.GetInventoryItemById(user, playerInventoryItemId);
             if (playerInventoryItem == null)
             {
-                throw new ArgumentException($"Cannot donate item to taking tree. Player has no item with id '{playerInventoryItemId}'", nameof(playerInventoryItemId));
+                throw new UserCannotDonateException($"Cannot donate item to taking tree. Player has no item with id '{playerInventoryItemId}'", ErrorId.TakingTree_UserCannotDonate_UserDoesNotHaveItem);
             }
 
             // Remove item from user
@@ -57,7 +58,7 @@ namespace PetGame.Business
             TakingTreeInventoryItem existingInventoryItem = await GetTakingTreeInventoryItemById(takingTreeInventoryItemId);
             if (existingInventoryItem == null)
             {
-                throw new ArgumentException($"Cannot take item from taking tree. No taking tree inventory item exists with id '{takingTreeInventoryItemId}'", nameof(takingTreeInventoryItemId));
+                throw new UserCannotClaimException($"Cannot take item from taking tree. No taking tree inventory item exists with id '{takingTreeInventoryItemId}'", ErrorId.TakingTree_UserCannotClaim_ItemDoesNotExist);
             }
 
             // Remove this item from the taking tree
@@ -75,6 +76,16 @@ namespace PetGame.Business
                 .Include(item => item.DonatedBy)
                 .SingleOrDefaultAsync((TakingTreeInventoryItem inventoryItem) => inventoryItem.Id == takingTreeInventoryItemId);
         }
+
+        // EXCEPTIONS
+        public class UserCannotDonateException : PetGameException
+        {
+            public UserCannotDonateException(string message, ErrorId errorId) : base(message, errorId) { }
+        }
+
+        public class UserCannotClaimException : PetGameException
+        {
+            public UserCannotClaimException(string message, ErrorId errorId) : base(message, errorId) { }
         }
     }
 }

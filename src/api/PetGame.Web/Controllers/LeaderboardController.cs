@@ -37,38 +37,35 @@ namespace PetGame.Web
 
             // VALIDATION
             //  - Game ID
-            Guid gameId = dto.gameId;
-            if (!this.gameService.IsValidGameId(gameId))
+            if (!await this.gameService.IsValidGameId(dto.gameId.Value))
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Unknown game ID: {gameId}",
+                    [nameof(dto.gameId)] = $"Unknown game ID: {dto.gameId.Value}",
                 });
             }
-
             // - Timezone offset
-            int timeZoneOffsetMinutes = dto.timeZoneOffsetMinutes;
-            if (timeZoneOffsetMinutes < LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60)
+            if (dto.timeZoneOffsetMinutes.Value < LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60)
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Likely invalid time zone offset: {timeZoneOffsetMinutes}. Minimum supported offset is UTC{LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60})",
+                    [nameof(dto.timeZoneOffsetMinutes)] = $"Likely invalid time zone offset: {dto.timeZoneOffsetMinutes.Value}. Minimum supported offset is UTC{LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60})",
                 });
             }
-            else if (timeZoneOffsetMinutes > LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60)
+            else if (dto.timeZoneOffsetMinutes.Value > LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60)
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Likely invalid time zone offset: {timeZoneOffsetMinutes}. Maximum supported offset is UTC+{LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60})",
+                    [nameof(dto.timeZoneOffsetMinutes)] = $"Likely invalid time zone offset: {dto.timeZoneOffsetMinutes.Value}. Maximum supported offset is UTC+{LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60})",
                 });
             }
 
 
             IList<LeaderboardEntry> entries = await this.leaderboardService.GetUserEntriesForDate(
                 user.Id,
-                dto.gameId,
-                DateTimeUtility.GetLocalDateTimeNow(dto.timeZoneOffsetMinutes),
-                dto.timeZoneOffsetMinutes
+                dto.gameId.Value,
+                DateTimeUtility.GetLocalDateTimeNow(dto.timeZoneOffsetMinutes.Value),
+                dto.timeZoneOffsetMinutes.Value
             );
 
             return Ok(entries);
@@ -84,99 +81,110 @@ namespace PetGame.Web
 
             // VALIDATION
             //  - Game ID
-            Guid gameId = dto.gameId;
-            if (!this.gameService.IsValidGameId(gameId))
+            if (!await this.gameService.IsValidGameId(dto.gameId.Value))
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Unknown game ID: {gameId}",
+                    [nameof(dto.gameId)] = $"Unknown game ID: {dto.gameId.Value}",
                 });
             }
-
             // - Timezone offset
-            int timeZoneOffsetMinutes = dto.timeZoneOffsetMinutes;
-            if (timeZoneOffsetMinutes < LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60)
+            if (dto.timeZoneOffsetMinutes.Value < LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60)
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Likely invalid time zone offset: {timeZoneOffsetMinutes}. Minimum supported offset is UTC{LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60})",
+                    [nameof(dto.timeZoneOffsetMinutes)] = $"Likely invalid time zone offset: {dto.timeZoneOffsetMinutes.Value}. Minimum supported offset is UTC{LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60})",
                 });
             }
-            else if (timeZoneOffsetMinutes > LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60)
+            else if (dto.timeZoneOffsetMinutes.Value > LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60)
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Likely invalid time zone offset: {timeZoneOffsetMinutes}. Maximum supported offset is UTC+{LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60})",
+                    [nameof(dto.timeZoneOffsetMinutes)] = $"Likely invalid time zone offset: {dto.timeZoneOffsetMinutes.Value}. Maximum supported offset is UTC+{LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60})",
                 });
             }
 
 
             IList<LeaderboardEntry> entries = await this.leaderboardService.GetUserEntriesForDate(
                 user.Id,
-                dto.gameId,
-                dto.date,
-                dto.timeZoneOffsetMinutes
+                dto.gameId.Value,
+                dto.date.Value,
+                dto.timeZoneOffsetMinutes.Value
             );
 
             return Ok(entries);
         }
 
-        [HttpGet]
-        [Route("game/{gameId}/{topN?}")]
-        public async Task<ActionResult<IList<LeaderboardEntry>>> GetTopEntriesForGame(Guid gameId, int topN = 10)
+        [HttpPost]
+        [Route("game")]
+        public async Task<ActionResult<IList<LeaderboardEntry>>> GetTopEntriesForGame(LeaderboardTopGameEntriesDto dto)
         {
             // VALIDATION
-            if (!this.gameService.IsValidGameId(gameId))
+            //  - Game ID
+            if (!await this.gameService.IsValidGameId(dto.gameId.Value))
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Unknown game ID: {gameId}",
+                    [nameof(dto.gameId)] = $"Unknown game ID: {dto.gameId}",
+                });
+            }
+            //  - Top N
+            if (dto.topN <= 0)
+            {
+                return ValidationError(new ValidationErrors
+                {
+                    [nameof(dto.topN)] = $"Cannot be less than or equal to 0",
+                });
+            }
+            else if (dto.topN > 1000)
+            {
+                return ValidationError(new ValidationErrors
+                {
+                    [nameof(dto.topN)] = $"Cannot be greater than 1000",
                 });
             }
 
-            return Ok(await this.leaderboardService.GetTopEntriesForGame(gameId, topN));
+
+            return Ok(await this.leaderboardService.GetTopEntriesForGame(dto.gameId.Value, dto.topN ?? 10));
         }
+
 
         [HttpPost]
         [Route("submit")]
         [Authorize]
-        public async Task<ActionResult<LeaderboardEntry>> SaveEntry(LeaderboardEntryDto dto)
+        public async Task<ActionResult<LeaderboardEntry>> SaveEntry(LeaderboardSaveEntryDto dto)
         {
             // VALIDATION
             //  - Game ID
-            Guid gameId = dto.gameId;
-            if (!this.gameService.IsValidGameId(gameId))
+            if (!await this.gameService.IsValidGameId(dto.gameId.Value))
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Unknown game ID: {gameId}",
+                    [nameof(dto.gameId)] = $"Unknown game ID: {dto.gameId.Value}",
                 });
             }
-
             // - Score
             // @TODO validate score
-            if (dto.score > 9999 || dto.score < 0)
+            if (dto.score.Value >= 9999 || dto.score.Value <= 0)
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = "Stop trying to hack the leaderboard"
+                    [nameof(dto.score)] = "Stop trying to hack the leaderboard"
                 });
             }
-
             // - Timezone offset
-            int timeZoneOffsetMinutes = dto.timeZoneOffsetMinutes;
-            if (timeZoneOffsetMinutes < LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60)
+            if (dto.timeZoneOffsetMinutes.Value < LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60)
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Likely invalid time zone offset: {timeZoneOffsetMinutes}. Minimum supported offset is UTC{LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60})",
+                    [nameof(dto.timeZoneOffsetMinutes)] = $"Likely invalid time zone offset: {dto.timeZoneOffsetMinutes.Value}. Minimum supported offset is UTC{LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MIN_TIME_ZONE_OFFSET_HOURS * 60})",
                 });
             }
-            else if (timeZoneOffsetMinutes > LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60)
+            else if (dto.timeZoneOffsetMinutes.Value > LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60)
             {
-                return BadRequest(new
+                return ValidationError(new ValidationErrors
                 {
-                    message = $"Likely invalid time zone offset: {timeZoneOffsetMinutes}. Maximum supported offset is UTC+{LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60})",
+                    [nameof(dto.timeZoneOffsetMinutes)] = $"Likely invalid time zone offset: {dto.timeZoneOffsetMinutes.Value}. Maximum supported offset is UTC+{LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS} ({LeaderboardEntry.MAX_TIME_ZONE_OFFSET_HOURS * 60})",
                 });
             }
 
@@ -188,19 +196,18 @@ namespace PetGame.Web
             {
                 LeaderboardEntry entry = await this.leaderboardService.SaveEntry(
                     user.Id,
-                    gameId,
-                    dto.score,
-                    dto.timeZoneOffsetMinutes
+                    dto.gameId.Value,
+                    dto.score.Value,
+                    dto.timeZoneOffsetMinutes.Value
                 );
 
                 return Ok(entry);
             }
-            catch (InvalidOperationException e)
+            catch (LeaderboardService.MaxSubmissionsPerDayReachedException e)
             {
-                return BadRequest(new
-                {
-                    message = e.Message,
-                });
+                return BadRequest(new ApiError(
+                    errors: new GenericError(e)
+                ));
             }
         }
     }

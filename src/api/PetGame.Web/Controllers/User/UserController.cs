@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PetGame.Business;
+using PetGame.Common;
 using PetGame.Data;
 
 namespace PetGame.Web
@@ -24,14 +25,6 @@ namespace PetGame.Web
         }
 
         [HttpGet]
-        [Route("debug/all")]
-        // [Authorize]
-        public ActionResult<IList<User>> debug_GetAllUsers()
-        {
-            return Ok(this.userService.debug_GetAllUsers());
-        }
-
-        [HttpGet]
         [Route("profile")]
         [Authorize]
         public async Task<ActionResult<User>> Profile()
@@ -44,11 +37,10 @@ namespace PetGame.Web
                 // Bad state. User is authenticated but does not exist in database (this should not ever happen)
                 this.logger.LogError("Cannot get user profile. User is authenticated but not found in database. User Id: {UserAuthId}.", userAuthId);
 
-
-                return BadRequest(JsonConvert.SerializeObject(new
+                return StatusCode(500, new
                 {
                     Error = $"No user exists with auth id '{userAuthId}'.",
-                }));
+                });
             }
 
             return Ok(user);
@@ -57,26 +49,29 @@ namespace PetGame.Web
         [HttpPatch]
         [Route("profile")]
         [Authorize]
-        public async Task<ActionResult<User>> UpdateProfile(User dto)
+        public async Task<ActionResult<User>> UpdateProfile(UserUpdateProfileDto dto)
         {
+            // VALIDATION
+            //  - Username
+            if (dto.username != null && string.IsNullOrWhiteSpace(dto.username))
+            {
+                return ValidationError(new ValidationErrors
+                {
+                    [nameof(dto.username)] = $"Cannot be blank, or whitespace"
+                });
+            }
+
+
             string userAuthId = HttpContext.User.GetSubject();
-            // @TODO one day will have to straighten this whole "2 primary keys" thing
-            //  and do less trips to the DB
             User user = await this.userService.GetUserByAuthId(userAuthId);
 
-            try
+            User updatedUser = await this.userService.UpdateUser(user.Id, new User
             {
-                User updatedUser = await this.userService.UpdateUser(user.Id, dto);
-                return Ok(updatedUser);
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(JsonConvert.SerializeObject(new
-                {
-                    Error = e.ToString(),
+                // @TODO automapper
+                Username = dto.username,
+            });
 
-                }));
-            }
+            return Ok(updatedUser);
         }
     }
 }

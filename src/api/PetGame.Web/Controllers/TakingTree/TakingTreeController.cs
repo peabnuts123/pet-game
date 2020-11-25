@@ -40,10 +40,19 @@ namespace PetGame.Web
             string userAuthId = HttpContext.User.GetSubject();
             User user = await this.userService.GetUserByAuthId(userAuthId);
 
+            try
+            {
                 await this.takingTreeService.UserDonateItem(user, dto.playerInventoryItemId.Value);
 
                 var allItems = await this.takingTreeService.GetAllItems();
                 return Ok(allItems);
+            }
+            catch (TakingTreeService.UserCannotDonateException e)
+            {
+                return BadRequest(new ApiError(
+                    errors: new GenericError(e)
+                ));
+            }
         }
 
         [HttpPost]
@@ -54,10 +63,20 @@ namespace PetGame.Web
             string userAuthId = HttpContext.User.GetSubject();
             User user = await this.userService.GetUserByAuthId(userAuthId);
 
+            try
+            {
                 await this.takingTreeService.UserClaimItem(user, dto.takingTreeInventoryItemId.Value);
 
                 var allItems = await this.takingTreeService.GetAllItems();
                 return Ok(allItems);
+            }
+            catch (TakingTreeService.UserCannotClaimException e)
+            {
+                return BadRequest(new ApiError(
+                    errors: new GenericError(e)
+                ));
+            }
+
         }
     }
 }
