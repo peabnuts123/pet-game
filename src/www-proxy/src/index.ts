@@ -2,6 +2,8 @@ import { APIGatewayProxyHandlerV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import AWS, { AWSError } from 'aws-sdk';
 import { PromiseResult } from 'aws-sdk/lib/request';
 
+import Logger from './util/Logger';
+
 const s3 = new AWS.S3();
 const ssm = new AWS.SSM();
 
@@ -53,10 +55,13 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, _context) => {
     BUCKET_NAME = await BUCKET_NAME_PROMISE;
     _ROUTE_MAP_KEY = await ROUTE_MAP_KEY_PROMISE;
   } catch (e) {
+    Logger.logError("Could not read value from parameter store", e);
     return errorResponse("Could not read value from parameter store", e);
   }
 
   try {
+    Logger.log(`Handling request: ${event.rawPath}${event.rawQueryString ? '?' + event.rawQueryString : ''}`);
+
     // Forward request to S3
     // It will throw if the request fails e.g. for a file that doesn't exist, or if we don't have auth
     const s3Response = await s3.getObject({
@@ -66,6 +71,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, _context) => {
 
     // If we made it here then the request is for a file that exists in S3
     // Forward response from S3
+    Logger.log("Requested object exists in S3, serving response.");
     return forwardS3Response(s3Response);
   } catch (_e) {
     const error: AWSError = _e as AWSError;
@@ -77,6 +83,8 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, _context) => {
       (error.code === 'NoSuchKey') || // 404 from S3
       (error.code === 'UriParameterError' && event.rawPath === '/') // Request root which produces S3 key as empty string
     )) {
+      Logger.log("Requested  object does NOT exist in S3. Checking if path exists in route map...");
+
       // If we 404 from S3, check if it's a valid route in the route map
       try {
         // Ensure route map has finished loading, first (as well as the index.html, which we will send in the response)
@@ -89,19 +97,23 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, _context) => {
         if (routeMapContainsPath(routeMap, event.rawPath)) {
           // Request is for a path in the route map
           // Return index.html with code 200
+          Logger.log("Requested path is in route map. Serving 200 with index.html");
           return forwardS3Response(indexHtmlResponse);
         } else {
           // Request is for a path not in S3 or the application's route map
           // Return index.html with code 404
+          Logger.log("Requested path is NOT in route map OR S3, serving 404 with index.html");
           return forwardS3Response(indexHtmlResponse, 404);
         }
       } catch (e) {
         // Failed to load route map (or index.html), this is bad
+        Logger.logError("Failed while reading route map / index.html from S3 bucket", e);
         return errorResponse("Failed while reading route map / index.html from S3 bucket", e);
       }
     }
 
     // Error is not 'NoSuchKey' - return a valuable error for debugging
+    Logger.logError("An error occurred", error);
     return errorResponse("An error occurred", error);
   }
 };

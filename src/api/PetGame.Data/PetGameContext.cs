@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Npgsql;
 using PetGame.Config;
 
@@ -15,8 +13,16 @@ namespace PetGame.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
+            // Skip configuring if configuration has already been supplied elsewhere
+            if (options.IsConfigured) return;
+
             // Parse `postgres://[user]:[password]@[host]/[database]`-formatted connection string
             string databaseUrl = Configuration.Base["DATABASE_URL"];
+            if (databaseUrl == null)
+            {
+                throw new ArgumentNullException("Cannot connect to database. Configuration parameter `DATABASE_URL` is null. Are you missing a config file, or environment variable?");
+            }
+
             Uri databaseUri = new Uri(databaseUrl);
             string[] userInfo = Uri.UnescapeDataString(databaseUri.UserInfo).Split(':');
 
@@ -39,6 +45,8 @@ namespace PetGame.Data
         public DbSet<PlayerInventoryItem> PlayerInventoryItems { get; set; }
         public DbSet<TakingTreeInventoryItem> TakingTreeInventoryItems { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<LeaderboardEntry> LeaderboardEntries { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,6 +55,7 @@ namespace PetGame.Data
             //  rather than just putting ALL the models' logic in this one place
             modelBuilder.Entity<Item>().HasData(Item.ALL_ITEMS);
             modelBuilder.Entity<User>().HasIndex(u => u.AuthId).IsUnique();
+            modelBuilder.Entity<Game>().HasData(Game.ALL_GAMES);
         }
     }
 }

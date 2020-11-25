@@ -92,7 +92,7 @@ resource "aws_cloudfront_distribution" "www" {
   ordered_cache_behavior {
     allowed_methods        = ["HEAD", "GET", "OPTIONS"]
     cached_methods         = ["HEAD", "GET"]
-    path_pattern           = "/"
+    path_pattern           = "/index.html"
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
     target_origin_id       = local.www_origin_id

@@ -19,6 +19,29 @@ namespace PetGame.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("PetGame.Data.Game", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Games");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("bf06df8d-276f-40d2-975a-f57f2042d8c2"),
+                            Name = "Bappy Flirb"
+                        });
+                });
+
             modelBuilder.Entity("PetGame.Data.Item", b =>
                 {
                     b.Property<Guid>("Id")
@@ -87,6 +110,33 @@ namespace PetGame.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PetGame.Data.LeaderboardEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("EntryTimeUTC")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LeaderboardEntries");
+                });
+
             modelBuilder.Entity("PetGame.Data.PlayerInventoryItem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -153,6 +203,21 @@ namespace PetGame.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PetGame.Data.LeaderboardEntry", b =>
+                {
+                    b.HasOne("PetGame.Data.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetGame.Data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PetGame.Data.PlayerInventoryItem", b =>

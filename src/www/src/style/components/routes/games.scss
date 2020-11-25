@@ -1,0 +1,69 @@
+// ========================
+// Games Route
+// ========================
+// @note:
+// ========================
+// .games {}
+
+// ========================
+// ELEMENTS
+// ========================
+.games__aspect-maintainer {
+  position: relative;
+  margin-bottom: $m * 2;
+  width: 100%;
+  // padding-bottom: @NOTE SET BY JAVASCRIPT
+}
+
+.games__container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.games__iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.games__leaderboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.games__leaderboard__no-scores-message {
+  display: block;
+  width: 100%;
+  font-style: italic;
+}
+
+.games__leaderboard__table {
+  width: 100%;
+
+  th {
+    text-align: center;
+  }
+  
+  td {
+    text-align: center;
+  }
+
+  // .games__leaderboard__table__user--th {}
+  
+  .games__leaderboard__table__user--td {
+    word-break: break-all;
+  }
+}
+
+// ========================
+// MODIFIERS
+// ========================
+
+// ========================
+// UI STATES
+// ========================

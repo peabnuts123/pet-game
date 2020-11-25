@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <ProjectReference Include="..\PetGame.Common\PetGame.Common.csproj" />
     <ProjectReference Include="..\PetGame.Business\PetGame.Business.csproj" />
     <ProjectReference Include="..\PetGame.Config\PetGame.Config.csproj" />
   </ItemGroup>

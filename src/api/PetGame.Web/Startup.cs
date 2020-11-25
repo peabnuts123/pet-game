@@ -13,6 +13,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Serilog;
+using System.Text.Json.Serialization;
+using System.Linq;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PetGame.Web
 {
@@ -47,7 +51,40 @@ namespace PetGame.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // ASP.NET
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions((options) =>
+                {
+                    // Strip nulls from payload
+                    // @TODO This might be annoying later?
+                    //  In .NET5 you can specify when to omit properties with JsonIgnore
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    // Serialize enums as strings instead of integers
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                })
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    // Customise automatic validation error response payload
+                    options.InvalidModelStateResponseFactory = (context) =>
+                    {
+                        // Map validation errors to RequestValidationError models
+                        List<ErrorModel> validationErrors = context.ModelState
+                            .Where((entry) => entry.Value.Errors.Count > 0)
+                            .SelectMany((entry) =>
+                                entry.Value.Errors.Select((error) =>
+                                    new RequestValidationError(field: entry.Key, message: error.ErrorMessage) as ErrorModel
+                                )
+                            )
+                            .ToList();
+
+                        // Return generic API error
+                        ApiError response = new ApiError(message: validationErrors.Count == 1 ?
+                            $"There was a validation error in your request" :
+                            $"There were {validationErrors.Count} validation errors in your request",
+                            errors: validationErrors);
+
+                        return new BadRequestObjectResult(response);
+                    };
+                });
 
             // Store data protection keys in AWS (only in production)
             if (this.HostEnvironment.IsProduction())
@@ -60,6 +97,8 @@ namespace PetGame.Web
             services.AddTransient(typeof(ITakingTreeService), typeof(TakingTreeService));
             services.AddTransient(typeof(IUserService), typeof(UserService));
             services.AddTransient(typeof(IItemService), typeof(ItemService));
+            services.AddTransient(typeof(ILeaderboardService), typeof(LeaderboardService));
+            services.AddTransient(typeof(IGameService), typeof(GameService));
 
             // DB
             services.AddDbContext<PetGameContext>();
@@ -88,6 +127,10 @@ namespace PetGame.Web
             // > OIDC configuration
             .AddOpenIdConnect("Auth0", options =>
             {
+                // @TODO Add "Sign in with Xero" for lulz 
+                //  - https://developer.xero.com/documentation/oauth2/sign-in
+                //  - https://auth0.com/docs/connections/social/oauth2
+
                 // Set the authority to your Auth0 domain
                 options.Authority = $"https://{Configuration["Auth0:Domain"]}";
 
@@ -100,7 +143,7 @@ namespace PetGame.Web
                 // Configure the scope - Details: https://auth0.com/docs/scopes/openid-connect-scopes
                 options.Scope.Add("openid");
 
-                // Set the callback path, so Auth0 will call back to
+                // Set the callback path, Auth0 will call back to
                 // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
                 options.CallbackPath = new PathString("/api/auth/callback");
 

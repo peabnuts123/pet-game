@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PetGame.Common;
 using PetGame.Data;
 
 namespace PetGame.Business
@@ -20,12 +21,13 @@ namespace PetGame.Business
             this.itemService = itemService;
         }
 
-        public IList<TakingTreeInventoryItem> GetAllItems()
+        public async Task<IList<TakingTreeInventoryItem>> GetAllItems()
         {
-            return this.db.TakingTreeInventoryItems
+            // @TODO sometimes this includes item.DonatedBy.Inventory - I don't want this
+            return await this.db.TakingTreeInventoryItems
                 .Include(item => item.Item)
                 .Include(item => item.DonatedBy)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task UserDonateItem(User user, Guid playerInventoryItemId)
@@ -36,7 +38,7 @@ namespace PetGame.Business
             PlayerInventoryItem playerInventoryItem = this.userService.GetInventoryItemById(user, playerInventoryItemId);
             if (playerInventoryItem == null)
             {
-                throw new ArgumentException($"Cannot donate item to taking tree. Player has no item with id '{playerInventoryItemId}'", nameof(playerInventoryItemId));
+                throw new UserCannotDonateException($"Cannot donate item to taking tree. Player has no item with id '{playerInventoryItemId}'", ErrorId.TakingTree_UserCannotDonate_UserDoesNotHaveItem);
             }
 
             // Remove item from user
@@ -53,10 +55,10 @@ namespace PetGame.Business
         public async Task UserClaimItem(User user, Guid takingTreeInventoryItemId)
         {
             // Fetch and validate takingTreeInventoryItemId
-            TakingTreeInventoryItem existingInventoryItem = GetTakingTreeInventoryItemById(takingTreeInventoryItemId);
+            TakingTreeInventoryItem existingInventoryItem = await GetTakingTreeInventoryItemById(takingTreeInventoryItemId);
             if (existingInventoryItem == null)
             {
-                throw new ArgumentException($"Cannot take item from taking tree. No taking tree inventory item exists with id '{takingTreeInventoryItemId}'", nameof(takingTreeInventoryItemId));
+                throw new UserCannotClaimException($"Cannot take item from taking tree. No taking tree inventory item exists with id '{takingTreeInventoryItemId}'", ErrorId.TakingTree_UserCannotClaim_ItemDoesNotExist);
             }
 
             // Remove this item from the taking tree
@@ -67,12 +69,23 @@ namespace PetGame.Business
             await this.userService.AddItemToUser(user, existingInventoryItem.Item.Id, 1);
         }
 
-        public TakingTreeInventoryItem GetTakingTreeInventoryItemById(Guid takingTreeInventoryItemId)
+        public async Task<TakingTreeInventoryItem> GetTakingTreeInventoryItemById(Guid takingTreeInventoryItemId)
         {
-            return this.db.TakingTreeInventoryItems
+            return await this.db.TakingTreeInventoryItems
                 .Include(item => item.Item)
                 .Include(item => item.DonatedBy)
-                .SingleOrDefault((TakingTreeInventoryItem inventoryItem) => inventoryItem.Id == takingTreeInventoryItemId);
+                .SingleOrDefaultAsync((TakingTreeInventoryItem inventoryItem) => inventoryItem.Id == takingTreeInventoryItemId);
+        }
+
+        // EXCEPTIONS
+        public class UserCannotDonateException : PetGameException
+        {
+            public UserCannotDonateException(string message, ErrorId errorId) : base(message, errorId) { }
+        }
+
+        public class UserCannotClaimException : PetGameException
+        {
+            public UserCannotClaimException(string message, ErrorId errorId) : base(message, errorId) { }
         }
     }
 }

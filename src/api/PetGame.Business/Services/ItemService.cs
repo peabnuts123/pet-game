@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetGame.Data;
 
@@ -18,14 +19,14 @@ namespace PetGame.Business
             this.logger = logger;
         }
 
-        public IList<Item> GetAllItems()
+        public async Task<IList<Item>> GetAllItems()
         {
-            return this.db.Items.ToList();
+            return await this.db.Items.ToListAsync();
         }
 
-        public Item GetItemById(Guid id)
+        public async Task<Item> GetItemById(Guid id)
         {
-            return this.db.Items.SingleOrDefault((Item item) => item.Id == id);
+            return await this.db.Items.SingleOrDefaultAsync((Item item) => item.Id == id);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PetGame.Business;
@@ -21,9 +22,10 @@ namespace PetGame.Web
 
         [HttpGet]
         [Route("debug")]
-        public ActionResult<IList<Item>> debug_GetAll()
+        public async Task<ActionResult<IList<Item>>> debug_GetAll()
         {
-            return Ok(this.itemService.GetAllItems());
+            var allItems = await this.itemService.GetAllItems();
+            return Ok(allItems);
         }
     }
 }
