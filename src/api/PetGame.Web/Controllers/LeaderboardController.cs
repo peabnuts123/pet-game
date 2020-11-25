@@ -148,6 +148,72 @@ namespace PetGame.Web
             return Ok(await this.leaderboardService.GetTopEntriesForGame(dto.gameId.Value, dto.topN ?? 10));
         }
 
+        [HttpPost]
+        [Route("game/user")]
+        public async Task<ActionResult<IList<LeaderboardEntry>>> GetTopUserEntriesForGame(LeaderboardTopUserGameEntriesDto dto)
+        {
+            // VALIDATION
+            //  - Game ID
+            if (!await this.gameService.IsValidGameId(dto.gameId.Value))
+            {
+                return ValidationError(new ValidationErrors
+                {
+                    [nameof(dto.gameId)] = $"Unknown game ID: {dto.gameId}",
+                });
+            }
+            //  - Top N
+            if (dto.topN <= 0)
+            {
+                return ValidationError(new ValidationErrors
+                {
+                    [nameof(dto.topN)] = $"Cannot be less than or equal to 0",
+                });
+            }
+            else if (dto.topN > 1000)
+            {
+                return ValidationError(new ValidationErrors
+                {
+                    [nameof(dto.topN)] = $"Cannot be greater than 1000",
+                });
+            }
+            //  - User ID
+            if (dto.userId.HasValue && !await this.userService.IsValidUserId(dto.userId.Value))
+            {
+                return ValidationError(new ValidationErrors
+                {
+                    [nameof(dto.userId)] = $"Unknown user ID: {dto.userId.Value}",
+                });
+            }
+            // Extract user ID from either the request body or the auth cookie
+            // At least one must be present
+            Guid userId;
+            if (dto.userId.HasValue)
+            {
+                userId = dto.userId.Value;
+            }
+            else
+            {
+                // No user specified - default to user auth header 
+                string userAuthId = HttpContext.User.GetSubject();
+
+                if (string.IsNullOrEmpty(userAuthId))
+                {
+                    return ValidationError(new ValidationErrors
+                    {
+                        [nameof(dto.userId)] = $"Could not locate user ID. Either specify a `{nameof(dto.userId)}` parameter, or include a valid authentication cookie in the request",
+                    });
+                }
+                else
+                {
+                    User user = await this.userService.GetUserByAuthId(userAuthId);
+                    userId = user.Id;
+                }
+            }
+
+
+            return Ok(await this.leaderboardService.GetTopUserEntriesForGame(userId, dto.gameId.Value, dto.topN ?? 10));
+        }
+
 
         [HttpPost]
         [Route("submit")]

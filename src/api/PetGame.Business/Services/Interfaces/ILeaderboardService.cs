@@ -24,6 +24,14 @@ namespace PetGame.Business
         /// <param name="topN">Number of top scores to get</param>
         /// <returns>List of N LeaderboardEntry objects for the given game</returns>
         Task<IList<LeaderboardEntry>> GetTopEntriesForGame(Guid gameId, int topN);
+        /// <summary>
+        /// Get a user's top N scores for a particular game
+        /// </summary>
+        /// <param name="userId">ID of the user</param>
+        /// <param name="gameId">ID of the game</param>
+        /// <param name="topN">Number of top scores to get</param>
+        /// <returns>List of N LeaderboardEntry objects for the given game</returns>
+        Task<IList<LeaderboardEntry>> GetTopUserEntriesForGame(Guid userId, Guid gameId, int topN);
 
         /// <summary>
         /// Submit a user's score for a particular game
